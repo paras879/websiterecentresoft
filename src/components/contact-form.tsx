@@ -1,0 +1,370 @@
+"use client";
+
+import { useState } from "react";
+import { siteConfig } from "@/lib/site-config";
+import styles from "./contact-form.module.css";
+
+interface FormState {
+  fullName: string;
+  email: string;
+  company: string;
+  phone: string;
+  service: string;
+  message: string;
+  privacyAgreed: boolean;
+}
+
+interface FormErrors {
+  fullName?: string;
+  email?: string;
+  phone?: string;
+  service?: string;
+  message?: string;
+  privacyAgreed?: string;
+}
+
+// Phone numbers may only contain digits, spaces, hyphens, parentheses and a leading "+".
+const PHONE_FORMAT = /^\+?[0-9\s\-()]+$/;
+
+function sanitizePhone(value: string): string {
+  const cleaned = value.replace(/[^0-9+\s\-()]/g, "");
+  // Keep "+" only as the very first character.
+  return cleaned.replace(/(?!^)\+/g, "");
+}
+
+export function ContactForm() {
+  const [formData, setFormData] = useState<FormState>({
+    fullName: "",
+    email: "",
+    company: "",
+    phone: "",
+    service: "Software Development",
+    message: "",
+    privacyAgreed: false,
+  });
+
+  const [errors, setErrors] = useState<FormErrors>({});
+  const [preparedSummary, setPreparedSummary] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
+
+  const validate = (): boolean => {
+    const nextErrors: FormErrors = {};
+
+    if (!formData.fullName.trim()) {
+      nextErrors.fullName = "Please enter your full name.";
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!formData.email.trim()) {
+      nextErrors.email = "Please enter your work email address.";
+    } else if (!emailRegex.test(formData.email.trim())) {
+      nextErrors.email = "Please enter a valid email address (e.g., name@company.com).";
+    }
+
+    const phone = formData.phone.trim();
+    if (phone) {
+      const digitCount = phone.replace(/\D/g, "").length;
+      if (!PHONE_FORMAT.test(phone) || digitCount < 7 || digitCount > 15) {
+        nextErrors.phone = "Please enter a valid phone number (7–15 digits, e.g. +91 98765 43210).";
+      }
+    }
+
+    if (!formData.service) {
+      nextErrors.service = "Please select a service of interest.";
+    }
+
+    if (!formData.message.trim()) {
+      nextErrors.message = "Please write a brief summary of your requirements.";
+    } else if (formData.message.trim().length < 10) {
+      nextErrors.message = "Message should be at least 10 characters long.";
+    }
+
+    if (!formData.privacyAgreed) {
+      nextErrors.privacyAgreed = "Please acknowledge that you agree to be contacted regarding this enquiry.";
+    }
+
+    setErrors(nextErrors);
+    return Object.keys(nextErrors).length === 0;
+  };
+
+  const generateEnquiryText = () => {
+    return [
+      `Enquiry for Recenturesoft Infotech`,
+      `=================================`,
+      `Full Name: ${formData.fullName.trim()}`,
+      `Work Email: ${formData.email.trim()}`,
+      `Company: ${formData.company.trim() || "Not specified"}`,
+      `Phone: ${formData.phone.trim() || "Not specified"}`,
+      `Service of Interest: ${formData.service}`,
+      ``,
+      `Project Requirements:`,
+      formData.message.trim(),
+    ].join("\n");
+  };
+
+  const handleOpenEmailClient = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!validate()) return;
+
+    const summary = generateEnquiryText();
+    setPreparedSummary(summary);
+
+    const subject = encodeURIComponent(`[Website Enquiry] ${formData.service} - ${formData.fullName.trim()}`);
+    const body = encodeURIComponent(summary);
+    const mailtoUrl = `mailto:${siteConfig.contact.email}?subject=${subject}&body=${body}`;
+
+    // Trigger local email client
+    window.location.href = mailtoUrl;
+  };
+
+  const handleCopySummary = async () => {
+    if (!preparedSummary) return;
+    try {
+      await navigator.clipboard.writeText(preparedSummary);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 3000);
+    } catch {
+      // Fallback if clipboard API is restricted
+      setCopied(false);
+    }
+  };
+
+  return (
+    <div className={styles.formContainer} id="contact-form">
+      <div className={styles.formHeader}>
+        <h2 className={styles.formTitle}>Project Enquiry Form</h2>
+        <p className={styles.formSubtitle}>
+          Fill out the details below and our team will get back to you.
+        </p>
+        <div className={styles.formNotice}>
+          <strong>How it works:</strong> this website does not store your message. Sending the form
+          opens your email app with the details pre-filled to{" "}
+          <code>{siteConfig.contact.email}</code>, where you can review and send it.
+        </div>
+      </div>
+
+      <form className={styles.form} onSubmit={handleOpenEmailClient} noValidate>
+        <div className={styles.formGrid}>
+          {/* Full Name */}
+          <div className={styles.formGroup}>
+            <label htmlFor="fullName" className={styles.label}>
+              Full Name <span className={styles.requiredStar}>*</span>
+            </label>
+            <input
+              type="text"
+              id="fullName"
+              name="fullName"
+              autoComplete="name"
+              required
+              className={`${styles.input} ${errors.fullName ? styles.inputError : ""}`}
+              placeholder="Enter your full name"
+              value={formData.fullName}
+              onChange={(e) => {
+                setFormData((prev) => ({ ...prev, fullName: e.target.value }));
+                if (errors.fullName) setErrors((prev) => ({ ...prev, fullName: undefined }));
+              }}
+              aria-invalid={!!errors.fullName}
+              aria-describedby={errors.fullName ? "fullName-error" : undefined}
+            />
+            {errors.fullName && (
+              <span id="fullName-error" className={styles.errorMessage} role="alert">
+                {errors.fullName}
+              </span>
+            )}
+          </div>
+
+          {/* Work Email */}
+          <div className={styles.formGroup}>
+            <label htmlFor="email" className={styles.label}>
+              Work Email <span className={styles.requiredStar}>*</span>
+            </label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              autoComplete="email"
+              required
+              className={`${styles.input} ${errors.email ? styles.inputError : ""}`}
+              placeholder="name@company.com"
+              value={formData.email}
+              onChange={(e) => {
+                setFormData((prev) => ({ ...prev, email: e.target.value }));
+                if (errors.email) setErrors((prev) => ({ ...prev, email: undefined }));
+              }}
+              aria-invalid={!!errors.email}
+              aria-describedby={errors.email ? "email-error" : undefined}
+            />
+            {errors.email && (
+              <span id="email-error" className={styles.errorMessage} role="alert">
+                {errors.email}
+              </span>
+            )}
+          </div>
+
+          {/* Company Name (Optional) */}
+          <div className={styles.formGroup}>
+            <label htmlFor="company" className={styles.label}>
+              Company Name <span className={styles.optionalTag}>(Optional)</span>
+            </label>
+            <input
+              type="text"
+              id="company"
+              name="company"
+              autoComplete="organization"
+              className={styles.input}
+              placeholder="Your organization"
+              value={formData.company}
+              onChange={(e) =>
+                setFormData((prev) => ({ ...prev, company: e.target.value }))
+              }
+            />
+          </div>
+
+          {/* Phone Number (Optional) */}
+          <div className={styles.formGroup}>
+            <label htmlFor="phone" className={styles.label}>
+              Phone Number <span className={styles.optionalTag}>(Optional)</span>
+            </label>
+            <input
+              type="tel"
+              id="phone"
+              name="phone"
+              autoComplete="tel"
+              inputMode="tel"
+              maxLength={20}
+              pattern="\+?[0-9\s\-()]{7,20}"
+              className={`${styles.input} ${errors.phone ? styles.inputError : ""}`}
+              placeholder="e.g. +91 98765 43210"
+              value={formData.phone}
+              onChange={(e) => {
+                setFormData((prev) => ({ ...prev, phone: sanitizePhone(e.target.value) }));
+                if (errors.phone) setErrors((prev) => ({ ...prev, phone: undefined }));
+              }}
+              aria-invalid={!!errors.phone}
+              aria-describedby={errors.phone ? "phone-error" : undefined}
+            />
+            {errors.phone && (
+              <span id="phone-error" className={styles.errorMessage} role="alert">
+                {errors.phone}
+              </span>
+            )}
+          </div>
+
+          {/* Service of Interest */}
+          <div className={`${styles.formGroup} ${styles.fullWidth}`}>
+            <label htmlFor="service" className={styles.label}>
+              Service of Interest <span className={styles.requiredStar}>*</span>
+            </label>
+            <select
+              id="service"
+              name="service"
+              required
+              className={`${styles.select} ${errors.service ? styles.inputError : ""}`}
+              value={formData.service}
+              onChange={(e) => {
+                setFormData((prev) => ({ ...prev, service: e.target.value }));
+                if (errors.service) setErrors((prev) => ({ ...prev, service: undefined }));
+              }}
+              aria-invalid={!!errors.service}
+              aria-describedby={errors.service ? "service-error" : undefined}
+            >
+              <option value="Software Development">Software Development</option>
+              <option value="AI Automation">AI Automation</option>
+              <option value="Other">General Engineering Inquiry</option>
+            </select>
+            {errors.service && (
+              <span id="service-error" className={styles.errorMessage} role="alert">
+                {errors.service}
+              </span>
+            )}
+          </div>
+
+          {/* Message */}
+          <div className={`${styles.formGroup} ${styles.fullWidth}`}>
+            <label htmlFor="message" className={styles.label}>
+              Project Details <span className={styles.requiredStar}>*</span>
+            </label>
+            <textarea
+              id="message"
+              name="message"
+              required
+              className={`${styles.textarea} ${errors.message ? styles.inputError : ""}`}
+              placeholder="Describe your technical requirements, goals, and expected timeline..."
+              value={formData.message}
+              onChange={(e) => {
+                setFormData((prev) => ({ ...prev, message: e.target.value }));
+                if (errors.message) setErrors((prev) => ({ ...prev, message: undefined }));
+              }}
+              aria-invalid={!!errors.message}
+              aria-describedby={errors.message ? "message-error" : undefined}
+            />
+            {errors.message && (
+              <span id="message-error" className={styles.errorMessage} role="alert">
+                {errors.message}
+              </span>
+            )}
+          </div>
+        </div>
+
+        {/* Privacy Acknowledgement */}
+        <div className={styles.checkboxContainer}>
+          <input
+            type="checkbox"
+            id="privacyAgreed"
+            name="privacyAgreed"
+            required
+            className={styles.checkbox}
+            checked={formData.privacyAgreed}
+            onChange={(e) => {
+              setFormData((prev) => ({ ...prev, privacyAgreed: e.target.checked }));
+              if (errors.privacyAgreed) setErrors((prev) => ({ ...prev, privacyAgreed: undefined }));
+            }}
+            aria-invalid={!!errors.privacyAgreed}
+            aria-describedby={errors.privacyAgreed ? "privacy-error" : undefined}
+          />
+          <label htmlFor="privacyAgreed" className={styles.checkboxLabel}>
+            I confirm this enquiry is for business purposes and understand that sending the message will be completed via my email client.
+          </label>
+        </div>
+        {errors.privacyAgreed && (
+          <span id="privacy-error" className={styles.errorMessage} role="alert">
+            {errors.privacyAgreed}
+          </span>
+        )}
+
+        {/* Actions */}
+        <div className={styles.actionsRow}>
+          <button type="submit" className={`btn btn-primary ${styles.submitBtn}`}>
+            Send Project Enquiry
+          </button>
+          {preparedSummary && (
+            <button
+              type="button"
+              className={`btn btn-secondary ${styles.copyBtn}`}
+              onClick={handleCopySummary}
+            >
+              {copied ? "Copied to Clipboard!" : "Copy Enquiry Summary"}
+            </button>
+          )}
+        </div>
+      </form>
+
+      {/* Real Action Summary */}
+      {preparedSummary && (
+        <div className={styles.statusBox} role="status">
+          <div className={styles.statusTitle}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M20 6L9 17l-5-5" />
+            </svg>
+            <span>Enquiry Prepared for Email Delivery</span>
+          </div>
+          <p className={styles.statusDesc}>
+            Your email application has been invoked with the pre-formatted enquiry addressed to{" "}
+            <strong>{siteConfig.contact.email}</strong>. If your mail client did not open automatically,
+            use the &quot;Copy Enquiry Summary&quot; button above to paste the message directly into your webmail.
+          </p>
+        </div>
+      )}
+    </div>
+  );
+}

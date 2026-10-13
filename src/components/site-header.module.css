@@ -1,0 +1,673 @@
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background-color: var(--color-bg-header);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--color-border-header);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+  transition: background-color var(--transition-fast), border-color var(--transition-fast);
+}
+
+[data-theme="dark"] .header {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+.headerInner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 72px;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  text-decoration: none;
+}
+
+.brandMark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(135deg, #0066ee 0%, #004ebd 100%);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  box-shadow: 0 2px 8px rgba(0, 98, 227, 0.3);
+  color: var(--color-pure-white);
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.brandText {
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--color-text-heading);
+  transition: color var(--transition-fast);
+}
+
+.brandAccent {
+  color: var(--color-blue-primary);
+}
+
+.desktopNav {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-1);
+}
+
+.navLink {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 0.875rem;
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  border-radius: var(--radius-md);
+  transition: color var(--transition-fast), background-color var(--transition-fast);
+  position: relative;
+}
+
+.navLink:hover {
+  color: var(--color-blue-primary);
+  background-color: var(--color-blue-subtle);
+}
+
+.activeNavLink {
+  color: var(--color-blue-primary);
+  background-color: var(--color-blue-light);
+  font-weight: 600;
+}
+
+.dropdownContainer {
+  position: relative;
+}
+
+.dropdownTrigger {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  padding: 0.5rem 0.875rem;
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  border-radius: var(--radius-md);
+  transition: color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.activeTrigger {
+  color: var(--color-blue-primary);
+  background-color: var(--color-blue-light);
+  font-weight: 600;
+}
+
+.dropdownTrigger:hover,
+.dropdownTrigger[aria-expanded="true"] {
+  color: var(--color-blue-primary);
+  background-color: var(--color-blue-subtle);
+}
+
+.caret {
+  width: 14px;
+  height: 14px;
+  stroke: currentColor;
+  stroke-width: 2;
+  fill: none;
+  transition: transform var(--transition-fast);
+}
+
+.caretRotated {
+  transform: rotate(180deg);
+}
+
+.dropdownMenu {
+  position: absolute;
+  top: calc(100% + var(--spacing-2));
+  left: 0;
+  width: 340px;
+  background-color: var(--color-bg-dropdown);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--color-border-card);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-dropdown);
+  padding: var(--spacing-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+  animation: fadeIn 180ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dropdownHeader {
+  padding: var(--spacing-1) var(--spacing-3) var(--spacing-2) var(--spacing-3);
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.dropdownHeaderTitle {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-blue-primary);
+}
+
+.dropdownItem {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-3);
+  padding: var(--spacing-3);
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+  transition: background-color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.dropdownItem:hover {
+  background-color: var(--color-blue-subtle);
+  border-color: var(--color-blue-border);
+}
+
+.dropdownItemIconBox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-md);
+  background: var(--color-blue-light);
+  border: 1px solid var(--color-blue-border);
+  color: var(--color-blue-primary);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.dropdownItemIcon {
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
+  stroke-width: 2;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.dropdownItemContent {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+
+.dropdownItemTitle {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-text-heading);
+}
+
+.dropdownItemDesc {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  line-height: 1.4;
+}
+
+.dropdownItemArrow {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  align-self: center;
+  transition: transform var(--transition-fast), color var(--transition-fast);
+}
+
+.dropdownItem:hover .dropdownItemArrow {
+  color: var(--color-blue-primary);
+  transform: translateX(3px);
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+}
+
+.ctaBtn {
+  display: inline-flex;
+}
+
+@media (max-width: 900px) {
+  .desktopNav {
+    display: none;
+  }
+
+  .ctaBtn {
+    display: none;
+  }
+}
+
+/* ==========================================================================
+   Enterprise header treatment
+   ========================================================================== */
+.header {
+  background-color: var(--color-bg-page);
+  box-shadow: none;
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.headerInner {
+  height: 80px;
+}
+
+.brandMark {
+  border-radius: var(--radius-sm);
+  background: var(--color-blue-primary);
+  box-shadow: none;
+  width: 34px;
+  height: 34px;
+}
+
+.navLink,
+.dropdownTrigger {
+  padding: 0.5rem 1rem;
+  border-radius: 0;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--color-text-heading);
+  background: none;
+}
+
+.navLink::after,
+.dropdownTrigger::after {
+  content: "";
+  position: absolute;
+  left: 1rem;
+  right: 1rem;
+  bottom: 0;
+  height: 2px;
+  background: var(--color-blue-primary);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--transition-base);
+}
+
+.dropdownTrigger {
+  position: relative;
+}
+
+.navLink:hover,
+.dropdownTrigger:hover,
+.dropdownTrigger[aria-expanded="true"],
+.activeNavLink,
+.activeTrigger {
+  background: none;
+  color: var(--color-blue-primary);
+}
+
+.navLink:hover::after,
+.dropdownTrigger:hover::after,
+.activeNavLink::after,
+.activeTrigger::after {
+  transform: scaleX(1);
+}
+
+.dropdownMenu {
+  border-radius: var(--radius-md);
+  border-top: 3px solid var(--color-blue-primary);
+}
+
+/* ==========================================================================
+   Services dropdown - premium panel
+   ========================================================================== */
+
+/* Transparent hover bridge: the menu starts right below the trigger so the pointer never leaves it */
+.dropdownMenu {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  z-index: 60;
+  display: block;
+  width: 380px;
+  margin-left: -190px;
+  padding: 14px 0 0;
+  background: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  animation: ddIn 200ms cubic-bezier(0.16, 1, 0.3, 1);
+  transform-origin: top center;
+}
+
+@keyframes ddIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.dropdownPanel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--color-bg-dropdown);
+  border: 1px solid var(--color-border-card);
+  border-radius: 16px;
+  box-shadow:
+    0 24px 48px -12px rgba(11, 31, 68, 0.28),
+    0 8px 16px -8px rgba(11, 31, 68, 0.12);
+}
+
+/* Gradient accent along the top edge */
+.dropdownPanel::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #1d4ed8, #38bdf8);
+}
+
+.dropdownHeader {
+  padding: 1.1rem 1.25rem 0.5rem;
+  border: 0;
+}
+
+.dropdownHeaderTitle {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.dropdownItems {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 0 0.625rem 0.625rem;
+}
+
+.dropdownItem {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  padding: 0.75rem;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.dropdownItem:hover,
+.dropdownItem:focus-visible {
+  background-color: var(--color-blue-subtle);
+  border-color: var(--color-blue-border);
+  transform: translateX(2px);
+}
+
+.dropdownItemCurrent {
+  background-color: var(--color-blue-subtle);
+}
+
+.dropdownItemIconBox {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  margin: 0;
+  color: var(--color-blue-primary);
+  background: var(--color-blue-light);
+  border: 1px solid var(--color-blue-border);
+  border-radius: 11px;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.dropdownItem:hover .dropdownItemIconBox,
+.dropdownItem:focus-visible .dropdownItemIconBox {
+  color: #ffffff;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  border-color: transparent;
+  box-shadow: 0 8px 16px -6px rgba(37, 99, 235, 0.6);
+}
+
+.dropdownItemIcon {
+  width: 20px;
+  height: 20px;
+  stroke: currentColor;
+  stroke-width: 2;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.dropdownItemContent {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.dropdownItemTitle {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: var(--color-text-heading);
+}
+
+.dropdownItemDesc {
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: var(--color-text-muted);
+}
+
+.dropdownItemArrow {
+  align-self: center;
+  color: var(--color-text-muted);
+  opacity: 0;
+  transform: translateX(-6px);
+  transition: opacity 0.2s ease, transform 0.2s ease, color 0.2s ease;
+}
+
+.dropdownItem:hover .dropdownItemArrow,
+.dropdownItem:focus-visible .dropdownItemArrow {
+  color: var(--color-blue-primary);
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.dropdownFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.875rem 1.25rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-blue-primary);
+  background: var(--color-blue-subtle);
+  border-top: 1px solid var(--color-border-subtle);
+  transition: background-color 0.2s ease;
+}
+
+.dropdownFooter:hover,
+.dropdownFooter:focus-visible {
+  background: var(--color-blue-light);
+}
+
+.dropdownFooterArrow {
+  transition: transform 0.2s ease;
+}
+
+.dropdownFooter:hover .dropdownFooterArrow {
+  transform: translateX(4px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dropdownMenu {
+    animation: none;
+  }
+
+  .dropdownItem,
+  .dropdownItemArrow,
+  .dropdownFooterArrow {
+    transition: none;
+  }
+
+  .dropdownItem:hover {
+    transform: none;
+  }
+}
+
+/* ==========================================================================
+   Services dropdown - two-column layout
+   ========================================================================== */
+.dropdownMenu {
+  width: 640px;
+  margin-left: -320px;
+}
+
+.dropdownPanel {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+}
+
+.dropdownMain {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.dropdownMain .dropdownFooter {
+  margin-top: auto;
+}
+
+.dropdownItem {
+  padding: 0.875rem 0.75rem;
+}
+
+.dropdownItemIconBox {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+}
+
+.dropdownItemTitle {
+  font-size: 1rem;
+}
+
+.dropdownAside {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 1.75rem 1.5rem;
+  overflow: hidden;
+  color: #ffffff;
+  background:
+    radial-gradient(90% 60% at 100% 0%, rgba(56, 189, 248, 0.35) 0%, rgba(56, 189, 248, 0) 70%),
+    linear-gradient(160deg, #1d4ed8 0%, #0b1f44 100%);
+}
+
+.asideKicker {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #bfdbfe;
+}
+
+.asideTitle {
+  margin: 0.25rem 0 0;
+  font-size: 1.25rem;
+  font-weight: 800;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+}
+
+.asideText {
+  margin: 0 0 auto;
+  font-size: 0.875rem;
+  line-height: 1.55;
+  color: rgba(226, 232, 240, 0.92);
+}
+
+.asideBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1.25rem;
+  padding: 0.65rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #0b1f44;
+  background: #ffffff;
+  border-radius: 8px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.asideBtn:hover,
+.asideBtn:focus-visible {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px -8px rgba(0, 0, 0, 0.5);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .asideBtn {
+    transition: none;
+  }
+
+  .asideBtn:hover {
+    transform: none;
+  }
+}
+
+/* ==========================================================================
+   Mobile header — keep logo, theme toggle and menu button on one line
+   ========================================================================== */
+@media (max-width: 900px) {
+  /* Higher specificity than the global .btn rule so the CTA really hides on small screens */
+  .actions .ctaBtn {
+    display: none;
+  }
+
+  .headerInner {
+    height: 64px;
+    gap: 0.75rem;
+  }
+
+  .brand {
+    min-width: 0;
+  }
+
+  .brandText {
+    font-size: 1.125rem;
+  }
+
+  .actions {
+    flex-shrink: 0;
+    gap: 0.5rem;
+  }
+}

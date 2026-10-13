@@ -1,0 +1,146 @@
+RECENTURESOFT WEBSITE — REQUIREMENTS
+
+PROJECT NAME: Recenturesoft Corporate Website
+
+PURPOSE:
+Create a new, minimal, premium corporate website for Recenturesoft. Use HCLTech and Accenture as design inspiration only. Do not copy their branding, logos, content, or exact layouts.
+
+OFFICIAL COMPANY WEBSITE:
+https://www.recenturesoft.com/
+
+TECHNOLOGY:
+- Next.js App Router
+- React
+- TypeScript
+- CSS / CSS Modules
+- Frontend only
+- No backend
+- No database
+- No authentication
+- No API integration
+- No unnecessary dependencies
+
+REQUIRED PAGES:
+1. Home — /
+2. About Us — /about
+3. Software Development — /services/software-development
+4. AI Automation — /services/ai-automation
+5. Contact Us — /contact
+
+NAVIGATION:
+- Home
+- About Us
+- Services
+  - Software Development
+  - AI Automation
+- Contact Us
+
+DESIGN REQUIREMENTS:
+- Minimal, premium, modern corporate design.
+- Blue color palette only, ranging from dark navy blue to light blue.
+- White and light neutral surfaces are allowed for readability.
+- Avoid heavy black typography; use readable, appropriately contrasted text.
+- Normal, professional font sizes.
+- Fully responsive on mobile, tablet, laptop and desktop.
+- Clean layouts and consistent spacing.
+- Target approximately 8px vertical margins and spacing where practical.
+- Do not sacrifice readability to enforce 8px spacing everywhere.
+- Home page main content must start with one clear H1 heading.
+- Each page must have one descriptive H1 heading.
+- Use subtle animations only.
+- No unnecessary 3D effects, particle effects or heavy visual libraries.
+
+HOME PAGE:
+- Premium hero section
+- Clear company introduction
+- Services overview
+- Software Development section
+- AI Automation section
+- Company capabilities
+- Contact call-to-action
+- Professional footer
+
+ABOUT US:
+- Company introduction
+- Mission and vision, if verified
+- Company capabilities
+- Business approach
+- Contact call-to-action
+
+SOFTWARE DEVELOPMENT:
+- Custom software development
+- Web application development
+- Business software solutions
+- Other services verified from the official website
+
+AI AUTOMATION:
+- AI-powered workflows
+- Business process automation
+- Repetitive task automation
+- Other capabilities verified from official company information
+
+CONTACT US:
+- Verified company email
+- Verified phone number
+- Verified address, if available
+- Email and phone links
+- WhatsApp link only if the official business number is verified
+- No fake contact form submission
+
+CONTENT:
+- Use https://www.recenturesoft.com/ as the primary source for company information.
+- Keep the content concise, professional and easy to understand.
+- Do not invent clients, testimonials, awards, certifications, statistics or company achievements.
+- Verify all company information before publishing.
+
+IMAGES:
+- Use optimized and properly licensed images.
+- Prefer local assets in the public/images folder.
+- Record every image source in ASSET_SOURCES.md.
+- Use descriptive alt text.
+- Do not use HCLTech or Accenture logos.
+- Do not use unverified image links.
+
+PERFORMANCE:
+- Optimize for fast page rendering and navigation.
+- Use Next.js Server Components by default.
+- Use Client Components only when necessary.
+- Avoid unnecessary JavaScript and heavy dependencies.
+- Optimize images and prevent layout shifts.
+- Use lazy loading for below-the-fold images when appropriate.
+- Avoid autoplay videos and heavy sliders.
+- Do not promise a guaranteed 1ms load time.
+- Measure real performance using Lighthouse.
+
+SEO:
+- Add unique page titles and meta descriptions.
+- Configure sitemap and robots rules.
+- Use semantic HTML.
+- Use descriptive URLs.
+- Add Open Graph metadata.
+- Add structured data only for verified company information.
+
+ACCESSIBILITY:
+- Keyboard-accessible navigation.
+- Visible focus indicators.
+- Readable font sizes and contrast.
+- Appropriate image alt text.
+- Responsive mobile navigation.
+- Respect reduced-motion preferences.
+
+QUALITY REQUIREMENTS:
+- All five routes must work.
+- No broken links or missing images.
+- No horizontal overflow on mobile.
+- No browser console errors.
+- Lint must pass.
+- Production build must pass.
+- Verify mobile and desktop performance before deployment.
+
+DEPLOYMENT:
+- The website should be compatible with Vercel.
+- No backend environment variables should be required.
+- Do not add unused packages or unnecessary configuration files.
+
+IMPORTANT:
+Inspect the existing project before changing files. Implement only the approved requirements. Do not create additional pages without permission.

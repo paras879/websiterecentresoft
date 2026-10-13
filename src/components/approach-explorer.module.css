@@ -1,0 +1,408 @@
+/* Interactive approach explorer. Uses the --sv-* tokens from the services page wrapper. */
+
+.explorer {
+  max-width: 62rem;
+  margin: 0 auto;
+}
+
+/* Stepper */
+.stepper {
+  position: relative;
+  margin-bottom: 2rem;
+}
+
+.track {
+  position: absolute;
+  top: 24px;
+  left: 10%;
+  right: 10%;
+  height: 4px;
+  background: var(--sv-line, #e2e8f0);
+  border-radius: 4px;
+}
+
+.trackFill {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, #1d4ed8, #38bdf8);
+  border-radius: 4px;
+  transition: width 0.5s ease;
+}
+
+.tabs {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0 0.25rem;
+  font-family: inherit;
+  cursor: pointer;
+  background: none;
+  border: 0;
+}
+
+.dot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  font-size: 0.9375rem;
+  font-weight: 800;
+  color: var(--sv-muted, #64748b);
+  background: var(--sv-card, #ffffff);
+  border: 2px solid var(--sv-line, #e2e8f0);
+  border-radius: 50%;
+  transition: transform 0.3s ease, background 0.3s ease, color 0.3s ease,
+    border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.dotIcon {
+  width: 22px;
+  height: 22px;
+  stroke: currentColor;
+  stroke-width: 2.6;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.tabLabel {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: var(--sv-text, #475569);
+  transition: color 0.3s ease;
+}
+
+.tab:hover .dot {
+  border-color: var(--sv-blue, #1d4ed8);
+  transform: translateY(-3px);
+}
+
+.done .dot {
+  color: #ffffff;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  border-color: transparent;
+}
+
+.done .tabLabel {
+  color: var(--sv-heading, #0b1f44);
+}
+
+.active .dot {
+  color: #ffffff;
+  background: linear-gradient(135deg, #2563eb 0%, #0b1f44 100%);
+  border-color: transparent;
+  transform: scale(1.12);
+  box-shadow: 0 0 0 6px var(--sv-tint, #eff6ff), 0 0 0 8px var(--sv-blue, #1d4ed8),
+    0 16px 26px -10px rgba(29, 78, 216, 0.7);
+}
+
+.active .tabLabel {
+  color: var(--sv-blue, #1d4ed8);
+}
+
+.tab:focus-visible {
+  outline: 2px solid var(--sv-blue, #1d4ed8);
+  outline-offset: 6px;
+  border-radius: 12px;
+}
+
+/* Panel */
+.panel {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.4fr);
+  overflow: hidden;
+  color: #ffffff;
+  background: linear-gradient(150deg, #0b1f44 0%, #123a9c 62%, #1d4ed8 130%);
+  border-radius: 26px;
+  box-shadow: 0 34px 60px -30px rgba(11, 31, 68, 0.65);
+}
+
+.panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.15) 1px, transparent 1.4px);
+  background-size: 24px 24px;
+  -webkit-mask-image: linear-gradient(120deg, #000 0%, transparent 60%);
+  mask-image: linear-gradient(120deg, #000 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.panel::after {
+  content: "";
+  position: absolute;
+  right: -100px;
+  bottom: -110px;
+  width: 340px;
+  height: 340px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.32) 0%, rgba(56, 189, 248, 0) 70%);
+  pointer-events: none;
+}
+
+.panelVisual {
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 260px;
+  border-right: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.bigNum {
+  font-size: clamp(6rem, 11vw, 9rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.06em;
+  color: transparent;
+  -webkit-text-stroke: 2px rgba(255, 255, 255, 0.28);
+  animation: explorerIn 0.5s ease both;
+}
+
+.panelIcon {
+  position: absolute;
+  right: 1.75rem;
+  bottom: 1.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 18px;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  animation: explorerIn 0.5s 0.05s ease both;
+}
+
+.panelIconSvg {
+  width: 28px;
+  height: 28px;
+  stroke: #ffffff;
+  stroke-width: 1.8;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.panelBody {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 2.75rem 3rem;
+  animation: explorerIn 0.45s ease both;
+}
+
+.panelLabel {
+  margin-bottom: 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #7cc4fb;
+}
+
+.panelTitle {
+  margin: 0 0 0.9rem;
+  font-size: clamp(1.875rem, 3.4vw, 2.5rem);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  color: #ffffff;
+}
+
+.panelText {
+  max-width: 34rem;
+  margin: 0 0 2rem;
+  font-size: 1.125rem;
+  line-height: 1.7;
+  color: rgba(226, 232, 240, 0.94);
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: auto;
+}
+
+.ctrl {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  min-width: 48px;
+  height: 48px;
+  padding: 0 1rem;
+  font-family: inherit;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: #ffffff;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 12px;
+  transition: background 0.25s ease, transform 0.25s ease, opacity 0.25s ease;
+}
+
+.ctrl:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+.ctrlNext {
+  padding: 0 1.4rem;
+  color: #0b1f44;
+  background: #ffffff;
+  border-color: #ffffff;
+}
+
+.ctrlNext:hover:not(:disabled) {
+  background: #e0ecff;
+}
+
+.ctrl:disabled {
+  cursor: default;
+  opacity: 0.45;
+}
+
+.ctrl:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 3px;
+}
+
+@keyframes explorerIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 800px) {
+  .panel {
+    grid-template-columns: 1fr;
+  }
+
+  .panelVisual {
+    min-height: 150px;
+    border-right: 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  }
+
+  .bigNum {
+    font-size: 6rem;
+  }
+
+  .panelIcon {
+    right: 1.25rem;
+    bottom: 1.1rem;
+    width: 52px;
+    height: 52px;
+  }
+
+  .panelBody {
+    padding: 2rem 1.75rem;
+  }
+}
+
+@media (max-width: 560px) {
+  .track {
+    top: 20px;
+  }
+
+  .dot {
+    width: 42px;
+    height: 42px;
+    font-size: 0.8125rem;
+  }
+
+  .tabLabel {
+    font-size: 0.6875rem;
+  }
+
+  .dotIcon {
+    width: 18px;
+    height: 18px;
+  }
+
+  .controls {
+    width: 100%;
+  }
+
+  .ctrlNext {
+    flex: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .trackFill,
+  .dot,
+  .ctrl {
+    transition: none;
+  }
+
+  .bigNum,
+  .panelIcon,
+  .panelBody {
+    animation: none;
+  }
+
+  .tab:hover .dot,
+  .ctrl:hover:not(:disabled) {
+    transform: none;
+  }
+}
+
+/* Step photo */
+.panelImg {
+  object-fit: cover;
+  animation: explorerIn 0.6s ease both;
+}
+
+.panelShade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(11, 31, 68, 0.35) 0%, rgba(11, 31, 68, 0.15) 55%, rgba(18, 58, 156, 0.85) 100%);
+}
+
+.bigNum {
+  position: relative;
+  z-index: 1;
+  -webkit-text-stroke-color: rgba(255, 255, 255, 0.7);
+}
+
+.panelIcon {
+  z-index: 1;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+@media (max-width: 800px) {
+  .panelShade {
+    background: linear-gradient(180deg, rgba(11, 31, 68, 0.3) 0%, rgba(18, 58, 156, 0.85) 100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .panelImg {
+    animation: none;
+  }
+}

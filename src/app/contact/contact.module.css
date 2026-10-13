@@ -1,0 +1,468 @@
+/* Contact page — Stitch "Contact Us" design. Wrapped in .page so legacy theme-hcl.css rules do not apply.
+   The --ct-* tokens are also used by contact-form.module.css (CSS variables inherit across modules). */
+
+.page {
+  --ct-bg: #ffffff;
+  --ct-bg-alt: #f8fafc;
+  --ct-card: #ffffff;
+  --ct-tint: #eff6ff;
+  --ct-tint-border: #dbeafe;
+  --ct-line: #e2e8f0;
+  --ct-heading: #0b1f44;
+  --ct-text: #475569;
+  --ct-muted: #64748b;
+  --ct-blue: #1d4ed8;
+  --ct-blue-hover: #1e40af;
+  --ct-input-bg: #ffffff;
+  --ct-input-border: #cbd5e1;
+  --ct-shadow: 0 1px 2px rgba(11, 31, 68, 0.06);
+  --ct-shadow-hover: 0 18px 36px -16px rgba(11, 31, 68, 0.28);
+  --ct-overlay: rgba(255, 255, 255, 0.72);
+  --ct-navy: #0b1f44;
+
+  background: var(--ct-bg);
+  color: var(--ct-text);
+}
+
+:global([data-theme="dark"]) .page {
+  --ct-bg: #0a1428;
+  --ct-bg-alt: #0d1a33;
+  --ct-card: #111c36;
+  --ct-tint: #0f1d3a;
+  --ct-tint-border: rgba(59, 130, 246, 0.25);
+  --ct-line: rgba(255, 255, 255, 0.1);
+  --ct-heading: #f1f5f9;
+  --ct-text: #a9b7cc;
+  --ct-muted: #8294ad;
+  --ct-blue: #3b82f6;
+  --ct-blue-hover: #60a5fa;
+  --ct-input-bg: #0a1428;
+  --ct-input-border: rgba(255, 255, 255, 0.18);
+  --ct-shadow: none;
+  --ct-shadow-hover: 0 18px 36px -16px rgba(0, 0, 0, 0.7);
+  --ct-overlay: rgba(10, 20, 40, 0.82);
+  --ct-navy: #060f22;
+}
+
+.page :global(.container) {
+  max-width: 1280px;
+}
+
+.page h1,
+.page h2,
+.page h3 {
+  text-wrap: wrap;
+}
+
+.icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Hero */
+.hero {
+  position: relative;
+  overflow: hidden;
+  padding: 5rem 0 5.5rem;
+  background: var(--ct-bg-alt);
+  border-bottom: 1px solid var(--ct-line);
+}
+
+.heroImage {
+  object-fit: cover;
+  object-position: center 30%;
+}
+
+.heroOverlay {
+  position: absolute;
+  inset: 0;
+  background: var(--ct-overlay);
+  backdrop-filter: blur(2px);
+}
+
+.heroInner {
+  position: relative;
+  z-index: 1;
+  max-width: 64rem;
+  text-align: center;
+}
+
+.heroTitle {
+  margin: 0 0 1.25rem;
+  font-size: clamp(2.125rem, 5vw, 3.5rem);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+  color: var(--ct-heading);
+}
+
+.heroText {
+  max-width: 48rem;
+  margin: 0 auto;
+  font-size: 1.1875rem;
+  line-height: 1.65;
+  color: var(--ct-heading);
+  opacity: 0.88;
+}
+
+/* Main grid */
+.section {
+  padding: 4rem 0;
+  background: var(--ct-bg);
+}
+
+.mainGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  gap: 2.5rem;
+  align-items: start;
+}
+
+.side {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.channels {
+  padding: 2rem;
+  background: var(--ct-tint);
+  border: 1px solid var(--ct-tint-border);
+  border-radius: 14px;
+}
+
+.sideTitle {
+  margin: 0 0 1.5rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  color: var(--ct-heading);
+}
+
+.channelList {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.channel {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.channelLink {
+  transition: transform 0.2s ease;
+}
+
+.channelLink:hover {
+  transform: translateX(4px);
+}
+
+.channelIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  color: var(--ct-blue);
+  background: var(--ct-card);
+  border: 1px solid var(--ct-tint-border);
+  border-radius: 11px;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.channelLink:hover .channelIcon {
+  color: #ffffff;
+  background: var(--ct-blue);
+  border-color: var(--ct-blue);
+}
+
+.channelText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.channelLabel {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ct-muted);
+}
+
+.channelValue {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--ct-heading);
+  overflow-wrap: anywhere;
+}
+
+/* Office */
+.office {
+  overflow: hidden;
+  background: var(--ct-card);
+  border: 1px solid var(--ct-line);
+  border-radius: 14px;
+  box-shadow: var(--ct-shadow);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.office:hover {
+  transform: translateY(-4px);
+  border-color: var(--ct-blue);
+  box-shadow: var(--ct-shadow-hover);
+}
+
+.officePhoto {
+  position: relative;
+  aspect-ratio: 16 / 9;
+}
+
+.officeImage {
+  object-fit: cover;
+}
+
+.officeBody {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.1rem 1.25rem;
+}
+
+.officeTitle {
+  margin: 0;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: var(--ct-heading);
+}
+
+.officeSub {
+  margin: 2px 0 0;
+  font-size: 0.8125rem;
+  color: var(--ct-muted);
+}
+
+.officeLink,
+.textLink {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--ct-blue);
+  white-space: nowrap;
+}
+
+.textLink {
+  white-space: normal;
+}
+
+.officeLink:hover,
+.textLink:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+/* Closing CTA */
+.closing {
+  padding: 4.5rem 0;
+  color: #ffffff;
+  background:
+    radial-gradient(60% 120% at 50% 0%, rgba(59, 130, 246, 0.22) 0%, rgba(59, 130, 246, 0) 70%),
+    var(--ct-navy);
+}
+
+.closingInner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 48rem;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.closingTitle {
+  margin: 0 0 1.25rem;
+  font-size: clamp(1.875rem, 4vw, 2.5rem);
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.025em;
+  color: #ffffff;
+}
+
+.closingText {
+  max-width: 38rem;
+  margin: 0 0 2.25rem;
+  font-size: 1.0625rem;
+  line-height: 1.7;
+  color: rgba(226, 232, 240, 0.9);
+}
+
+.closingActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.btnPrimary,
+.btnGhost,
+.btnOutline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 48px;
+  padding: 0.85rem 1.75rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.2;
+  text-align: center;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.btnPrimary {
+  color: #ffffff;
+  background: #2563eb;
+  box-shadow: 0 8px 20px -6px rgba(37, 99, 235, 0.55);
+}
+
+.btnPrimary:hover {
+  background: #3b82f6;
+}
+
+.btnGhost {
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.btnGhost:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: #ffffff;
+}
+
+.btnOutline {
+  color: var(--ct-heading);
+  border-color: var(--ct-line);
+  white-space: nowrap;
+}
+
+.btnOutline:hover {
+  color: var(--ct-blue);
+  border-color: var(--ct-blue);
+}
+
+.btnPrimary:active,
+.btnGhost:active,
+.btnOutline:active {
+  transform: scale(0.97);
+}
+
+.btnPrimary:focus-visible,
+.btnGhost:focus-visible,
+.btnOutline:focus-visible,
+.textLink:focus-visible,
+.officeLink:focus-visible,
+.channelLink:focus-visible {
+  outline: 2px solid var(--ct-blue);
+  outline-offset: 3px;
+}
+
+.closing .btnPrimary:focus-visible,
+.closing .btnGhost:focus-visible {
+  outline-color: #ffffff;
+}
+
+/* Careers */
+.careers {
+  padding: 3rem 0;
+  background: var(--ct-bg-alt);
+  border-top: 1px solid var(--ct-line);
+}
+
+.careersInner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
+.careersTitle {
+  margin: 0 0 0.5rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--ct-heading);
+}
+
+.careersText {
+  max-width: 40rem;
+  margin: 0;
+  font-size: 0.9375rem;
+  line-height: 1.65;
+  color: var(--ct-text);
+}
+
+.backRow {
+  padding: 1.25rem 0 1.75rem;
+  background: var(--ct-bg-alt);
+  border-top: 1px solid var(--ct-line);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .channelLink,
+  .office,
+  .btnPrimary,
+  .btnGhost,
+  .btnOutline {
+    transition: none;
+  }
+
+  .office:hover,
+  .channelLink:hover {
+    transform: none;
+  }
+}
+
+@media (max-width: 1024px) {
+  .mainGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .hero {
+    padding: 3.5rem 0 4rem;
+  }
+}
+
+@media (max-width: 720px) {
+  .section {
+    padding: 3rem 0;
+  }
+
+  .channels {
+    padding: 1.5rem;
+  }
+
+  .closingActions {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+  }
+}

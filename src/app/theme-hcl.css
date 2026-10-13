@@ -1,0 +1,410 @@
+/* ==========================================================================
+   Recenturesoft — Enterprise visual layer (inspired by large-IT-services sites)
+   Full-bleed dark heroes, oversized left-aligned type, flat square cards,
+   dark stats band and a solid blue closing CTA. Loaded after globals.css.
+   ========================================================================== */
+
+:root {
+  --hero-navy: #050b1f;
+  --hero-navy-2: #081a4d;
+  --hero-blue: #0b4fd6;
+}
+
+/* --------------------------------------------------------------------------
+   Hero — first section of every page
+   -------------------------------------------------------------------------- */
+main > section:first-child {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  min-height: 520px;
+  padding-top: 88px;
+  padding-bottom: 96px;
+  color: #ffffff;
+  border: 0 !important;
+  background:
+    radial-gradient(900px 500px at 85% 10%, rgba(15, 95, 220, 0.55), transparent 65%),
+    radial-gradient(700px 400px at 0% 100%, rgba(0, 194, 255, 0.18), transparent 65%),
+    linear-gradient(105deg, var(--hero-navy) 0%, var(--hero-navy-2) 60%, var(--hero-blue) 140%) !important;
+}
+
+/* subtle engineering grid */
+main > section:first-child::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
+  background-size: 64px 64px;
+  -webkit-mask-image: linear-gradient(90deg, #000 0%, transparent 85%);
+  mask-image: linear-gradient(90deg, #000 0%, transparent 85%);
+}
+
+/* signature accent line along the bottom */
+main > section:first-child::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--color-blue-primary), var(--color-cyan-accent) 50%, transparent);
+}
+
+main > section:first-child > .container {
+  position: static;
+  display: block;
+  max-width: var(--container-max-width);
+}
+
+main > section:first-child [class*="heroInner"] {
+  display: block;
+  max-width: var(--container-max-width);
+}
+
+main > section:first-child [class*="heroContent"] {
+  max-width: 700px;
+  gap: var(--spacing-5);
+}
+
+main > section:first-child h1 {
+  margin-bottom: var(--spacing-5);
+  max-width: 800px;
+  font-size: clamp(2rem, 3.8vw, 3rem);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+  color: #ffffff;
+  background: none;
+  -webkit-text-fill-color: #ffffff;
+}
+
+main > section:first-child p {
+  max-width: 640px;
+  font-size: 1.0625rem;
+  line-height: 1.65;
+  color: #c3d0ea;
+}
+
+main > section:first-child [class*="heroPillRow"] {
+  border-top: 1px solid rgba(255, 255, 255, 0.18);
+  color: #aebfe0;
+}
+
+main > section:first-child [class*="heroPillItem"],
+main > section:first-child [class*="heroPillDivider"] {
+  color: #aebfe0;
+}
+
+main > section:first-child [class*="heroPillItem"] strong {
+  color: #ffffff;
+}
+
+main > section:first-child [class*="heroPillCheck"] {
+  color: var(--color-cyan-accent);
+}
+
+main > section:first-child .btn-primary {
+  background: #ffffff;
+  border-color: #ffffff;
+  color: #0a2a8a;
+  box-shadow: none;
+}
+
+main > section:first-child .btn-primary:hover {
+  background: #e6efff;
+  border-color: #e6efff;
+}
+
+main > section:first-child .btn-inverse-outline {
+  background: transparent;
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.55);
+  backdrop-filter: none;
+}
+
+main > section:first-child .btn-inverse-outline:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: #ffffff;
+}
+
+/* Hero imagery becomes a full-bleed background panel */
+main > section:first-child [class*="heroImageContainer"] {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 55%;
+  z-index: -1;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 45%);
+  mask-image: linear-gradient(90deg, transparent 0%, #000 45%);
+}
+
+main > section:first-child [class*="heroImage"]:not([class*="Container"]) {
+  width: 100%;
+  height: 100%;
+  border-radius: 0;
+  object-fit: cover;
+  opacity: 0.75;
+  transform: none;
+}
+
+main > section:first-child [class*="heroImageContainer"]:hover [class*="heroImage"] {
+  transform: none;
+}
+
+/* --------------------------------------------------------------------------
+   Sections & typography
+   -------------------------------------------------------------------------- */
+main > section:not(:first-child) {
+  padding-top: 88px;
+  padding-bottom: 88px;
+}
+
+main [class*="sectionAlt"] {
+  background-color: var(--color-bg-surface);
+}
+
+main [class*="sectionHeader"] {
+  align-items: flex-start;
+  text-align: left;
+  max-width: 820px;
+  margin-left: 0;
+  margin-right: 0;
+  margin-bottom: 56px;
+  gap: var(--spacing-3);
+}
+
+main [class*="sectionEyebrow"] {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  align-self: flex-start;
+  padding: 0;
+  background: none;
+  border: 0;
+  border-radius: 0;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-blue-primary);
+}
+
+main [class*="sectionEyebrow"]::before {
+  content: "";
+  width: 32px;
+  height: 2px;
+  background: var(--color-blue-primary);
+}
+
+main > section:not(:first-child) h2 {
+  font-size: clamp(1.625rem, 2.8vw, 2.25rem);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.03em;
+}
+
+main [class*="sectionDesc"] {
+  font-size: 1rem;
+  max-width: 640px;
+}
+
+/* --------------------------------------------------------------------------
+   Cards — flat, square, bordered; lift + blue edge on hover
+   -------------------------------------------------------------------------- */
+main [class*="Card"] {
+  border-radius: var(--radius-md);
+  box-shadow: none;
+  transition: transform var(--transition-base), box-shadow var(--transition-base), border-color var(--transition-base);
+}
+
+main [class*="Card"]:hover {
+  transform: translateY(-4px);
+  border-color: var(--color-blue-primary);
+  box-shadow: var(--shadow-card-hover);
+}
+
+/* containers that merely hold content should not lift */
+main [class*="introCard"]:hover,
+main [class*="careersCard"]:hover,
+main [class*="principlesCard"]:hover {
+  transform: none;
+  border-color: var(--color-border-card);
+  box-shadow: none;
+}
+
+main [class*="IconBox"] {
+  border-radius: var(--radius-md);
+  background: var(--color-blue-primary);
+  border: 0;
+  color: #ffffff;
+  box-shadow: none;
+}
+
+main [class*="Tag"],
+main [class*="stepBadge"],
+main [class*="pillarIndex"] {
+  border-radius: var(--radius-sm);
+}
+
+main [class*="imageWrapper"],
+main [class*="imageWrapper"] img {
+  border-radius: var(--radius-md);
+}
+
+/* --------------------------------------------------------------------------
+   Stats band (dark strip, large numerals)
+   -------------------------------------------------------------------------- */
+main > section.stat-band {
+  padding-top: 0;
+  padding-bottom: 0;
+  background: var(--hero-navy);
+  color: #ffffff;
+}
+
+.stat-band__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.stat-band__item {
+  padding: 36px 28px;
+  border-left: 1px solid rgba(255, 255, 255, 0.12);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.stat-band__item:first-child {
+  border-left: 0;
+  padding-left: 0;
+}
+
+.stat-band__value {
+  font-size: clamp(1.875rem, 3.2vw, 2.5rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: #ffffff;
+}
+
+.stat-band__label {
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: #9db1d6;
+}
+
+/* --------------------------------------------------------------------------
+   Closing CTA — solid brand blue band
+   -------------------------------------------------------------------------- */
+main [class*="ctaSection"] {
+  background: linear-gradient(100deg, #0a2a8a 0%, #0f5fdc 100%) !important;
+  border: 0;
+  overflow: hidden;
+}
+
+main [class*="ctaSection"]::before {
+  display: none;
+}
+
+main [class*="ctaInner"] {
+  align-items: flex-start;
+  text-align: left;
+  max-width: var(--container-max-width);
+}
+
+main [class*="ctaTitle"] {
+  max-width: 820px;
+  color: #ffffff;
+}
+
+main [class*="ctaDesc"] {
+  color: #d6e4ff;
+}
+
+main [class*="ctaEyebrow"] {
+  color: #9fc4ff;
+}
+
+main [class*="ctaButtonGroup"],
+main [class*="contactDirectList"] {
+  justify-content: flex-start;
+}
+
+main [class*="ctaSection"] .btn-primary {
+  background: #ffffff;
+  border-color: #ffffff;
+  color: #0a2a8a;
+}
+
+main [class*="ctaSection"] .btn-inverse-outline {
+  background: transparent;
+  border-color: rgba(255, 255, 255, 0.6);
+}
+
+/* --------------------------------------------------------------------------
+   Responsive
+   -------------------------------------------------------------------------- */
+@media (max-width: 900px) {
+  main > section:first-child {
+    min-height: 0;
+    padding-top: 64px;
+    padding-bottom: 72px;
+  }
+
+  main > section:first-child [class*="heroImageContainer"] {
+    width: 100%;
+    opacity: 0.28;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+
+  main > section:not(:first-child) {
+    padding-top: 72px;
+    padding-bottom: 72px;
+  }
+
+  .stat-band__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .stat-band__item,
+  .stat-band__item:first-child {
+    padding: 32px 20px;
+    border-left: 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+  }
+
+  .stat-band__item:nth-child(-n + 2) {
+    border-top: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .stat-band__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .stat-band__item:nth-child(2) {
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+  }
+}
+
+/* component headings inside cards keep a compact size */
+main [class*="formTitle"],
+main [class*="scannerTitle"],
+main [class*="Card"] h2 {
+  font-size: 1.5rem;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+}
