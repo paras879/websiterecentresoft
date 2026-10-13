@@ -203,13 +203,8 @@ export default function ContactPage() {
               .
             </p>
           </div>
-          <a
-            href="https://www.recenturesoft.com/career"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.btnOutline}
-          >
-            Visit official careers page <span aria-hidden="true">&rarr;</span>
+          <a href="mailto:hr@recenturesoft.com" className={styles.btnOutline}>
+            Email HR Team <span aria-hidden="true">&rarr;</span>
           </a>
         </div>
       </section>

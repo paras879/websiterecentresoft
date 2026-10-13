@@ -87,7 +87,7 @@
 
 .done .dot {
   color: #ffffff;
-  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  background: linear-gradient(135deg, #1d4ed8, #1d4ed8);
   border-color: transparent;
 }
 
@@ -97,11 +97,11 @@
 
 .active .dot {
   color: #ffffff;
-  background: linear-gradient(135deg, #2563eb 0%, #0b1f44 100%);
+  background: linear-gradient(135deg, #1d4ed8 0%, #0b1f44 100%);
   border-color: transparent;
   transform: scale(1.12);
   box-shadow: 0 0 0 6px var(--sv-tint, #eff6ff), 0 0 0 8px var(--sv-blue, #1d4ed8),
-    0 16px 26px -10px rgba(29, 78, 216, 0.7);
+    0 16px 26px -10px rgba(37, 99, 235, 0.7);
 }
 
 .active .tabLabel {
@@ -391,7 +391,7 @@
 
 .panelIcon {
   z-index: 1;
-  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  background: linear-gradient(135deg, #1d4ed8, #1d4ed8);
   border-color: rgba(255, 255, 255, 0.5);
 }
 

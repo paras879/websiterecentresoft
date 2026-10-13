@@ -28,19 +28,22 @@ export const metadata: Metadata = {
   },
 };
 
-const pillars: { icon: IconName; title: string; desc: string }[] = [
+const pillars: { icon: IconName; title: string; desc: string; flow: string[] }[] = [
   {
     icon: "workflow",
+    flow: ["CRM", "Webhook", "ERP"],
     title: "Targeted Workflow Automation",
     desc: "Connecting disparate software systems to trigger automated, error-free tasks. We eliminate manual handoffs between CRM, ERP, and bespoke customer databases through hardened webhook pipelines.",
   },
   {
     icon: "document",
+    flow: ["Invoices & forms", "Extract", "Validate"],
     title: "Intelligent Document Processing",
     desc: "Extracting, categorizing, and validating information from invoices, onboarding forms, and business records with multi-stage schema validation and confidence scoring thresholds.",
   },
   {
     icon: "assist",
+    flow: ["Summarise", "Classify", "Validate"],
     title: "Integrated AI Assistive Features",
     desc: "Embedding smart summarization, classification, and validation directly into your daily enterprise tools so your personnel make faster, data-backed decisions without leaving their primary interface.",
   },
@@ -120,31 +123,41 @@ export default function AIAutomationPage() {
       </section>
 
       {/* Practical AI */}
-      <section
-        id="practical"
-        className={styles.section}
-        aria-labelledby="practical-heading"
-      >
+      <section id="practical" className={styles.prac} aria-labelledby="practical-heading">
         <div className="container">
-          <div className={styles.sectionHead}>
-            <h2 id="practical-heading" className={styles.h2}>
-              What We Mean by Practical AI Automation
+          <div className={styles.pracHead}>
+            <h2 id="practical-heading" className={styles.pracTitle}>
+              What We Mean by{" "}
+              <span className={styles.pracGradient}>Practical AI Automation</span>
             </h2>
-            <p className={styles.lead}>
+            <p className={styles.pracLead}>
               We focus exclusively on grounded, realistic software systems. Rather than
               pursuing speculative hype or unchecked autonomy, our implementations solve
               tangible operational friction across verified business pipelines.
             </p>
           </div>
 
-          <div className={styles.pillars}>
+          <div className={styles.pracGrid}>
             {pillars.map((pillar) => (
-              <article key={pillar.title} className={styles.pillar}>
-                <div className={styles.iconBadge}>
-                  <Icon name={pillar.icon} className={styles.icon} />
+              <article key={pillar.title} className={styles.pracItem}>
+                <div className={styles.flow} aria-label={`Flow: ${pillar.flow.join(", ")}`}>
+                  {pillar.flow.map((step, i) => (
+                    <span key={step} className={styles.flowGroup}>
+                      <span className={styles.flowStep}>{step}</span>
+                      {i < pillar.flow.length - 1 && (
+                        <span className={styles.flowLink} aria-hidden="true" />
+                      )}
+                    </span>
+                  ))}
                 </div>
-                <h3 className={styles.h3}>{pillar.title}</h3>
-                <p className={styles.body}>{pillar.desc}</p>
+
+                <div className={styles.pracBody}>
+                  <div className={styles.pracIcon}>
+                    <Icon name={pillar.icon} className={styles.icon} />
+                  </div>
+                  <h3 className={styles.pracItemTitle}>{pillar.title}</h3>
+                  <p className={styles.body}>{pillar.desc}</p>
+                </div>
               </article>
             ))}
           </div>
@@ -152,27 +165,32 @@ export default function AIAutomationPage() {
       </section>
 
       {/* Implementation */}
-      <section
-        className={`${styles.section} ${styles.sectionSoft}`}
-        aria-labelledby="process-heading"
-      >
+      <section className={styles.impl} aria-labelledby="process-heading">
         <div className="container">
-          <div className={styles.sectionHeadCentered}>
-            <h2 id="process-heading" className={styles.h2}>
-              Implementation Process
+          <div className={styles.implHead}>
+            <h2 id="process-heading" className={styles.implTitle}>
+              Implementation <span className={styles.pracGradient}>Process</span>
             </h2>
-            <p className={styles.lead}>
+            <p className={styles.implLead}>
               A structured 5-stage framework to ensure reliable delivery and immediate
               operational value.
             </p>
           </div>
 
-          <ol className={styles.steps}>
-            {steps.map((item) => (
-              <li key={item.step} className={styles.step}>
-                <span className={styles.stepNumber}>{item.step}</span>
-                <h3 className={styles.h3}>{item.title}</h3>
-                <p className={styles.body}>{item.desc}</p>
+          <ol className={styles.implList}>
+            {steps.map((item, index) => (
+              <li key={item.step} className={styles.implItem}>
+                <div
+                  className={styles.ring}
+                  style={{ "--p": `${((index + 1) / steps.length) * 100}%` } as React.CSSProperties}
+                >
+                  <span className={styles.ringInner}>{item.step}</span>
+                </div>
+                <h3 className={styles.implItemTitle}>{item.title}</h3>
+                <p className={styles.implText}>{item.desc}</p>
+                <span className={styles.implTag}>
+                  Phase {index + 1} of {steps.length}
+                </span>
               </li>
             ))}
           </ol>

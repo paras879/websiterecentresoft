@@ -36,7 +36,6 @@ const groups: { icon: IconName; title: string; links: SiteLink[] }[] = [
     icon: "code",
     title: "Services",
     links: [
-      { label: "All Services", desc: "Our services at a glance", href: "/services" },
       {
         label: "Software Development",
         desc: "Custom software and web applications",

@@ -212,17 +212,6 @@ export function SiteHeader() {
                     })}
                   </div>
 
-                  <Link
-                    href="/services"
-                    className={styles.dropdownFooter}
-                    role="menuitem"
-                    onClick={() => setServicesOpen(false)}
-                  >
-                    <span>View all services</span>
-                    <span className={styles.dropdownFooterArrow} aria-hidden="true">
-                      &rarr;
-                    </span>
-                  </Link>
                   </div>
 
                   <div className={styles.dropdownAside}>

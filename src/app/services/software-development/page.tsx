@@ -296,7 +296,7 @@ export default function SoftwareDevelopmentPage() {
       </section>
 
       {/* CTA */}
-      <section className={styles.ctaBand} aria-labelledby="software-cta-heading">
+      <section className={`${styles.ctaBand} ${styles.ctaSoft}`} aria-labelledby="software-cta-heading">
         <div className={`container ${styles.closeInner}`}>
           <h2 id="software-cta-heading" className={styles.closeTitle}>
             Ready to Build Software That Lasts?

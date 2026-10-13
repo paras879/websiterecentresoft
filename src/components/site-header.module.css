@@ -35,9 +35,9 @@
   width: 32px;
   height: 32px;
   border-radius: var(--radius-sm);
-  background: linear-gradient(135deg, #0066ee 0%, #004ebd 100%);
+  background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
   border: 1px solid rgba(255, 255, 255, 0.22);
-  box-shadow: 0 2px 8px rgba(0, 98, 227, 0.3);
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
   color: var(--color-pure-white);
   font-size: 0.875rem;
   font-weight: 700;
@@ -447,7 +447,7 @@
 .dropdownItem:hover .dropdownItemIconBox,
 .dropdownItem:focus-visible .dropdownItemIconBox {
   color: #ffffff;
-  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  background: linear-gradient(135deg, #1d4ed8, #1d4ed8);
   border-color: transparent;
   box-shadow: 0 8px 16px -6px rgba(37, 99, 235, 0.6);
 }

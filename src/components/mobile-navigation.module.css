@@ -92,7 +92,7 @@
   width: 28px;
   height: 28px;
   border-radius: var(--radius-sm);
-  background: linear-gradient(135deg, #0066ee 0%, #004ebd 100%);
+  background: linear-gradient(135deg, #0062e3 0%, #004ebd 100%);
   border: 1px solid rgba(255, 255, 255, 0.2);
   color: var(--color-pure-white);
   font-size: 0.8125rem;

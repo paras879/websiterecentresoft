@@ -27,7 +27,7 @@
   --hp-bg: #0a1428;
   --hp-bg-alt: #0d1a33;
   --hp-tint: #0f1d3a;
-  --hp-tint-border: rgba(59, 130, 246, 0.25);
+  --hp-tint-border: rgba(56, 189, 248, 0.25);
   --hp-card: #111c36;
   --hp-line: rgba(255, 255, 255, 0.1);
   --hp-heading: #f1f5f9;
@@ -426,11 +426,11 @@
 }
 
 .contactBand .btnPrimary {
-  background: #2563eb;
+  background: #1d4ed8;
 }
 
 .contactBand .btnPrimary:hover {
-  background: #3b82f6;
+  background: #38bdf8;
 }
 
 /* Responsive */
@@ -571,7 +571,7 @@
   width: 160px;
   height: 160px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(59, 130, 246, 0.16) 0%, rgba(59, 130, 246, 0) 70%);
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.16) 0%, rgba(56, 189, 248, 0) 70%);
   opacity: 0;
   transition: opacity 0.4s ease;
   pointer-events: none;
@@ -631,7 +631,7 @@
 
 .reason:hover .reasonIcon {
   color: #ffffff;
-  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  background: linear-gradient(135deg, #1d4ed8, #1d4ed8);
   border-color: transparent;
   transform: rotate(-6deg) scale(1.08);
   box-shadow: 0 12px 22px -8px rgba(37, 99, 235, 0.65);
@@ -786,12 +786,12 @@
   box-shadow:
     0 0 0 6px var(--hp-tint),
     0 0 0 7px var(--hp-tint-border),
-    0 14px 24px -10px rgba(29, 78, 216, 0.6);
+    0 14px 24px -10px rgba(37, 99, 235, 0.6);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 :global([data-theme="dark"]) .stageNode {
-  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  background: linear-gradient(135deg, #38bdf8 0%, #1d4ed8 100%);
 }
 
 .stageNode .icon {
@@ -806,7 +806,7 @@
   box-shadow:
     0 0 0 6px var(--hp-tint),
     0 0 0 9px var(--hp-blue),
-    0 18px 28px -10px rgba(29, 78, 216, 0.7);
+    0 18px 28px -10px rgba(37, 99, 235, 0.7);
 }
 
 .stageBody {
@@ -982,7 +982,7 @@
   overflow: hidden;
   background:
     radial-gradient(45% 55% at 100% 0%, rgba(37, 99, 235, 0.09) 0%, rgba(37, 99, 235, 0) 70%),
-    radial-gradient(40% 50% at 0% 100%, rgba(14, 165, 233, 0.08) 0%, rgba(14, 165, 233, 0) 70%),
+    radial-gradient(40% 50% at 0% 100%, rgba(37, 99, 235, 0.08) 0%, rgba(37, 99, 235, 0) 70%),
     var(--hp-bg-alt);
   border-top: 1px solid var(--hp-line);
   border-bottom: 1px solid var(--hp-line);
@@ -1070,16 +1070,13 @@
 }
 
 .gradText {
-  background: linear-gradient(90deg, #1d4ed8 0%, #0ea5e9 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  color: #1d4ed8;
+  background: none;
+  -webkit-text-fill-color: currentColor;
 }
 
 :global([data-theme="dark"]) .gradText {
-  background: linear-gradient(90deg, #60a5fa 0%, #38bdf8 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
+  color: #3b82f6;
 }
 
 .aboutList {
@@ -1126,7 +1123,7 @@
 
 .aboutItem:hover .aboutItemIcon {
   color: #ffffff;
-  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  background: linear-gradient(135deg, #1d4ed8, #1d4ed8);
   border-color: transparent;
 }
 
@@ -1254,7 +1251,7 @@
   width: 260px;
   height: 260px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(59, 130, 246, 0.2) 0%, rgba(59, 130, 246, 0) 70%);
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.2) 0%, rgba(56, 189, 248, 0) 70%);
   opacity: 0.55;
   transition: opacity 0.5s ease, transform 0.5s ease;
   pointer-events: none;
@@ -1303,14 +1300,14 @@
   height: 64px;
   margin-bottom: 1.5rem;
   color: #ffffff;
-  background: linear-gradient(135deg, #2563eb 0%, #0b1f44 100%);
+  background: linear-gradient(135deg, #1d4ed8 0%, #0b1f44 100%);
   border-radius: 18px;
-  box-shadow: 0 16px 28px -12px rgba(29, 78, 216, 0.7);
+  box-shadow: 0 16px 28px -12px rgba(37, 99, 235, 0.7);
   transition: transform 0.35s ease, box-shadow 0.35s ease;
 }
 
 :global([data-theme="dark"]) .svcIcon {
-  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  background: linear-gradient(135deg, #38bdf8 0%, #1d4ed8 100%);
 }
 
 .svcIcon .icon {
@@ -1320,7 +1317,7 @@
 
 .svcBox:hover .svcIcon {
   transform: rotate(-6deg) scale(1.08);
-  box-shadow: 0 22px 34px -12px rgba(29, 78, 216, 0.85);
+  box-shadow: 0 22px 34px -12px rgba(37, 99, 235, 0.85);
 }
 
 .svcTitle {
@@ -1423,7 +1420,7 @@
 .svcLink:hover,
 .svcLink:focus-visible {
   color: #ffffff;
-  background: linear-gradient(90deg, #1d4ed8, #2563eb);
+  background: linear-gradient(90deg, #1d4ed8, #1d4ed8);
   border-color: transparent;
 }
 
@@ -1483,5 +1480,49 @@
   .svcBox:hover .svcIcon,
   .svcLink:hover .svcArrow {
     transform: none;
+  }
+}
+
+/* ==========================================================================
+   Home - closing CTA: glass card on a deep-blue band
+   ========================================================================== */
+.contactBand {
+  position: relative;
+  padding: 4.5rem 0;
+  overflow: hidden;
+  background:
+    radial-gradient(50% 80% at 85% 0%, rgba(29, 78, 216, 0.55) 0%, rgba(29, 78, 216, 0) 70%),
+    radial-gradient(40% 70% at 0% 100%, rgba(30, 64, 175, 0.5) 0%, rgba(30, 64, 175, 0) 70%),
+    #071632;
+}
+
+.contactInner {
+  position: relative;
+  max-width: 62rem;
+  padding: 3.5rem 2rem;
+  background:
+    radial-gradient(rgba(255, 255, 255, 0.12) 1px, transparent 1.4px) 0 0 / 22px 22px,
+    rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 28px;
+  box-shadow: 0 40px 70px -40px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.contactBand .btnPrimary {
+  background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+  border-color: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 14px 28px -12px rgba(29, 78, 216, 0.95);
+}
+
+.contactBand .btnPrimary:hover {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+}
+
+@media (max-width: 720px) {
+  .contactInner {
+    padding: 2.25rem 1.25rem;
+    border-radius: 20px;
   }
 }

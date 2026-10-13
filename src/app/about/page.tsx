@@ -237,7 +237,7 @@ export default function AboutPage() {
       </section>
 
       {/* CTA */}
-      <section className={styles.ctaBand} aria-labelledby="about-cta-heading">
+      <section className={`${styles.ctaBand} ${styles.ctaAbout}`} aria-labelledby="about-cta-heading">
         <div className={`container ${styles.closeInner}`}>
           <h2 id="about-cta-heading" className={styles.closeTitle}>
             Ready to discuss your software or automation requirements?
@@ -250,7 +250,7 @@ export default function AboutPage() {
             <Link href="/contact" className={styles.btnPrimary}>
               Discuss Your Project <span aria-hidden="true">&rarr;</span>
             </Link>
-            <Link href="/services" className={styles.btnGhost}>
+            <Link href="/services/software-development" className={styles.btnGhost}>
               Explore Services <span aria-hidden="true">&rsaquo;</span>
             </Link>
           </div>

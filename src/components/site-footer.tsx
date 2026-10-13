@@ -34,7 +34,6 @@ const companyLinks = [
 ];
 
 const serviceLinks = [
-  { label: "All Services", href: "/services" },
   { label: "Software Development", href: "/services/software-development" },
   { label: "AI Automation", href: "/services/ai-automation" },
 ];
