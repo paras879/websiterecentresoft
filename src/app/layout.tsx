@@ -111,6 +111,7 @@ export default async function RootLayout({
           <SiteShell
             header={<SiteHeader site={site} info={info} />}
             footer={<SiteFooter site={site} info={info} />}
+            whatsappUrl={info.contact.whatsappUrl}
           >
             {children}
           </SiteShell>

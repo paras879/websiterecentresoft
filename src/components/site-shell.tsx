@@ -1,6 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
+import { WhatsAppFloatingButton } from "./whatsapp-button";
 
 /**
  * Wraps public pages with the header and footer. The admin area gets neither, so it can use the
@@ -9,10 +10,12 @@ import { usePathname } from "next/navigation";
 export function SiteShell({
   header,
   footer,
+  whatsappUrl,
   children,
 }: {
   header: React.ReactNode;
   footer: React.ReactNode;
+  whatsappUrl?: string;
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
@@ -33,6 +36,7 @@ export function SiteShell({
         </main>
         {footer}
       </div>
+      {whatsappUrl ? <WhatsAppFloatingButton url={whatsappUrl} /> : null}
     </>
   );
 }

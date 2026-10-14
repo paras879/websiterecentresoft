@@ -263,6 +263,34 @@ a.contactItem:hover .contactIcon {
   border-color: #1d4ed8;
 }
 
+.whatsappItem {
+  transition: transform 0.2s ease;
+}
+
+.whatsappIcon {
+  color: #ffffff !important;
+  background: #25d366 !important;
+  border-color: #25d366 !important;
+  box-shadow: 0 4px 12px rgba(37, 211, 102, 0.35);
+}
+
+.whatsappSvg {
+  width: 20px;
+  height: 20px;
+  fill: #ffffff;
+}
+
+a.whatsappItem:hover .whatsappIcon {
+  background: #1ebc57 !important;
+  border-color: #1ebc57 !important;
+  box-shadow: 0 6px 16px rgba(37, 211, 102, 0.5);
+  transform: scale(1.08);
+}
+
+a.whatsappItem:hover .whatsappText {
+  color: #1ebc57;
+}
+
 .stroke {
   width: 18px;
   height: 18px;
