@@ -26,6 +26,15 @@ export function SiteFooter({ site, info }: { site: SiteContent["site"]; info: Si
   const { contact } = info;
   const { footer, socials } = site;
 
+  // The privacy policy is a legal page, so it is always linked, even if the saved footer links do not include it.
+  const hasPrivacyLink = footer.columns.some((c) => c.links.some((l) => l.href === "/privacy-policy"));
+  const columns =
+    hasPrivacyLink || footer.columns.length === 0
+      ? footer.columns
+      : footer.columns.map((c, i) =>
+          i === 0 ? { ...c, links: [...c.links, { label: "Privacy Policy", href: "/privacy-policy" }] } : c,
+        );
+
   return (
     <footer className={styles.footer}>
       <div className={`container ${styles.mainSection}`}>
@@ -73,7 +82,7 @@ export function SiteFooter({ site, info }: { site: SiteContent["site"]; info: Si
           </div>
 
           {/* Link columns */}
-          {footer.columns.map((column) => (
+          {columns.map((column) => (
             <nav key={column.title} aria-label={column.title}>
               <h2 className={styles.colTitle}>{column.title}</h2>
               <ul className={styles.linkList}>

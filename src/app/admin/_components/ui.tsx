@@ -30,7 +30,6 @@ const ui = {
   briefcase: "M3 8h18v12H3zM8 8V5h8v3M3 14h18",
   logout: "M9 21H5V3h4M16 17l5-5-5-5M21 12H9",
   alert: "M12 3l10 18H2zM12 10v5M12 18h.01",
-  download: "M12 3v12M7 10l5 5 5-5M4 21h16",
   upload: "M12 15V3M7 8l5-5 5 5M4 21h16",
   reset: "M3 12a9 9 0 109-9 9 9 0 00-6.7 3M3 4v5h5",
   save: "M5 3h11l3 3v15H5zM8 3v6h7V3M8 21v-7h8v7",

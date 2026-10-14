@@ -36,6 +36,7 @@ export const iconPaths = {
   wrench: "M14.7 6.3a4 4 0 00-5.4 5.4L3 18v3h3l6.3-6.3a4 4 0 005.4-5.4l-2.5 2.5-2.4-.6-.6-2.4 2.5-2.5z",
   calendar: "M3 5h18v14H3zM3 9h18M8 3v4M16 3v4",
   pen: "M4 20h4L18 10l-4-4L4 16v4zM14 6l4 4",
+  download: "M12 3v12M7 10l5 5 5-5M4 21h16",
 } as const;
 
 export type IconName = keyof typeof iconPaths;

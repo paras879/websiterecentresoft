@@ -75,6 +75,18 @@ export function PrivacyPolicyView({ company, email, phone, phoneRaw, address, ma
     };
   }, []);
 
+  // The browser's print window offers "Save as PDF". The page title becomes the file name.
+  const downloadPdf = () => {
+    const previous = document.title;
+    document.title = "Recenturesoft-Privacy-Policy";
+    const restore = () => {
+      document.title = previous;
+      window.removeEventListener("afterprint", restore);
+    };
+    window.addEventListener("afterprint", restore);
+    window.print();
+  };
+
   return (
     <div className={styles.page}>
       <div className={styles.progress} aria-hidden="true">
@@ -97,6 +109,7 @@ export function PrivacyPolicyView({ company, email, phone, phoneRaw, address, ma
           <p className={styles.lead}>
             How {company} collects, uses, protects and shares information on www.recenturesoft.com.
           </p>
+          <p className={styles.printMeta}>{company} &middot; www.recenturesoft.com/privacy-policy</p>
 
           <ul className={styles.glance} aria-label="Quick links">
             {GLANCE.map((g, i) => (
@@ -135,9 +148,13 @@ export function PrivacyPolicyView({ company, email, phone, phoneRaw, address, ma
               ))}
             </ol>
           </nav>
-          <button type="button" className={styles.printBtn} onClick={() => window.print()}>
-            Print this page
-          </button>
+          <div className={styles.pdfBox}>
+            <button type="button" className={styles.pdfBtn} onClick={downloadPdf}>
+              <Icon name="download" className={styles.pdfSvg} />
+              Download as PDF
+            </button>
+            <p className={styles.pdfHint}>In the window that opens, choose &ldquo;Save as PDF&rdquo;.</p>
+          </div>
         </aside>
 
         <article className={styles.doc}>

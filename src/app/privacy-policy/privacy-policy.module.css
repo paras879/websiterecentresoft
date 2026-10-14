@@ -299,23 +299,52 @@
   opacity: 0.75;
 }
 
-.printBtn {
+.pdfBox {
   margin: 1.25rem 0 0 0.75rem;
-  padding: 0.55rem 1rem;
+}
+
+.pdfBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-height: 44px;
+  padding: 0 1.05rem;
   font: inherit;
-  font-size: 0.875rem;
+  font-size: 0.9375rem;
   font-weight: 500;
   color: var(--pp-heading);
   cursor: pointer;
   background: var(--pp-surface);
   border: 1px solid var(--pp-line);
-  border-radius: 8px;
-  transition: border-color 0.15s ease, background-color 0.15s ease;
+  border-radius: 10px;
+  transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.2s ease;
 }
 
-.printBtn:hover {
-  background: var(--pp-alt);
+.pdfBtn:hover {
+  background: var(--pp-tint);
   border-color: var(--pp-accent);
+  transform: translateY(-1px);
+}
+
+.pdfSvg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: var(--pp-accent);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.pdfHint {
+  margin: 0.55rem 0 0;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: var(--pp-muted);
+}
+
+.printMeta {
+  display: none;
 }
 
 /* ---------------------------------------------------------------- document */
@@ -740,7 +769,7 @@
   }
 
   .sideTitle,
-  .printBtn {
+  .pdfBox {
     display: none;
   }
 
@@ -804,15 +833,75 @@
 }
 
 @media print {
+  @page {
+    size: A4;
+    margin: 16mm 15mm;
+  }
+
+  /* the site header, footer and chat button are not part of the document */
+  :global(.app-shell > header),
+  :global(.app-shell > footer),
+  :global(.skip-link) {
+    display: none !important;
+  }
+
+  /* always print in light colours, even when the site is in dark mode */
+  .page,
+  :global([data-theme="dark"]) .page {
+    --pp-bg: #ffffff;
+    --pp-surface: #ffffff;
+    --pp-alt: #f8fafc;
+    --pp-line: #d5dce6;
+    --pp-heading: #0b1f44;
+    --pp-text: #1f2937;
+    --pp-muted: #475569;
+    --pp-accent: #1d4ed8;
+    --pp-tint: #eef4ff;
+    --pp-tint-line: #c3d4fb;
+
+    padding-bottom: 0;
+    color: #1f2937;
+    background: #ffffff;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
   .side,
   .progress,
   .rail,
-  .glance {
-    display: none;
+  .glance,
+  .topImg,
+  .topShade {
+    display: none !important;
+  }
+
+  .top {
+    padding: 0 0 12pt;
+    background: none;
+    border-bottom: 2px solid #0b1f44;
+  }
+
+  .title {
+    margin-bottom: 4pt;
+    font-size: 26pt;
+    color: #0b1f44;
+  }
+
+  .lead {
+    font-size: 11pt;
+    color: #475569;
+  }
+
+  .printMeta {
+    display: block;
+    margin: 6pt 0 0;
+    font-size: 9.5pt;
+    color: #64748b;
   }
 
   .layout {
     display: block;
+    padding-top: 12pt;
   }
 
   .doc {
@@ -820,7 +909,34 @@
   }
 
   .block {
-    break-inside: avoid-page;
+    padding: 14pt 0;
+    break-inside: auto;
+  }
+
+  .heading {
+    break-after: avoid;
+    font-size: 15pt;
+  }
+
+  .block p {
+    font-size: 10.5pt;
+    line-height: 1.6;
+    orphans: 3;
+    widows: 3;
+  }
+
+  .note,
+  .chip,
+  .contactBox {
+    break-inside: avoid;
+  }
+
+  .contactActions {
+    display: none;
+  }
+
+  .contactBox a {
+    text-decoration: none;
   }
 }
 
