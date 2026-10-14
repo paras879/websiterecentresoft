@@ -119,8 +119,8 @@ export function MobileNavigation({ site, info }: { site: SiteContent["site"]; in
               className={styles.brandLogoLight}
             />
             <Image
-              src="/images/recenturesoft-logo-white.png"
-              alt="Recenturesoft - A Hub of IT Services"
+              src="/images/logo_white.PNG"
+              alt="Recenturesoft"
               width={150}
               height={50}
               className={styles.brandLogoDark}

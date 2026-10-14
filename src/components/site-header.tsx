@@ -104,8 +104,8 @@ export function SiteHeader({ site, info }: Props) {
             className={styles.brandLogoLight}
           />
           <Image
-            src="/images/recenturesoft-logo-white.png"
-            alt="Recenturesoft - A Hub of IT Services"
+            src="/images/logo_white.PNG"
+            alt="Recenturesoft"
             width={180}
             height={60}
             priority

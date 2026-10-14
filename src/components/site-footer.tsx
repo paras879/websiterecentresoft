@@ -41,8 +41,8 @@ export function SiteFooter({ site, info }: { site: SiteContent["site"]; info: Si
                 className={styles.brandLogoLight}
               />
               <Image
-                src="/images/recenturesoft-logo-white.png"
-                alt="Recenturesoft - A Hub of IT Services"
+                src="/images/logo_white.PNG"
+                alt="Recenturesoft"
                 width={180}
                 height={60}
                 className={styles.brandLogoDark}
