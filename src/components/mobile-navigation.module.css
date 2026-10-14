@@ -82,32 +82,30 @@
 .brand {
   display: inline-flex;
   align-items: center;
-  gap: var(--spacing-2);
 }
 
-.brandMark {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
-  border-radius: var(--radius-sm);
-  background: linear-gradient(135deg, #0062e3 0%, #004ebd 100%);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: var(--color-pure-white);
-  font-size: 0.8125rem;
-  font-weight: 700;
+.brandLogoLight {
+  display: block;
+  height: 38px;
+  width: auto;
+  max-width: 150px;
+  object-fit: contain;
 }
 
-.brandText {
-  font-size: var(--font-size-base);
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  color: var(--color-text-heading);
+.brandLogoDark {
+  display: none;
+  height: 34px;
+  width: auto;
+  max-width: 150px;
+  object-fit: contain;
 }
 
-.brandAccent {
-  color: var(--color-blue-primary);
+:global([data-theme="dark"]) .brandLogoLight {
+  display: none;
+}
+
+:global([data-theme="dark"]) .brandLogoDark {
+  display: block;
 }
 
 .closeButton {

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import type { SiteContent } from "@/content";
 import type { SiteInfo } from "@/lib/site";
 import { socialIcons, type SocialIconName } from "@/lib/social-icons";
@@ -31,14 +32,21 @@ export function SiteFooter({ site, info }: { site: SiteContent["site"]; info: Si
         <div className={styles.grid}>
           {/* Brand */}
           <div className={styles.brandCol}>
-            <Link href="/" className={styles.brand} aria-label={`${info.name} Home`}>
-              <span className={styles.brandMark} aria-hidden="true">
-                {info.name.charAt(0).toUpperCase()}
-              </span>
-              <span className={styles.brandText}>
-                {info.name}
-                <span className={styles.brandAccent}>.</span>
-              </span>
+            <Link href="/" className={styles.brand} aria-label={`${info.name} - A Hub of IT Services`}>
+              <Image
+                src="/images/recenturesoft-logo.png"
+                alt="Recenturesoft - A Hub of IT Services"
+                width={180}
+                height={60}
+                className={styles.brandLogoLight}
+              />
+              <Image
+                src="/images/recenturesoft-logo-white.png"
+                alt="Recenturesoft - A Hub of IT Services"
+                width={180}
+                height={60}
+                className={styles.brandLogoDark}
+              />
             </Link>
             <p className={styles.description}>{info.description}</p>
 

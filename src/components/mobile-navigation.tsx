@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import type { SiteContent } from "@/content";
 import type { SiteInfo } from "@/lib/site";
@@ -110,13 +111,20 @@ export function MobileNavigation({ site, info }: { site: SiteContent["site"]; in
       >
         <div className={styles.panelHeader}>
           <div className={styles.brand}>
-            <span className={styles.brandMark} aria-hidden="true">
-              R
-            </span>
-            <span className={styles.brandText}>
-              {info.name}
-              <span className={styles.brandAccent}>.</span>
-            </span>
+            <Image
+              src="/images/recenturesoft-logo.png"
+              alt="Recenturesoft - A Hub of IT Services"
+              width={150}
+              height={50}
+              className={styles.brandLogoLight}
+            />
+            <Image
+              src="/images/recenturesoft-logo-white.png"
+              alt="Recenturesoft - A Hub of IT Services"
+              width={150}
+              height={50}
+              className={styles.brandLogoDark}
+            />
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
             <ThemeToggle />
