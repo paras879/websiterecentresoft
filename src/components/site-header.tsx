@@ -204,7 +204,14 @@ export function SiteHeader({ site, info }: Props) {
                         </div>
                       </div>
 
-                      <div className={styles.dropdownAside}>
+                      <div
+                        className={styles.dropdownAside}
+                        style={
+                          header.asideImage
+                            ? ({ "--aside-img": `url("${encodeURI(header.asideImage)}")` } as React.CSSProperties)
+                            : undefined
+                        }
+                      >
                         <span className={styles.asideKicker}>{header.asideKicker}</span>
                         <p className={styles.asideTitle}>{header.asideTitle}</p>
                         <p className={styles.asideText}>{header.asideText}</p>
@@ -226,14 +233,19 @@ export function SiteHeader({ site, info }: Props) {
                               {info.contact.phone}
                             </a>
                           </li>
-                          {info.contact.shortLocation ? (
+                          {info.contact.address ? (
                             <li>
-                              <span className={styles.asideRow}>
+                              <a
+                                href={info.contact.mapUrl}
+                                className={`${styles.asideRow} ${styles.asideAddress}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
                                 <span className={styles.asideIcon}>
                                   <Icon name="pin" />
                                 </span>
-                                {info.contact.shortLocation}
-                              </span>
+                                {info.contact.address}
+                              </a>
                             </li>
                           ) : null}
                         </ul>
