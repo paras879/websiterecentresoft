@@ -11,6 +11,7 @@ export interface ContactInfo {
   phoneRaw: string;
   whatsappUrl: string;
   address: string;
+  mapUrl: string;
 }
 
 export interface SiteConfig {

@@ -41,5 +41,8 @@ export const siteConfig: SiteConfig = {
     phoneRaw: "+917770003288",
     whatsappUrl: "https://api.whatsapp.com/send?phone=+917770003288&text=Hi",
     address: "A-125, 1st Floor, Sector-63, Noida, Uttar Pradesh, 201301, India",
+    mapUrl:
+      "https://www.google.com/maps/search/?api=1&query=" +
+      encodeURIComponent("A-125, 1st Floor, Sector-63, Noida, Uttar Pradesh, 201301, India"),
   },
 };

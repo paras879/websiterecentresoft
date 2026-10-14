@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { siteConfig } from "@/lib/site-config";
+import { Icon } from "../services/icons";
 import { CareerForm } from "@/components/career-form";
 import { CareerPerks, type Perk } from "@/components/career-perks";
 import styles from "../services/services.module.css";
@@ -230,20 +231,82 @@ export default function CareersPage() {
       <section className={cr.end} aria-labelledby="cr-end-heading">
         <div className="container">
           <div className={cr.endBox}>
-            <h2 id="cr-end-heading" className={cr.endTitle}>
-              Ready to build something remarkable?
-            </h2>
-            <p className={cr.endText}>
-              Write to our team or call us, and we will tell you what to expect.
-            </p>
-            <div className={cr.endActions}>
-              <a href="mailto:hr@recenturesoft.com" className={cr.endBtn}>
-                Contact the talent team <span aria-hidden="true">&rarr;</span>
-              </a>
-              <a href={`tel:${contact.phone.replace(/\s/g, "")}`} className={cr.endGhost}>
-                {contact.phone}
-              </a>
+            <span className={cr.endDots} aria-hidden="true" />
+            <div className={cr.endCopy}>
+              <span className={cr.endKicker}>Join our team</span>
+              <h2 id="cr-end-heading" className={cr.endTitle}>
+                Ready to build something remarkable?
+              </h2>
+              <p className={cr.endText}>
+                Send us your profile or just say hello. Our team reads every message and will
+                tell you what to expect.
+              </p>
+              <div className={cr.endActions}>
+                <a href="#cr-apply" className={cr.endBtn}>
+                  Apply now <span aria-hidden="true">&rarr;</span>
+                </a>
+                <a href="mailto:hr@recenturesoft.com" className={cr.endGhost}>
+                  Email the talent team
+                </a>
+              </div>
             </div>
+
+            <ul className={cr.endList}>
+              <li>
+                <a href="mailto:hr@recenturesoft.com" className={cr.endRow}>
+                  <span className={cr.endIcon}>
+                    <Icon name="mailIcon" className={cr.endSvg} />
+                  </span>
+                  <span className={cr.endRowText}>
+                    <span className={cr.endLabel}>HR team</span>
+                    <span className={cr.endValue}>hr@recenturesoft.com</span>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href={`tel:${contact.phoneRaw}`} className={cr.endRow}>
+                  <span className={cr.endIcon}>
+                    <Icon name="phone" className={cr.endSvg} />
+                  </span>
+                  <span className={cr.endRowText}>
+                    <span className={cr.endLabel}>Call us</span>
+                    <span className={cr.endValue}>{contact.phone}</span>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a
+                  href={contact.whatsappUrl}
+                  className={cr.endRow}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <span className={cr.endIcon}>
+                    <Icon name="chat" className={cr.endSvg} />
+                  </span>
+                  <span className={cr.endRowText}>
+                    <span className={cr.endLabel}>WhatsApp</span>
+                    <span className={cr.endValue}>Message us</span>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a
+                  href={contact.mapUrl}
+                  className={cr.endRow}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <span className={cr.endIcon}>
+                    <Icon name="pin" className={cr.endSvg} />
+                  </span>
+                  <span className={cr.endRowText}>
+                    <span className={cr.endLabel}>Office · open in Maps</span>
+                    <span className={cr.endValue}>{contact.address}</span>
+                  </span>
+                </a>
+              </li>
+            </ul>
           </div>
         </div>
       </section>

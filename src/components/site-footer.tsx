@@ -129,11 +129,19 @@ export function SiteFooter() {
           <div>
             <h2 className={styles.colTitle}>Get in Touch</h2>
             <ul className={styles.contactList}>
-              <li className={styles.contactItem}>
-                <span className={styles.contactIcon}>
-                  <StrokeIcon path={icons.location} />
-                </span>
-                <span className={styles.contactText}>{contact.address}</span>
+              <li>
+                <a
+                  href={contact.mapUrl}
+                  className={styles.contactItem}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`Open ${contact.address} in Google Maps`}
+                >
+                  <span className={styles.contactIcon}>
+                    <StrokeIcon path={icons.location} />
+                  </span>
+                  <span className={styles.contactText}>{contact.address}</span>
+                </a>
               </li>
               <li>
                 <a href={`mailto:${contact.email}`} className={styles.contactItem}>

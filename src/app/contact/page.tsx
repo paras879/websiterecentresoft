@@ -29,9 +29,7 @@ export const metadata: Metadata = {
   },
 };
 
-const mapsUrl =
-  "https://www.google.com/maps/search/?api=1&query=" +
-  encodeURIComponent("A-125, Sector 63, Noida, Uttar Pradesh 201301");
+const mapsUrl = siteConfig.contact.mapUrl;
 
 export default function ContactPage() {
   const { contact } = siteConfig;
