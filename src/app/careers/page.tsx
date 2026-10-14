@@ -11,14 +11,14 @@ import styles from "../services/services.module.css";
 import cr from "./careers.module.css";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const { careers } = await getSiteContent();
+  const { careers, site } = await getSiteContent();
   return pageMetadata(careers.meta, "/careers");
 }
 
 const isIcon = (name: string): name is IconName => name in iconPaths;
 
 export default async function CareersPage() {
-  const { careers } = await getSiteContent();
+  const { careers, site } = await getSiteContent();
   const info = await getSiteInfo();
   const contact = info.contact;
   const { hero, why, areas, openingsBlock, apply, form, closing } = careers;
@@ -222,13 +222,12 @@ export default async function CareersPage() {
             {form.title ? <h3 className={cr.panelTitle}>{form.title}</h3> : null}
             <CareerForm
               hrEmail={hrEmail}
-              areas={form.areas}
+              areas={[...site.header.menu.map((m) => m.title), ...form.areas]}
               experience={form.experience}
               openingTitles={openings.map((o) => o.title)}
               submitLabel={form.submitLabel}
               idleNote={form.idleNote}
-              fallbackNote={form.fallbackNote}
-              emailInsteadNote={form.emailInsteadNote}
+              errorText={form.errorText}
               successText={form.successText}
               resumeLabel={form.resumeLabel}
               resumeHint={form.resumeHint}

@@ -13,7 +13,7 @@ const defaults = {
     image: "/images/home-hero.jpg",
   },
   form: {
-    services: ["Software Development", "AI Automation", "General Engineering Inquiry"],
+    services: ["General Engineering Inquiry"],
   },
   channels: {
     title: "Direct Channels",
@@ -35,11 +35,6 @@ const defaults = {
     text: "Have a custom software development or enterprise AI automation project in mind? Share your requirements with our technical team today.",
     callLabel: "Call Noida Labs Now",
     emailLabel: "Email Technical Team",
-  },
-  careers: {
-    title: "Careers",
-    text: "No current openings are listed at this time. For future opportunities, write to",
-    buttonLabel: "Email HR Team",
   },
   backLabel: "Back to Recenturesoft Home",
 };
@@ -65,13 +60,13 @@ export const contactModule = defineModule({
     {
       id: "form",
       title: "Enquiry form",
-      description: "The form fields are fixed. Here you choose what people can pick in the service list.",
+      description: "Every service in your Services menu (Site-wide, Header & menu) is offered automatically. Add any extra choices here.",
       fields: [
         group("form", "Enquiry form", [
-          strings("services", "Service choices", {
+          strings("services", "Extra choices", {
             addLabel: "Add choice",
             max: 80,
-            help: "The first one is selected by default. Keep at least one.",
+            help: "Shown after your services in the list, e.g. General Engineering Inquiry.",
           }),
         ]),
       ],
@@ -113,18 +108,6 @@ export const contactModule = defineModule({
           longtext("text", "Text", { rows: 3 }),
           text("callLabel", "Call button text"),
           text("emailLabel", "Email button text"),
-        ]),
-      ],
-    },
-    {
-      id: "careers",
-      title: "Careers note",
-      description: "The HR email address is edited under Site settings.",
-      fields: [
-        group("careers", "Careers note", [
-          text("title", "Heading"),
-          longtext("text", "Text", { rows: 3, help: "The HR email address is added after this text automatically." }),
-          text("buttonLabel", "Button text"),
         ]),
       ],
     },

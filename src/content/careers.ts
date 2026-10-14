@@ -120,20 +120,12 @@ const defaults = {
     title: "Candidate application",
     submitLabel: "Submit application",
     idleNote: "Your application goes straight to our HR team.",
-    fallbackNote:
-      "Your email app should have opened with the details filled in. Attach your resume and send it. If nothing opened, write to {email}.",
-    emailInsteadNote: "We could not save your application online just now, so we prepared it as an email instead.",
+    errorText:
+      "We could not send your application right now. Please try again in a moment, or write to {email}.",
     successText: "Thank you, your application has been received. Our team will contact you if there is a suitable role.",
     resumeLabel: "Resume",
     resumeHint: "up to 600 KB here; larger files: share a link or email it to us",
-    areas: [
-      "Software Development",
-      "AI Automation",
-      "Custom Development",
-      "SEO & Digital Marketing",
-      "Design (UI/UX)",
-      "Something else",
-    ],
+    areas: ["Something else"],
     experience: ["Fresher", "1–3 years", "4–6 years", "7+ years"],
   },
   closing: {
@@ -296,15 +288,18 @@ export const careersModule = defineModule({
           text("title", "Form heading", { max: 80 }),
           text("submitLabel", "Send button text", { max: 40 }),
           longtext("idleNote", "Note under the button", { rows: 2 }),
-          longtext("fallbackNote", "Message when the email app opens", {
-            rows: 3,
+          longtext("errorText", "Message when sending fails", {
+            rows: 2,
             help: "Write {email} where the HR email address should appear.",
           }),
-          longtext("emailInsteadNote", "Message when we could not save it online", { rows: 2 }),
           longtext("successText", "Thank-you message", { rows: 2 }),
           text("resumeLabel", "Resume upload label", { max: 40 }),
           text("resumeHint", "Resume size hint", { max: 160 }),
-          strings("areas", "Areas of interest", { addLabel: "Add area", max: 60 }),
+          strings("areas", "Extra areas of interest", {
+            addLabel: "Add area",
+            max: 60,
+            help: "Open roles and every service in your Services menu are listed first automatically. Add any other choices here.",
+          }),
           strings("experience", "Experience choices", { addLabel: "Add choice", max: 40 }),
         ]),
       ],

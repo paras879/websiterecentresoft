@@ -51,13 +51,10 @@ export function ContactForm({ services, recipientEmail }: ContactFormProps) {
   });
 
   const [errors, setErrors] = useState<FormErrors>({});
-  const [preparedSummary, setPreparedSummary] = useState<string | null>(null);
-  const [copied, setCopied] = useState(false);
   const [website, setWebsite] = useState(""); // honeypot, real visitors never fill this in
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
-  const [fellBack, setFellBack] = useState(false);
 
   const validate = (): boolean => {
     const nextErrors: FormErrors = {};
@@ -99,27 +96,6 @@ export function ContactForm({ services, recipientEmail }: ContactFormProps) {
     return Object.keys(nextErrors).length === 0;
   };
 
-  const generateEnquiryText = () => {
-    return [
-      `Enquiry for Recenturesoft Infotech`,
-      `=================================`,
-      `Full Name: ${formData.fullName.trim()}`,
-      `Work Email: ${formData.email.trim()}`,
-      `Company: ${formData.company.trim() || "Not specified"}`,
-      `Phone: ${formData.phone.trim() || "Not specified"}`,
-      `Service of Interest: ${formData.service}`,
-      ``,
-      `Project Requirements:`,
-      formData.message.trim(),
-    ].join("\n");
-  };
-
-  const openEmailClient = (summary: string) => {
-    const subject = encodeURIComponent(`[Website Enquiry] ${formData.service} - ${formData.fullName.trim()}`);
-    const body = encodeURIComponent(summary);
-    window.location.href = `mailto:${recipientEmail}?subject=${subject}&body=${body}`;
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (sending) return;
@@ -127,16 +103,9 @@ export function ContactForm({ services, recipientEmail }: ContactFormProps) {
 
     setApiError(null);
     setSent(false);
-    setFellBack(false);
-    setPreparedSummary(null);
     setSending(true);
 
-    const summary = generateEnquiryText();
-    const fallBack = () => {
-      setPreparedSummary(summary);
-      setFellBack(true);
-      openEmailClient(summary);
-    };
+    const failed = `We could not send your message right now. Please try again in a moment, or write to ${recipientEmail}.`;
 
     try {
       const res = await fetch("/api/inquiries", {
@@ -167,26 +136,14 @@ export function ContactForm({ services, recipientEmail }: ContactFormProps) {
         });
         setErrors({});
       } else if (res.status === 503 || data?.code === "storage_unavailable") {
-        fallBack();
+        setApiError(failed);
       } else {
-        setApiError(data?.error || "Sorry, we could not send your message. Please try again.");
+        setApiError(data?.error || failed);
       }
     } catch {
-      fallBack();
+      setApiError(failed);
     } finally {
       setSending(false);
-    }
-  };
-
-  const handleCopySummary = async () => {
-    if (!preparedSummary) return;
-    try {
-      await navigator.clipboard.writeText(preparedSummary);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 3000);
-    } catch {
-      // Fallback if clipboard API is restricted
-      setCopied(false);
     }
   };
 
@@ -198,9 +155,8 @@ export function ContactForm({ services, recipientEmail }: ContactFormProps) {
           Fill out the details below and our team will get back to you.
         </p>
         <div className={styles.formNotice}>
-          <strong>How it works:</strong> your message is sent to our team, and we reply by email. If it
-          cannot be sent from here, your email app opens with the details pre-filled to{" "}
-          <code>{recipientEmail}</code> so you can send it yourself.
+          <strong>How it works:</strong> your message goes straight to our team and we reply by email to
+          the address you give us.
         </div>
       </div>
 
@@ -411,15 +367,6 @@ export function ContactForm({ services, recipientEmail }: ContactFormProps) {
           <button type="submit" className={`btn btn-primary ${styles.submitBtn}`} disabled={sending}>
             {sending ? "Sending..." : "Send Project Enquiry"}
           </button>
-          {preparedSummary && (
-            <button
-              type="button"
-              className={`btn btn-secondary ${styles.copyBtn}`}
-              onClick={handleCopySummary}
-            >
-              {copied ? "Copied to Clipboard!" : "Copy Enquiry Summary"}
-            </button>
-          )}
         </div>
       </form>
 
@@ -437,27 +384,6 @@ export function ContactForm({ services, recipientEmail }: ContactFormProps) {
         </div>
       )}
 
-      {/* Real Action Summary */}
-      {preparedSummary && (
-        <div className={styles.statusBox} role="status">
-          <div className={styles.statusTitle}>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M20 6L9 17l-5-5" />
-            </svg>
-            <span>Enquiry Prepared for Email Delivery</span>
-          </div>
-          <p className={styles.statusDesc}>
-            {fellBack ? (
-              <>
-                We could not send your message through the website just now, so we prepared it for email instead.{" "}
-              </>
-            ) : null}
-            Your email application has been invoked with the pre-formatted enquiry addressed to{" "}
-            <strong>{recipientEmail}</strong>. If your mail client did not open automatically,
-            use the &quot;Copy Enquiry Summary&quot; button above to paste the message directly into your webmail.
-          </p>
-        </div>
-      )}
     </div>
   );
 }

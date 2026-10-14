@@ -29,7 +29,7 @@ interface FormState {
 }
 
 type Errors = Partial<Record<keyof FormState, string>>;
-type Status = "idle" | "sending" | "success" | "email";
+type Status = "idle" | "sending" | "success";
 
 interface CareerFormProps {
   hrEmail: string;
@@ -39,9 +39,8 @@ interface CareerFormProps {
   openingTitles?: string[];
   submitLabel: string;
   idleNote: string;
-  /** Shown when the mail app is opened. {email} is replaced by the HR address. */
-  fallbackNote: string;
-  emailInsteadNote: string;
+  /** Shown when sending fails. {email} is replaced by the HR address. */
+  errorText: string;
   successText: string;
   resumeLabel: string;
   resumeHint: string;
@@ -54,8 +53,7 @@ export function CareerForm({
   openingTitles = [],
   submitLabel,
   idleNote,
-  fallbackNote,
-  emailInsteadNote,
+  errorText,
   successText,
   resumeLabel,
   resumeHint,
@@ -103,28 +101,6 @@ export function CareerForm({
     return Object.keys(next).length === 0;
   };
 
-  const openMailClient = () => {
-    const body = [
-      "Application for Recenturesoft Infotech",
-      "======================================",
-      `Name: ${data.name.trim()}`,
-      `Email: ${data.email.trim()}`,
-      `Phone: ${data.phone.trim()}`,
-      `Area of interest: ${data.area}`,
-      `Experience: ${data.experience}`,
-      `LinkedIn / Portfolio / GitHub: ${data.link.trim() || "Not shared"}`,
-      "",
-      "About me:",
-      data.note.trim() || "-",
-      "",
-      "(Resume attached to this email)",
-    ].join("\n");
-
-    const subject = encodeURIComponent(`[Careers] ${data.area} - ${data.name.trim()}`);
-    setStatus("email");
-    window.location.href = `mailto:${hrEmail}?subject=${subject}&body=${encodeURIComponent(body)}`;
-  };
-
   const onFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] ?? null;
     setApiError("");
@@ -169,14 +145,15 @@ export function CareerForm({
         if (fileRef.current) fileRef.current.value = "";
         return;
       }
+      setStatus("idle");
       if (res.status === 503 || json.code === "storage_unavailable") {
-        openMailClient();
+        setApiError(errorText.replace("{email}", hrEmail));
         return;
       }
-      setStatus("idle");
-      setApiError(json.error || "We could not send your application. Please try again.");
+      setApiError(json.error || errorText.replace("{email}", hrEmail));
     } catch {
-      openMailClient();
+      setStatus("idle");
+      setApiError(errorText.replace("{email}", hrEmail));
     }
   };
 
@@ -354,9 +331,7 @@ export function CareerForm({
         </p>
       ) : (
         <p className={styles.note} role="status">
-          {status === "email"
-            ? `${fallbackNote.replace("{email}", hrEmail)} ${emailInsteadNote}`.trim()
-            : idleNote}
+          {idleNote}
         </p>
       )}
     </form>

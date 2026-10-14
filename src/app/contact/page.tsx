@@ -17,7 +17,7 @@ export default async function ContactPage() {
   const content = await getSiteContent();
   const info = await getSiteInfo();
   const { contact } = info;
-  const { hero, form, channels: copy, office, closing, careers, backLabel } = content.contact;
+  const { hero, form, channels: copy, office, closing, backLabel } = content.contact;
 
   const channels: {
     icon: IconName;
@@ -71,7 +71,10 @@ export default async function ContactPage() {
       {/* Form + channels */}
       <section className={styles.section} aria-label="Contact form and details">
         <div className={`container ${styles.mainGrid}`}>
-          <ContactForm services={form.services} recipientEmail={contact.email} />
+          <ContactForm
+            services={[...content.site.header.menu.map((m) => m.title), ...form.services]}
+            recipientEmail={contact.email}
+          />
 
           <aside className={styles.side}>
             <div className={styles.channels}>
@@ -165,29 +168,6 @@ export default async function ContactPage() {
               ) : null}
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* Careers */}
-      <section id="careers" className={styles.careers} aria-labelledby="careers-heading">
-        <div className={`container ${styles.careersInner}`}>
-          <div>
-            <h2 id="careers-heading" className={styles.careersTitle}>
-              {careers.title}
-            </h2>
-            <p className={styles.careersText}>
-              {careers.text}{" "}
-              <a href={`mailto:${contact.hrEmail}`} className={styles.textLink}>
-                {contact.hrEmail}
-              </a>
-              .
-            </p>
-          </div>
-          {careers.buttonLabel ? (
-            <a href={`mailto:${contact.hrEmail}`} className={styles.btnOutline}>
-              {careers.buttonLabel} <span aria-hidden="true">&rarr;</span>
-            </a>
-          ) : null}
         </div>
       </section>
 
