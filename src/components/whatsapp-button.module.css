@@ -1,7 +1,7 @@
 .floatBtn {
   position: fixed;
-  bottom: 24px;
-  right: 24px;
+  bottom: 44px;
+  right: 28px;
   z-index: 90;
   display: flex;
   align-items: center;
@@ -63,7 +63,7 @@
 
 @media (max-width: 640px) {
   .floatBtn {
-    bottom: 20px;
+    bottom: 34px;
     right: 20px;
     padding: 12px;
     border-radius: 50%;
