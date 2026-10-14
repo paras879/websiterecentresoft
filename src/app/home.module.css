@@ -84,8 +84,8 @@
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  min-height: 48px;
-  padding: 0.8rem 1.75rem;
+  min-height: 46px;
+  padding: 0.75rem 1.65rem;
   font-size: 0.9375rem;
   font-weight: 600;
   line-height: 1.2;
@@ -150,15 +150,15 @@
 
 /* Hero */
 .hero {
-  padding: 3.5rem 0 3.5rem;
+  padding: 2.5rem 0 2.75rem;
   background: var(--hp-hero-grad);
   border-bottom: 1px solid var(--hp-line);
 }
 
 .heroGrid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 4rem;
+  grid-template-columns: 1.08fr 0.92fr;
+  gap: clamp(2rem, 3.5vw, 3.5rem);
   align-items: center;
 }
 
@@ -166,14 +166,14 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 1.5rem;
+  gap: 1.15rem;
 }
 
 .heroTitle {
   margin: 0;
-  font-size: clamp(2.25rem, 4.2vw, 3.375rem);
+  font-size: clamp(2.15rem, 3.3vw, 2.9rem);
   font-weight: 700;
-  line-height: 1.2;
+  line-height: 1.18;
   letter-spacing: -0.025em;
   color: var(--hp-heading);
 }
@@ -181,13 +181,13 @@
 .heroText {
   margin: 0;
   max-width: 540px;
-  font-size: 1.125rem;
-  line-height: 1.7;
+  font-size: 1.0625rem;
+  line-height: 1.65;
   color: var(--hp-text);
 }
 
 .heroCopy .actions {
-  margin-top: 0.75rem;
+  margin-top: 0.35rem;
 }
 
 .photoFrame {
@@ -196,13 +196,17 @@
   border: 1px solid var(--hp-line);
   border-radius: 12px;
   box-shadow: var(--hp-shadow);
+  max-width: 520px;
+  margin-left: auto;
+  width: 100%;
 }
 
 .photo {
   display: block;
   width: 100%;
   height: auto;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 16 / 11;
+  max-height: 370px;
   object-fit: cover;
   border-radius: 8px;
 }

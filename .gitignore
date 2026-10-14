@@ -53,3 +53,9 @@ private_uploads/
 
 # Admin panel local data (saved edits, messages) when working on this computer
 .data/
+
+# IDE & Skill cache
+.claude/
+.taste-skill/
+skills-lock.json
+
