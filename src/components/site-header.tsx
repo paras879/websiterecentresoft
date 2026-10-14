@@ -21,6 +21,18 @@ const serviceItems = [
     href: "/services/ai-automation",
     icon: "M12 3l1.8 4.7L18.5 9.5l-4.7 1.8L12 16l-1.8-4.7L5.5 9.5l4.7-1.8zM19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z",
   },
+  {
+    title: "Custom Development",
+    desc: "Web apps, SaaS, APIs and enterprise software built for you",
+    href: "/services/custom-development",
+    icon: "M16 18l6-6-6-6M8 6l-6 6 6 6",
+  },
+  {
+    title: "SEO Services",
+    desc: "Technical, on-page and local SEO to grow organic traffic",
+    href: "/services/seo",
+    icon: "M11 4a7 7 0 100 14 7 7 0 000-14zM21 21l-5-5",
+  },
 ];
 
 export function SiteHeader() {
@@ -139,7 +151,6 @@ export function SiteHeader() {
                 isServicesActive ? styles.activeTrigger : ""
               }`}
               aria-expanded={servicesOpen}
-              aria-haspopup="true"
               aria-controls="services-dropdown-menu"
               onClick={(e) =>
                 // A mouse click keeps the hover-opened menu open; keyboard and touch toggle it.
@@ -168,7 +179,6 @@ export function SiteHeader() {
               <div
                 id="services-dropdown-menu"
                 className={styles.dropdownMenu}
-                role="menu"
                 aria-labelledby="services-menu-button"
               >
                 <div className={styles.dropdownPanel}>
@@ -187,7 +197,6 @@ export function SiteHeader() {
                           className={`${styles.dropdownItem} ${
                             isCurrent ? styles.dropdownItemCurrent : ""
                           }`}
-                          role="menuitem"
                           aria-current={isCurrent ? "page" : undefined}
                           onClick={() => setServicesOpen(false)}
                         >
@@ -223,7 +232,6 @@ export function SiteHeader() {
                     <Link
                       href="/contact"
                       className={styles.asideBtn}
-                      role="menuitem"
                       onClick={() => setServicesOpen(false)}
                     >
                       Discuss Your Project <span aria-hidden="true">&rarr;</span>
@@ -240,6 +248,14 @@ export function SiteHeader() {
             aria-current={pathname === "/contact" ? "page" : undefined}
           >
             Contact Us
+          </Link>
+
+          <Link
+            href="/careers"
+            className={`${styles.navLink} ${pathname === "/careers" ? styles.activeNavLink : ""}`}
+            aria-current={pathname === "/careers" ? "page" : undefined}
+          >
+            Careers
           </Link>
         </nav>
 

@@ -49,6 +49,27 @@ const services = [
     ],
     href: "/services/ai-automation",
     icon: "M12 8a4 4 0 100 8 4 4 0 000-8zM12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1",
+  },  {
+    title: "Custom Development",
+    desc: "Tailored digital solutions built around your workflows, from web platforms to integrations.",
+    items: [
+      "Custom web applications and enterprise portals",
+      "API development and third-party integrations",
+      "Legacy system modernisation, done in phases",
+    ],
+    href: "/services/custom-development",
+    icon: "M14.7 6.3a4 4 0 00-5.4 5.4L3 18v3h3l6.3-6.3a4 4 0 005.4-5.4l-2.5 2.5-2.4-.6-.6-2.4 2.5-2.5z",
+  },
+  {
+    title: "SEO Services",
+    desc: "Data-led search optimisation that builds visibility and a steady organic pipeline for your business.",
+    items: [
+      "Technical SEO, crawlability and Core Web Vitals",
+      "On-page, off-page and keyword research",
+      "Local SEO and detailed SEO audits",
+    ],
+    href: "/services/seo",
+    icon: "M11 4a7 7 0 100 14 7 7 0 000-14zM21 21l-4.3-4.3",
   },
 ];
 
@@ -187,7 +208,7 @@ export default function HomePage() {
               Our Services
             </h2>
             <p className={styles.lead}>
-              Two focused capabilities, delivered with the same engineering discipline.
+              Four capabilities, delivered with the same engineering discipline.
             </p>
           </header>
 

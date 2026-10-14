@@ -1,0 +1,483 @@
+.head {
+  margin-bottom: 2.5rem;
+}
+
+.bigTitle {
+  margin: 0 0 0.75rem;
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
+  font-weight: 600;
+  line-height: 1.12;
+  letter-spacing: -0.035em;
+  color: var(--sv-heading);
+}
+
+.lead {
+  max-width: 56ch;
+  margin: 0;
+  font-size: 1.125rem;
+  line-height: 1.6;
+  color: var(--sv-text);
+}
+
+/* ---------- why ---------- */
+.why {
+  padding: 4.5rem 0;
+  background: var(--sv-bg);
+}
+
+/* ---------- areas: expanding photo panels ---------- */
+.areas {
+  padding: 4.5rem 0;
+  background: var(--sv-bg-alt);
+  border-top: 1px solid var(--sv-line);
+  border-bottom: 1px solid var(--sv-line);
+}
+
+.fit {
+  display: flex;
+  gap: 1rem;
+  height: 440px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.fitItem {
+  flex: 1;
+  min-width: 0;
+  transition: flex 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.fit:not(:hover) .fitItem:first-child,
+.fitItem:hover,
+.fitItem:focus-within {
+  flex: 3.4;
+}
+
+.fit:hover .fitItem:first-child:not(:hover):not(:focus-within) {
+  flex: 1;
+}
+
+.fitLink {
+  position: relative;
+  display: block;
+  height: 100%;
+  overflow: hidden;
+  color: #ffffff;
+  text-decoration: none;
+  background: #0b1f44;
+  border-radius: 26px;
+}
+
+.fitLink:focus-visible {
+  outline: 3px solid #60a5fa;
+  outline-offset: 3px;
+}
+
+.fitImg {
+  object-fit: cover;
+  transition: transform 0.9s ease;
+}
+
+.fitItem:hover .fitImg,
+.fitItem:focus-within .fitImg {
+  transform: scale(1.06);
+}
+
+.fitShade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(7, 22, 50, 0.25) 0%, rgba(7, 22, 50, 0.92) 100%);
+  transition: background 0.4s ease;
+}
+
+.fitItem:hover .fitShade,
+.fitItem:focus-within .fitShade {
+  background: linear-gradient(180deg, rgba(18, 58, 156, 0.2) 0%, rgba(7, 22, 50, 0.92) 100%);
+}
+
+.fitNum {
+  position: absolute;
+  top: 1.25rem;
+  left: 1.4rem;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  background: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  border-radius: 999px;
+  backdrop-filter: blur(6px);
+}
+
+.fitBody {
+  position: absolute;
+  right: 1.5rem;
+  bottom: 1.5rem;
+  left: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.fitTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+  color: #ffffff;
+}
+
+.fitText,
+.fitGo {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 0.5s ease, opacity 0.4s ease 0.1s;
+}
+
+.fitText {
+  max-width: 34ch;
+  font-size: 1.0625rem;
+  line-height: 1.5;
+  color: rgba(226, 232, 240, 0.96);
+}
+
+.fitGo {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: #7cc4fb;
+}
+
+.fit:not(:hover) .fitItem:first-child .fitText,
+.fit:not(:hover) .fitItem:first-child .fitGo,
+.fitItem:hover .fitText,
+.fitItem:hover .fitGo,
+.fitItem:focus-within .fitText,
+.fitItem:focus-within .fitGo {
+  max-height: 120px;
+  opacity: 1;
+}
+
+.fit:hover .fitItem:first-child:not(:hover):not(:focus-within) .fitText,
+.fit:hover .fitItem:first-child:not(:hover):not(:focus-within) .fitGo {
+  max-height: 0;
+  opacity: 0;
+}
+
+/* ---------- apply ---------- */
+.apply {
+  padding: 4.5rem 0;
+  background: var(--sv-bg);
+}
+
+.applyGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: 3rem;
+  align-items: start;
+}
+
+.side {
+  position: sticky;
+  top: 6.5rem;
+}
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin-bottom: 1.25rem;
+  padding: 0.4rem 0.9rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #1d4ed8;
+  background: var(--sv-tint);
+  border: 1px solid var(--sv-tint-border);
+  border-radius: 999px;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  background: #1d4ed8;
+  border-radius: 50%;
+  animation: pulse 2s ease-out infinite;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(29, 78, 216, 0.5);
+  }
+  100% {
+    box-shadow: 0 0 0 10px rgba(29, 78, 216, 0);
+  }
+}
+
+.sideTitle {
+  margin: 0 0 0.75rem;
+  font-size: clamp(1.75rem, 3.2vw, 2.5rem);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.035em;
+  color: var(--sv-heading);
+}
+
+.sideText {
+  margin: 0 0 2rem;
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  color: var(--sv-text);
+}
+
+.steps {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;
+  margin: 0 0 1.75rem;
+  padding: 0;
+  list-style: none;
+}
+
+.steps::before {
+  content: "";
+  position: absolute;
+  top: 18px;
+  bottom: 18px;
+  left: 17px;
+  width: 2px;
+  background: var(--sv-tint-border);
+}
+
+.step {
+  position: relative;
+  display: flex;
+  gap: 1rem;
+}
+
+.stepNo {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: #ffffff;
+  background: #1d4ed8;
+  border-radius: 50%;
+}
+
+.stepTitle {
+  display: block;
+  font-size: 1.0625rem;
+  font-weight: 500;
+  color: var(--sv-heading);
+}
+
+.stepText {
+  display: block;
+  margin-top: 0.15rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--sv-text);
+}
+
+.direct {
+  margin: 0;
+  font-size: 1rem;
+  color: var(--sv-text);
+}
+
+.directLink {
+  font-weight: 500;
+  color: #1d4ed8;
+}
+
+.panel {
+  padding: 2.25rem;
+  background: var(--sv-card);
+  border: 1px solid var(--sv-line);
+  border-radius: 28px;
+  box-shadow: 0 34px 60px -44px rgba(11, 31, 68, 0.5);
+}
+
+.panelTitle {
+  margin: 0 0 1.5rem;
+  font-size: 1.5rem;
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  color: var(--sv-heading);
+}
+
+/* ---------- closing ---------- */
+.end {
+  padding: 0 0 5rem;
+  background: var(--sv-bg);
+}
+
+.endBox {
+  position: relative;
+  padding: 4rem 2rem;
+  overflow: hidden;
+  text-align: center;
+  color: #ffffff;
+  background: linear-gradient(155deg, #0b1f44 0%, #123a9c 100%);
+  border-radius: 32px;
+}
+
+.endBox::after {
+  content: "";
+  position: absolute;
+  top: -120px;
+  right: -80px;
+  width: 360px;
+  height: 360px;
+  background: radial-gradient(circle, rgba(96, 165, 250, 0.45), rgba(96, 165, 250, 0) 70%);
+  border-radius: 50%;
+}
+
+.endTitle {
+  position: relative;
+  z-index: 1;
+  margin: 0 0 0.75rem;
+  font-size: clamp(1.75rem, 3.6vw, 2.75rem);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.035em;
+  color: #ffffff;
+}
+
+.endText {
+  position: relative;
+  z-index: 1;
+  margin: 0 0 2rem;
+  font-size: 1.125rem;
+  color: rgba(226, 232, 240, 0.95);
+}
+
+.endActions {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.9rem;
+}
+
+.endBtn,
+.endGhost {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 52px;
+  padding: 0.85rem 1.6rem;
+  font-size: 1rem;
+  font-weight: 500;
+  text-decoration: none;
+  border-radius: 12px;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.endBtn {
+  color: #0b1f44;
+  background: #ffffff;
+}
+
+.endGhost {
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.endBtn:hover,
+.endGhost:hover {
+  transform: translateY(-2px);
+}
+
+.endGhost:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+@media (max-width: 900px) {
+  .fit {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .fitItem,
+  .fit:not(:hover) .fitItem:first-child,
+  .fitItem:hover,
+  .fitItem:focus-within {
+    flex: none;
+    height: 220px;
+  }
+
+  .fitText,
+  .fitGo,
+  .fit:not(:hover) .fitItem:first-child .fitText,
+  .fit:hover .fitItem:first-child:not(:hover):not(:focus-within) .fitText {
+    max-height: 120px;
+    opacity: 1;
+  }
+
+  .fit:hover .fitItem:first-child:not(:hover):not(:focus-within) .fitGo {
+    max-height: 120px;
+    opacity: 1;
+  }
+}
+
+@media (max-width: 1000px) {
+  .applyGrid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .side {
+    position: static;
+  }
+}
+
+@media (max-width: 700px) {
+  .why,
+  .areas,
+  .apply {
+    padding: 3rem 0;
+  }
+
+  .end {
+    padding-bottom: 3rem;
+  }
+
+  .panel {
+    padding: 1.5rem 1.25rem;
+  }
+
+  .endBox {
+    padding: 3rem 1.25rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dot {
+    animation: none;
+  }
+
+  .fitItem,
+  .fitImg,
+  .fitText,
+  .fitGo,
+  .endBtn,
+  .endGhost {
+    transition: none;
+  }
+
+  .fitItem:hover .fitImg,
+  .endBtn:hover,
+  .endGhost:hover {
+    transform: none;
+  }
+}

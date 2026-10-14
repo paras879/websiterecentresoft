@@ -29,7 +29,7 @@ const groups: { icon: IconName; title: string; links: SiteLink[] }[] = [
       { label: "Home", desc: "Overview of what we do", href: "/" },
       { label: "About Us", desc: "Who we are and how we work", href: "/about" },
       { label: "Contact Us", desc: "Talk to our team", href: "/contact" },
-      { label: "Careers", desc: "Current openings and HR contact", href: "/contact#careers" },
+      { label: "Careers", desc: "Join the team and send your profile", href: "/careers" },
     ],
   },
   {
@@ -45,6 +45,16 @@ const groups: { icon: IconName; title: string; links: SiteLink[] }[] = [
         label: "AI Automation",
         desc: "AI-powered workflow automation",
         href: "/services/ai-automation",
+      },
+      {
+        label: "Custom Development",
+        desc: "Web apps, SaaS, APIs and enterprise software",
+        href: "/services/custom-development",
+      },
+      {
+        label: "SEO Services",
+        desc: "Technical, on-page and local SEO",
+        href: "/services/seo",
       },
     ],
   },

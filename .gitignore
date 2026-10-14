@@ -45,3 +45,5 @@ next-env.d.ts
 # Internal notes (not for the repo)
 CLAUDE_ANTIGRAVITY_PROMPT.md
 PROJECT_STRUCTURE.md
+# Playwright CLI output (may contain credentials)
+.playwright-cli/

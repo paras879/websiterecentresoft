@@ -175,6 +175,26 @@ export function MobileNavigation() {
               >
                 AI Automation
               </Link>
+              <Link
+                href="/services/custom-development"
+                className={`${styles.subNavLink} ${
+                  pathname === "/services/custom-development" ? styles.activeSubNavLink : ""
+                }`}
+                aria-current={pathname === "/services/custom-development" ? "page" : undefined}
+                onClick={closeMenu}
+              >
+                Custom Development
+              </Link>
+              <Link
+                href="/services/seo"
+                className={`${styles.subNavLink} ${
+                  pathname === "/services/seo" ? styles.activeSubNavLink : ""
+                }`}
+                aria-current={pathname === "/services/seo" ? "page" : undefined}
+                onClick={closeMenu}
+              >
+                SEO Services
+              </Link>
             </div>
 
             <Link
@@ -184,6 +204,15 @@ export function MobileNavigation() {
               onClick={closeMenu}
             >
               Contact Us
+            </Link>
+
+            <Link
+              href="/careers"
+              className={`${styles.navLink} ${pathname === "/careers" ? styles.activeNavLink : ""}`}
+              aria-current={pathname === "/careers" ? "page" : undefined}
+              onClick={closeMenu}
+            >
+              Careers
             </Link>
           </div>
         </div>

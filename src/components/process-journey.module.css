@@ -1,0 +1,237 @@
+/* Scroll-driven process journey. Uses --sv-* tokens (light and dark). */
+
+.wrap {
+  display: grid;
+  grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+  gap: 4rem;
+  align-items: start;
+  margin-top: 2rem;
+}
+
+.side {
+  position: sticky;
+  top: 7rem;
+}
+
+.sideLead {
+  max-width: 24ch;
+  margin: 0 0 1.75rem;
+  font-size: 1.25rem;
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: -0.02em;
+  color: var(--sv-heading);
+}
+
+.mini {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.miniItem {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--sv-muted);
+  transition: color 0.3s ease;
+}
+
+.miniDot {
+  width: 12px;
+  height: 12px;
+  border: 2px solid var(--sv-line);
+  border-radius: 50%;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.miniDone {
+  color: var(--sv-heading);
+}
+
+.miniDone .miniDot {
+  background: #1d4ed8;
+  border-color: #1d4ed8;
+}
+
+/* journey */
+.list {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.track {
+  position: absolute;
+  top: 28px;
+  bottom: 28px;
+  left: 27px;
+  width: 4px;
+  background: var(--sv-line);
+  border-radius: 4px;
+}
+
+.fill {
+  display: block;
+  width: 100%;
+  background: linear-gradient(180deg, #1d4ed8, #60a5fa);
+  border-radius: 4px;
+}
+
+.item {
+  position: relative;
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+}
+
+.node {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 58px;
+  height: 58px;
+  flex-shrink: 0;
+  color: var(--sv-muted);
+  background: var(--sv-card);
+  border: 3px solid var(--sv-line);
+  border-radius: 50%;
+  transition: color 0.4s ease, background-color 0.4s ease, border-color 0.4s ease,
+    box-shadow 0.4s ease, transform 0.4s ease;
+}
+
+.itemDone .node {
+  color: #ffffff;
+  background: #1d4ed8;
+  border-color: #1d4ed8;
+  box-shadow: 0 0 0 6px rgba(29, 78, 216, 0.2);
+}
+
+.nodeIcon {
+  width: 24px;
+  height: 24px;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.card {
+  flex: 1;
+  padding: 1.5rem 1.75rem;
+  background: var(--sv-card);
+  border: 1px solid var(--sv-line);
+  border-radius: 20px;
+  opacity: 0.6;
+  transition: opacity 0.4s ease, border-color 0.4s ease, transform 0.4s ease,
+    box-shadow 0.4s ease;
+}
+
+.itemDone .card {
+  opacity: 1;
+  border-color: var(--sv-tint-border);
+  box-shadow: 0 20px 36px -26px rgba(11, 31, 68, 0.5);
+}
+
+.step {
+  display: block;
+  margin-bottom: 0.25rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: #1d4ed8;
+}
+
+.title {
+  margin: 0 0 0.5rem;
+  font-size: 1.5rem;
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  color: var(--sv-heading);
+}
+
+.text {
+  max-width: 48ch;
+  margin: 0 0 1rem;
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  color: var(--sv-text);
+}
+
+.gets {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0;
+  padding: 0.7rem 0.9rem;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--sv-heading);
+  background: var(--sv-tint);
+  border: 1px solid var(--sv-tint-border);
+  border-radius: 12px;
+}
+
+.getsLabel {
+  padding: 0.2rem 0.65rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #ffffff;
+  background: #1d4ed8;
+  border-radius: 999px;
+}
+
+@media (max-width: 1000px) {
+  .wrap {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .side {
+    position: static;
+  }
+
+  .mini {
+    display: none;
+  }
+}
+
+@media (max-width: 560px) {
+  .item {
+    gap: 1rem;
+  }
+
+  .node {
+    width: 46px;
+    height: 46px;
+  }
+
+  .track {
+    left: 21px;
+  }
+
+  .card {
+    padding: 1.1rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .node,
+  .card,
+  .miniItem,
+  .miniDot {
+    transition: none;
+  }
+}

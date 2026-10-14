@@ -4,8 +4,8 @@
   --ft-bg: linear-gradient(180deg, #f8fafd 0%, #eaf0f9 100%);
   --ft-glow-1: rgba(37, 99, 235, 0.1);
   --ft-glow-2: rgba(37, 99, 235, 0.08);
-  --ft-text: #475569;
-  --ft-muted: #5b6b82;
+  --ft-text: #1e293b;
+  --ft-muted: #334155;
   --ft-heading: #0b1f44;
   --ft-brand: #0b1f44;
   --ft-accent: #1d4ed8;
@@ -13,12 +13,12 @@
   --ft-line: rgba(11, 31, 68, 0.1);
   --ft-btn-bg: #ffffff;
   --ft-btn-border: rgba(11, 31, 68, 0.14);
-  --ft-btn-color: #334155;
+  --ft-btn-color: #1e293b;
   --ft-icon-bg: rgba(37, 99, 235, 0.08);
   --ft-icon-border: rgba(37, 99, 235, 0.22);
   --ft-icon-color: #1d4ed8;
   --ft-bottom-bg: rgba(11, 31, 68, 0.05);
-  --ft-contact: #334155;
+  --ft-contact: #0f172a;
   --ft-contact-hover: #0b1f44;
 
   position: relative;

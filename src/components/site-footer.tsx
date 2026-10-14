@@ -29,13 +29,15 @@ const companyLinks = [
   { label: "Home", href: "/" },
   { label: "About Us", href: "/about" },
   { label: "Contact Us", href: "/contact" },
-  { label: "Careers", href: "/contact#careers" },
+  { label: "Careers", href: "/careers" },
   { label: "Sitemap", href: "/sitemap" },
 ];
 
 const serviceLinks = [
   { label: "Software Development", href: "/services/software-development" },
   { label: "AI Automation", href: "/services/ai-automation" },
+  { label: "Custom Development", href: "/services/custom-development" },
+  { label: "SEO Services", href: "/services/seo" },
 ];
 
 const icons = {
