@@ -12,7 +12,7 @@ export interface SeoService {
   image: string;
 }
 
-export function SeoServicesExplorer({ services }: { services: SeoService[] }) {
+export function SeoServicesExplorer({ services, linkPrefix = "Ask about" }: { services: SeoService[]; linkPrefix?: string }) {
   const [active, setActive] = useState(0);
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const last = services.length - 1;
@@ -99,7 +99,7 @@ export function SeoServicesExplorer({ services }: { services: SeoService[] }) {
             ))}
           </ul>
           <Link href="/contact" className={styles.link}>
-            Ask about {current.title} <span aria-hidden="true">&rarr;</span>
+            {linkPrefix} {current.title} <span aria-hidden="true">&rarr;</span>
           </Link>
         </div>
       </div>

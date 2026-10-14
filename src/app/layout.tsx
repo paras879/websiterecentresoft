@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
-import { siteConfig } from "@/lib/site-config";
+import { getSiteContent } from "@/lib/content";
+import { buildSiteInfo } from "@/lib/site";
+import { SiteShell } from "@/components/site-shell";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { Analytics } from "@vercel/analytics/next";
@@ -8,73 +10,44 @@ import { ThemeProvider } from "@/components/theme-provider";
 import "./globals.css";
 import "./theme-hcl.css";
 
-export const metadata: Metadata = {
-  title: {
-    default: `${siteConfig.name} | Software Development & AI Automation`,
-    template: `%s | ${siteConfig.name}`,
-  },
-  description: siteConfig.description,
-  metadataBase: new URL("https://www.recenturesoft.com"),
-  alternates: {
-    canonical: "/",
-  },
-  openGraph: {
-    type: "website",
-    locale: "en_US",
-    url: "https://www.recenturesoft.com",
-    siteName: siteConfig.legalName,
-    title: `${siteConfig.name} | Software Development & AI Automation`,
-    description: siteConfig.description,
-    images: [
-      {
-        url: "/images/hero.jpg",
-        width: 1200,
-        height: 630,
-        alt: "Recenturesoft Software Engineering and AI Automation",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    site: "@recenture_soft",
-    title: `${siteConfig.name} | Software Development & AI Automation`,
-    description: siteConfig.description,
-    images: ["/images/hero.jpg"],
-  },
-};
+// Page content comes from the admin panel, so pages are rendered on request instead of at build time.
+export const dynamic = "force-dynamic";
 
-const organizationSchema = {
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  name: siteConfig.name,
-  legalName: siteConfig.legalName,
-  url: "https://www.recenturesoft.com",
-  logo: "https://www.recenturesoft.com/images/hero.jpg",
-  description: siteConfig.description,
-  address: {
-    "@type": "PostalAddress",
-    streetAddress: "A-125, 1st Floor, Sector-63",
-    addressLocality: "Noida",
-    addressRegion: "Uttar Pradesh",
-    postalCode: "201301",
-    addressCountry: "IN",
-  },
-  contactPoint: [
-    {
-      "@type": "ContactPoint",
-      telephone: "+91 777 000 3288",
-      contactType: "customer service",
-      areaServed: "IN",
-      availableLanguage: ["English", "Hindi"],
+export async function generateMetadata(): Promise<Metadata> {
+  const { site } = await getSiteContent();
+  const info = buildSiteInfo(site);
+  const title = site.meta.title || `${info.name} | Software Development & AI Automation`;
+  const description = site.meta.description || info.description;
+  const image = site.meta.image || "/images/hero.jpg";
+
+  return {
+    title: {
+      default: title,
+      template: `%s | ${info.name}`,
     },
-  ],
-  sameAs: [
-    "https://in.linkedin.com/company/recenturesoft",
-    "https://x.com/recenture_soft",
-    "https://www.facebook.com/recenturesoftinfotech/",
-    "https://www.youtube.com/channel/UCwrJM7HFZGmke0jr8y4VYXg",
-  ],
-};
+    description,
+    metadataBase: new URL("https://www.recenturesoft.com"),
+    alternates: {
+      canonical: "/",
+    },
+    openGraph: {
+      type: "website",
+      locale: "en_US",
+      url: "https://www.recenturesoft.com",
+      siteName: info.legalName,
+      title,
+      description,
+      images: [{ url: image, width: 1200, height: 630, alt: info.name }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      site: "@recenture_soft",
+      title,
+      description,
+      images: [image],
+    },
+  };
+}
 
 const themeInitScript = `
   (function() {
@@ -87,17 +60,47 @@ const themeInitScript = `
   })();
 `;
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const content = await getSiteContent();
+  const { site } = content;
+  const info = buildSiteInfo(site);
+
+  const organizationSchema = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: info.name,
+    legalName: info.legalName,
+    url: "https://www.recenturesoft.com",
+    logo: "https://www.recenturesoft.com/images/hero.jpg",
+    description: info.description,
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: "A-125, 1st Floor, Sector-63",
+      addressLocality: "Noida",
+      addressRegion: "Uttar Pradesh",
+      postalCode: "201301",
+      addressCountry: "IN",
+    },
+    contactPoint: [
+      {
+        "@type": "ContactPoint",
+        telephone: info.contact.phone,
+        contactType: "customer service",
+        areaServed: "IN",
+        availableLanguage: ["English", "Hindi"],
+      },
+    ],
+    sameAs: site.socials.map((s) => s.href),
+  };
+
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <script
-          dangerouslySetInnerHTML={{ __html: themeInitScript }}
-        />
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
@@ -105,16 +108,12 @@ export default function RootLayout({
       </head>
       <body>
         <ThemeProvider>
-          <a href="#main-content" className="skip-link">
-            Skip to main content
-          </a>
-          <div className="app-shell">
-            <SiteHeader />
-            <main id="main-content" className="site-main">
-              {children}
-            </main>
-            <SiteFooter />
-          </div>
+          <SiteShell
+            header={<SiteHeader site={site} info={info} />}
+            footer={<SiteFooter site={site} info={info} />}
+          >
+            {children}
+          </SiteShell>
         </ThemeProvider>
         <Analytics />
         <SpeedInsights />

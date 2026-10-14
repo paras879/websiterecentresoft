@@ -8,8 +8,8 @@ export interface TechItem {
   role: string;
   /** one line on what we use it for */
   use: string;
-  /** file name in /public/tech (without .svg); omit for the generic pipeline icon */
-  icon?: string;
+  /** local path of the logo (an SVG used as a mask); omit for the generic pipeline icon */
+  logo?: string;
   color: string;
 }
 
@@ -18,7 +18,7 @@ export interface TechGroup {
   items: TechItem[];
 }
 
-export function TechWall({ groups }: { groups: TechGroup[] }) {
+export function TechWall({ groups, kicker = "How we use it" }: { groups: TechGroup[]; kicker?: string }) {
   const [active, setActive] = useState(0);
   const [pick, setPick] = useState(0);
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
@@ -78,12 +78,12 @@ export function TechWall({ groups }: { groups: TechGroup[] }) {
             className={styles.featureLogo}
             style={{ "--brand": featured.color } as React.CSSProperties}
           >
-            {featured.icon ? (
+            {featured.logo ? (
               <span
                 className={styles.featureMask}
                 style={{
-                  maskImage: `url(/tech/${featured.icon}.svg)`,
-                  WebkitMaskImage: `url(/tech/${featured.icon}.svg)`,
+                  maskImage: `url(${featured.logo})`,
+                  WebkitMaskImage: `url(${featured.logo})`,
                 }}
                 aria-hidden="true"
               />
@@ -94,7 +94,7 @@ export function TechWall({ groups }: { groups: TechGroup[] }) {
             )}
           </span>
           <div className={styles.featureText}>
-            <span className={styles.featureKicker}>How we use it</span>
+            <span className={styles.featureKicker}>{kicker}</span>
             <h3 className={styles.featureName}>{featured.name}</h3>
             <p className={styles.featureUse}>{featured.use}</p>
           </div>
@@ -122,12 +122,12 @@ export function TechWall({ groups }: { groups: TechGroup[] }) {
               className={styles.logoWrap}
               style={{ "--brand": item.color } as React.CSSProperties}
             >
-              {item.icon ? (
+              {item.logo ? (
                 <span
                   className={styles.logo}
                   style={{
-                    maskImage: `url(/tech/${item.icon}.svg)`,
-                    WebkitMaskImage: `url(/tech/${item.icon}.svg)`,
+                    maskImage: `url(${item.logo})`,
+                    WebkitMaskImage: `url(${item.logo})`,
                   }}
                   aria-hidden="true"
                 />

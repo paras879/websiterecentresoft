@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { siteConfig } from "@/lib/site-config";
 import styles from "./contact-form.module.css";
 
 interface FormState {
@@ -32,13 +31,21 @@ function sanitizePhone(value: string): string {
   return cleaned.replace(/(?!^)\+/g, "");
 }
 
-export function ContactForm() {
+interface ContactFormProps {
+  /** Choices shown in the "Service of Interest" list. The first one is selected by default. */
+  services: string[];
+  /** Address the fallback email draft is addressed to. */
+  recipientEmail: string;
+}
+
+export function ContactForm({ services, recipientEmail }: ContactFormProps) {
+  const serviceOptions = services.length > 0 ? services : ["General Enquiry"];
   const [formData, setFormData] = useState<FormState>({
     fullName: "",
     email: "",
     company: "",
     phone: "",
-    service: "Software Development",
+    service: serviceOptions[0],
     message: "",
     privacyAgreed: false,
   });
@@ -46,6 +53,11 @@ export function ContactForm() {
   const [errors, setErrors] = useState<FormErrors>({});
   const [preparedSummary, setPreparedSummary] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
+  const [website, setWebsite] = useState(""); // honeypot, real visitors never fill this in
+  const [sending, setSending] = useState(false);
+  const [sent, setSent] = useState(false);
+  const [apiError, setApiError] = useState<string | null>(null);
+  const [fellBack, setFellBack] = useState(false);
 
   const validate = (): boolean => {
     const nextErrors: FormErrors = {};
@@ -102,19 +114,68 @@ export function ContactForm() {
     ].join("\n");
   };
 
-  const handleOpenEmailClient = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!validate()) return;
-
-    const summary = generateEnquiryText();
-    setPreparedSummary(summary);
-
+  const openEmailClient = (summary: string) => {
     const subject = encodeURIComponent(`[Website Enquiry] ${formData.service} - ${formData.fullName.trim()}`);
     const body = encodeURIComponent(summary);
-    const mailtoUrl = `mailto:${siteConfig.contact.email}?subject=${subject}&body=${body}`;
+    window.location.href = `mailto:${recipientEmail}?subject=${subject}&body=${body}`;
+  };
 
-    // Trigger local email client
-    window.location.href = mailtoUrl;
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (sending) return;
+    if (!validate()) return;
+
+    setApiError(null);
+    setSent(false);
+    setFellBack(false);
+    setPreparedSummary(null);
+    setSending(true);
+
+    const summary = generateEnquiryText();
+    const fallBack = () => {
+      setPreparedSummary(summary);
+      setFellBack(true);
+      openEmailClient(summary);
+    };
+
+    try {
+      const res = await fetch("/api/inquiries", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: formData.fullName.trim(),
+          email: formData.email.trim(),
+          phone: formData.phone.trim(),
+          company: formData.company.trim(),
+          service: formData.service,
+          message: formData.message.trim(),
+          website,
+        }),
+      });
+      const data = (await res.json().catch(() => null)) as { success?: boolean; error?: string; code?: string } | null;
+
+      if (res.ok && data?.success) {
+        setSent(true);
+        setFormData({
+          fullName: "",
+          email: "",
+          company: "",
+          phone: "",
+          service: serviceOptions[0],
+          message: "",
+          privacyAgreed: false,
+        });
+        setErrors({});
+      } else if (res.status === 503 || data?.code === "storage_unavailable") {
+        fallBack();
+      } else {
+        setApiError(data?.error || "Sorry, we could not send your message. Please try again.");
+      }
+    } catch {
+      fallBack();
+    } finally {
+      setSending(false);
+    }
   };
 
   const handleCopySummary = async () => {
@@ -137,13 +198,24 @@ export function ContactForm() {
           Fill out the details below and our team will get back to you.
         </p>
         <div className={styles.formNotice}>
-          <strong>How it works:</strong> this website does not store your message. Sending the form
-          opens your email app with the details pre-filled to{" "}
-          <code>{siteConfig.contact.email}</code>, where you can review and send it.
+          <strong>How it works:</strong> your message is sent to our team, and we reply by email. If it
+          cannot be sent from here, your email app opens with the details pre-filled to{" "}
+          <code>{recipientEmail}</code> so you can send it yourself.
         </div>
       </div>
 
-      <form className={styles.form} onSubmit={handleOpenEmailClient} noValidate>
+      <form className={styles.form} onSubmit={handleSubmit} noValidate>
+        <div className={styles.honeypot} aria-hidden="true">
+          <input
+            type="text"
+            id="website"
+            name="website"
+            tabIndex={-1}
+            autoComplete="off"
+            value={website}
+            onChange={(e) => setWebsite(e.target.value)}
+          />
+        </div>
         <div className={styles.formGrid}>
           {/* Full Name */}
           <div className={styles.formGroup}>
@@ -268,9 +340,11 @@ export function ContactForm() {
               aria-invalid={!!errors.service}
               aria-describedby={errors.service ? "service-error" : undefined}
             >
-              <option value="Software Development">Software Development</option>
-              <option value="AI Automation">AI Automation</option>
-              <option value="Other">General Engineering Inquiry</option>
+              {serviceOptions.map((option) => (
+                <option key={option} value={option}>
+                  {option}
+                </option>
+              ))}
             </select>
             {errors.service && (
               <span id="service-error" className={styles.errorMessage} role="alert">
@@ -334,8 +408,8 @@ export function ContactForm() {
 
         {/* Actions */}
         <div className={styles.actionsRow}>
-          <button type="submit" className={`btn btn-primary ${styles.submitBtn}`}>
-            Send Project Enquiry
+          <button type="submit" className={`btn btn-primary ${styles.submitBtn}`} disabled={sending}>
+            {sending ? "Sending..." : "Send Project Enquiry"}
           </button>
           {preparedSummary && (
             <button
@@ -349,6 +423,20 @@ export function ContactForm() {
         </div>
       </form>
 
+      {sent && (
+        <div className={styles.statusBox} role="status">
+          <div className={styles.statusTitle}>
+            <span>Thank you, your message has been sent. We will get back to you soon.</span>
+          </div>
+        </div>
+      )}
+
+      {apiError && (
+        <div className={styles.statusBox} role="alert">
+          <p className={styles.statusDesc}>{apiError}</p>
+        </div>
+      )}
+
       {/* Real Action Summary */}
       {preparedSummary && (
         <div className={styles.statusBox} role="status">
@@ -359,8 +447,13 @@ export function ContactForm() {
             <span>Enquiry Prepared for Email Delivery</span>
           </div>
           <p className={styles.statusDesc}>
+            {fellBack ? (
+              <>
+                We could not send your message through the website just now, so we prepared it for email instead.{" "}
+              </>
+            ) : null}
             Your email application has been invoked with the pre-formatted enquiry addressed to{" "}
-            <strong>{siteConfig.contact.email}</strong>. If your mail client did not open automatically,
+            <strong>{recipientEmail}</strong>. If your mail client did not open automatically,
             use the &quot;Copy Enquiry Summary&quot; button above to paste the message directly into your webmail.
           </p>
         </div>

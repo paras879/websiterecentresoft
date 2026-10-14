@@ -1,26 +1,20 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import styles from "./career-form.module.css";
 
-const HR_EMAIL = "hr@recenturesoft.com";
-
-const AREAS = [
-  "Software Development",
-  "AI Automation",
-  "Custom Development",
-  "SEO & Digital Marketing",
-  "Design (UI/UX)",
-  "Something else",
-];
-
-const EXPERIENCE = ["Fresher", "1–3 years", "4–6 years", "7+ years"];
-
 const PHONE_FORMAT = /^\+?[0-9\s\-()]+$/;
+const MAX_BROWSER_BYTES = 10 * 1024 * 1024;
 
 function sanitizePhone(value: string): string {
   const cleaned = value.replace(/[^0-9+\s\-()]/g, "");
   return cleaned.replace(/(?!^)\+/g, "");
+}
+
+function formatSize(bytes: number): string {
+  return bytes < 1024 * 1024
+    ? `${Math.max(1, Math.round(bytes / 1024))} KB`
+    : `${(bytes / 1024 / 1024).toFixed(1)} MB`;
 }
 
 interface FormState {
@@ -35,20 +29,56 @@ interface FormState {
 }
 
 type Errors = Partial<Record<keyof FormState, string>>;
+type Status = "idle" | "sending" | "success" | "email";
 
-export function CareerForm() {
-  const [data, setData] = useState<FormState>({
+interface CareerFormProps {
+  hrEmail: string;
+  areas: string[];
+  experience: string[];
+  /** Titles of currently open roles, listed first in the area choices. */
+  openingTitles?: string[];
+  submitLabel: string;
+  idleNote: string;
+  /** Shown when the mail app is opened. {email} is replaced by the HR address. */
+  fallbackNote: string;
+  emailInsteadNote: string;
+  successText: string;
+  resumeLabel: string;
+  resumeHint: string;
+}
+
+export function CareerForm({
+  hrEmail,
+  areas,
+  experience,
+  openingTitles = [],
+  submitLabel,
+  idleNote,
+  fallbackNote,
+  emailInsteadNote,
+  successText,
+  resumeLabel,
+  resumeHint,
+}: CareerFormProps) {
+  const areaChoices = [...openingTitles, ...areas.filter((a) => !openingTitles.includes(a))];
+  const initial = (): FormState => ({
     name: "",
     email: "",
     phone: "",
-    area: AREAS[0],
-    experience: EXPERIENCE[1],
+    area: areaChoices[0] ?? "",
+    experience: experience[1] ?? experience[0] ?? "",
     link: "",
     note: "",
     agreed: false,
   });
+
+  const [data, setData] = useState<FormState>(initial);
   const [errors, setErrors] = useState<Errors>({});
-  const [sent, setSent] = useState(false);
+  const [status, setStatus] = useState<Status>("idle");
+  const [apiError, setApiError] = useState("");
+  const [resume, setResume] = useState<File | null>(null);
+  const fileRef = useRef<HTMLInputElement>(null);
+  const trapRef = useRef<HTMLInputElement>(null);
 
   const set = <K extends keyof FormState>(key: K, value: FormState[K]) => {
     setData((prev) => ({ ...prev, [key]: value }));
@@ -73,10 +103,7 @@ export function CareerForm() {
     return Object.keys(next).length === 0;
   };
 
-  const onSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!validate()) return;
-
+  const openMailClient = () => {
     const body = [
       "Application for Recenturesoft Infotech",
       "======================================",
@@ -94,12 +121,82 @@ export function CareerForm() {
     ].join("\n");
 
     const subject = encodeURIComponent(`[Careers] ${data.area} - ${data.name.trim()}`);
-    setSent(true);
-    window.location.href = `mailto:${HR_EMAIL}?subject=${subject}&body=${encodeURIComponent(body)}`;
+    setStatus("email");
+    window.location.href = `mailto:${hrEmail}?subject=${subject}&body=${encodeURIComponent(body)}`;
   };
+
+  const onFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] ?? null;
+    setApiError("");
+    if (file && file.size > MAX_BROWSER_BYTES) {
+      setResume(null);
+      e.target.value = "";
+      setApiError("That file is too large. Please share a link to your resume instead, or email it to us.");
+      return;
+    }
+    setResume(file);
+  };
+
+  const onSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (status === "sending" || !validate()) return;
+
+    setApiError("");
+    setStatus("sending");
+    const body = new FormData();
+    body.set("name", data.name.trim());
+    body.set("email", data.email.trim());
+    body.set("phone", data.phone.trim());
+    body.set("area", data.area);
+    body.set("experience", data.experience);
+    body.set("link", data.link.trim());
+    body.set("note", data.note.trim());
+    body.set("agreed", "true");
+    body.set("website", trapRef.current?.value ?? "");
+    if (resume) body.set("resume", resume);
+
+    try {
+      const res = await fetch("/api/careers/apply", { method: "POST", body });
+      const json = (await res.json().catch(() => ({}))) as {
+        success?: boolean;
+        code?: string;
+        error?: string;
+      };
+      if (res.ok && json.success) {
+        setStatus("success");
+        setData(initial());
+        setResume(null);
+        if (fileRef.current) fileRef.current.value = "";
+        return;
+      }
+      if (res.status === 503 || json.code === "storage_unavailable") {
+        openMailClient();
+        return;
+      }
+      setStatus("idle");
+      setApiError(json.error || "We could not send your application. Please try again.");
+    } catch {
+      openMailClient();
+    }
+  };
+
+  const hint = resumeHint.trim();
 
   return (
     <form className={styles.form} onSubmit={onSubmit} noValidate>
+      <div className={styles.trap} aria-hidden="true">
+        <input
+          ref={trapRef}
+          aria-label="Leave this field empty"
+          id="cr-website"
+          name="website"
+          type="text"
+          tabIndex={-1}
+          autoComplete="off"
+          defaultValue=""
+        />
+      </div>
+
       <div className={styles.row}>
         <div className={styles.field}>
           <label htmlFor="cr-name" className={styles.label}>
@@ -160,8 +257,8 @@ export function CareerForm() {
             value={data.experience}
             onChange={(e) => set("experience", e.target.value)}
           >
-            {EXPERIENCE.map((x) => (
-              <option key={x}>{x}</option>
+            {experience.map((x, i) => (
+              <option key={`${x}-${i}`}>{x}</option>
             ))}
           </select>
         </div>
@@ -170,7 +267,7 @@ export function CareerForm() {
       <fieldset className={styles.fieldset}>
         <legend className={styles.label}>Area you are interested in</legend>
         <div className={styles.chips}>
-          {AREAS.map((area) => (
+          {areaChoices.map((area) => (
             <label key={area} className={styles.pick}>
               <input
                 type="radio"
@@ -199,6 +296,25 @@ export function CareerForm() {
       </div>
 
       <div className={styles.field}>
+        <label htmlFor="cr-resume" className={styles.label}>
+          {resumeLabel} <span className={styles.opt}>(optional, PDF, DOC or DOCX)</span>
+        </label>
+        <input
+          ref={fileRef}
+          id="cr-resume"
+          type="file"
+          accept=".pdf,.doc,.docx"
+          className={styles.input}
+          onChange={onFile}
+          aria-describedby="cr-resume-hint"
+        />
+        <p id="cr-resume-hint" className={styles.hint}>
+          {resume ? `Chosen: ${resume.name} (${formatSize(resume.size)}). ` : ""}
+          {hint ? `${hint.charAt(0).toUpperCase()}${hint.slice(1)}${/[.!?]$/.test(hint) ? "" : "."}` : ""}
+        </p>
+      </div>
+
+      <div className={styles.field}>
         <label htmlFor="cr-note" className={styles.label}>
           Tell us about yourself <span className={styles.opt}>(optional)</span>
         </label>
@@ -221,15 +337,28 @@ export function CareerForm() {
       </label>
       {errors.agreed ? <p className={styles.err}>{errors.agreed}</p> : null}
 
-      <button type="submit" className={styles.submit}>
-        Prepare my application <span aria-hidden="true">&rarr;</span>
-      </button>
+      <div className={styles.actions}>
+        <button type="submit" className={styles.submit} disabled={status === "sending"}>
+          {submitLabel} <span aria-hidden="true">&rarr;</span>
+        </button>
+        {apiError ? (
+          <p className={styles.err} role="alert">
+            {apiError}
+          </p>
+        ) : null}
+      </div>
 
-      <p className={styles.note} role="status">
-        {sent
-          ? `Your email app should have opened with the details filled in. Attach your resume and send it. If nothing opened, write to ${HR_EMAIL}.`
-          : "This opens an email to our HR team with your details filled in. Attach your resume before sending."}
-      </p>
+      {status === "success" ? (
+        <p className={styles.success} role="status">
+          {successText}
+        </p>
+      ) : (
+        <p className={styles.note} role="status">
+          {status === "email"
+            ? `${fallbackNote.replace("{email}", hrEmail)} ${emailInsteadNote}`.trim()
+            : idleNote}
+        </p>
+      )}
     </form>
   );
 }

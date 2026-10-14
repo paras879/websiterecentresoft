@@ -1,120 +1,50 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { siteConfig } from "@/lib/site-config";
-import { Icon, type IconName } from "../services/icons";
+import { getSiteContent } from "@/lib/content";
+import { getSiteInfo } from "@/lib/site";
+import { pageMetadata } from "@/lib/seo";
+import { Icon, iconPaths, type IconName } from "../services/icons";
 import styles from "../services/services.module.css";
 
-export const metadata: Metadata = {
-  title: "Sitemap | Recenturesoft Infotech",
-  description:
-    "Browse every page of the Recenturesoft Infotech website: company information, services, contact details and more.",
-  alternates: {
-    canonical: "/sitemap",
-  },
-  openGraph: {
-    title: "Sitemap | Recenturesoft Infotech",
-    description:
-      "Browse every page of the Recenturesoft Infotech website: company information, services, contact details and more.",
-    url: "https://www.recenturesoft.com/sitemap",
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const { sitemap } = await getSiteContent();
+  return pageMetadata(sitemap.meta, "/sitemap");
+}
 
 type SiteLink = { label: string; desc: string; href: string; external?: boolean };
 
-const groups: { icon: IconName; title: string; links: SiteLink[] }[] = [
-  {
-    icon: "enterprise",
-    title: "Company",
-    links: [
-      { label: "Home", desc: "Overview of what we do", href: "/" },
-      { label: "About Us", desc: "Who we are and how we work", href: "/about" },
-      { label: "Contact Us", desc: "Talk to our team", href: "/contact" },
-      { label: "Careers", desc: "Join the team and send your profile", href: "/careers" },
-    ],
-  },
-  {
-    icon: "code",
-    title: "Services",
-    links: [
-      {
-        label: "Software Development",
-        desc: "Custom software and web applications",
-        href: "/services/software-development",
-      },
-      {
-        label: "AI Automation",
-        desc: "AI-powered workflow automation",
-        href: "/services/ai-automation",
-      },
-      {
-        label: "Custom Development",
-        desc: "Web apps, SaaS, APIs and enterprise software",
-        href: "/services/custom-development",
-      },
-      {
-        label: "SEO Services",
-        desc: "Technical, on-page and local SEO",
-        href: "/services/seo",
-      },
-    ],
-  },
-  {
-    icon: "handshake",
-    title: "Connect",
-    links: [
-      {
-        label: siteConfig.contact.email,
-        desc: "Email us",
-        href: `mailto:${siteConfig.contact.email}`,
-        external: true,
-      },
-      {
-        label: siteConfig.contact.phone,
-        desc: "Call our team",
-        href: `tel:${siteConfig.contact.phoneRaw}`,
-        external: true,
-      },
-      {
-        label: "WhatsApp",
-        desc: "Send us a message",
-        href: siteConfig.contact.whatsappUrl,
-        external: true,
-      },
-    ],
-  },
-  {
-    icon: "people",
-    title: "Social",
-    links: [
-      {
-        label: "LinkedIn",
-        desc: "Company updates",
-        href: "https://in.linkedin.com/company/recenturesoft",
-        external: true,
-      },
-      {
-        label: "X (Twitter)",
-        desc: "@recenture_soft",
-        href: "https://x.com/recenture_soft",
-        external: true,
-      },
-      {
-        label: "Facebook",
-        desc: "Recenturesoft Infotech",
-        href: "https://www.facebook.com/recenturesoftinfotech/",
-        external: true,
-      },
-      {
-        label: "YouTube",
-        desc: "Our channel",
-        href: "https://www.youtube.com/channel/UCwrJM7HFZGmke0jr8y4VYXg",
-        external: true,
-      },
-    ],
-  },
-];
+const isIcon = (name: string): name is IconName => name in iconPaths;
 
-export default function SitemapPage() {
+export default async function SitemapPage() {
+  const content = await getSiteContent();
+  const info = await getSiteInfo();
+  const { hero, company, services, connect, social, cta } = content.sitemap;
+  const { contact } = info;
+
+  const groups: { icon: string; title: string; links: SiteLink[] }[] = [
+    { icon: company.icon, title: company.title, links: company.links },
+    { icon: services.icon, title: services.title, links: services.links },
+    {
+      icon: connect.icon,
+      title: connect.title,
+      links: [
+        { label: contact.email, desc: connect.emailDesc, href: `mailto:${contact.email}`, external: true },
+        { label: contact.phone, desc: connect.phoneDesc, href: `tel:${contact.phoneRaw}`, external: true },
+        {
+          label: connect.whatsappLabel,
+          desc: connect.whatsappDesc,
+          href: contact.whatsappUrl,
+          external: true,
+        },
+      ].filter((link) => link.label),
+    },
+    {
+      icon: social.icon,
+      title: social.title,
+      links: social.links.map((link) => ({ ...link, external: true })),
+    },
+  ].filter((g) => g.links.length > 0);
+
   return (
     <div className={styles.page}>
       {/* Hero */}
@@ -122,12 +52,9 @@ export default function SitemapPage() {
         <div className="container">
           <div className={`${styles.heroCopy} ${styles.sitemapHero}`}>
             <h1 id="sitemap-heading" className={styles.heroTitle}>
-              Sitemap
+              {hero.title}
             </h1>
-            <p className={styles.heroText}>
-              Everything on the Recenturesoft website in one place. Pick a page below to jump
-              straight to it.
-            </p>
+            {hero.text ? <p className={styles.heroText}>{hero.text}</p> : null}
           </div>
         </div>
       </section>
@@ -136,15 +63,15 @@ export default function SitemapPage() {
       <section className={styles.section} aria-label="Site pages">
         <div className="container">
           <div className={styles.sitemapGrid}>
-            {groups.map((group) => (
-              <article key={group.title} className={styles.tile}>
+            {groups.map((group, groupIndex) => (
+              <article key={`${group.title}-${groupIndex}`} className={styles.tile}>
                 <div className={styles.iconBadge}>
-                  <Icon name={group.icon} className={styles.icon} />
+                  {isIcon(group.icon) ? <Icon name={group.icon} className={styles.icon} /> : null}
                 </div>
                 <h2 className={styles.sitemapTitle}>{group.title}</h2>
                 <ul className={styles.siteList}>
-                  {group.links.map((link) => {
-                    const content = (
+                  {group.links.map((link, index) => {
+                    const body = (
                       <>
                         <span className={styles.siteLinkText}>
                           <span className={styles.siteLinkLabel}>{link.label}</span>
@@ -156,7 +83,7 @@ export default function SitemapPage() {
                       </>
                     );
                     return (
-                      <li key={link.label}>
+                      <li key={`${link.label}-${index}`}>
                         {link.external ? (
                           <a
                             href={link.href}
@@ -165,11 +92,11 @@ export default function SitemapPage() {
                               ? { target: "_blank", rel: "noopener noreferrer" }
                               : {})}
                           >
-                            {content}
+                            {body}
                           </a>
                         ) : (
                           <Link href={link.href} className={styles.siteLink}>
-                            {content}
+                            {body}
                           </Link>
                         )}
                       </li>
@@ -186,16 +113,16 @@ export default function SitemapPage() {
       <section className={styles.ctaBand} aria-labelledby="sitemap-cta-heading">
         <div className={`container ${styles.closeInner}`}>
           <h2 id="sitemap-cta-heading" className={styles.closeTitle}>
-            Can&apos;t find what you&apos;re looking for?
+            {cta.title}
           </h2>
-          <p className={styles.closeText}>
-            Tell us what you need and our Noida team will point you in the right direction.
-          </p>
-          <div className={styles.actions}>
-            <Link href="/contact" className={styles.btnPrimary}>
-              Contact Us <span aria-hidden="true">&rarr;</span>
-            </Link>
-          </div>
+          {cta.text ? <p className={styles.closeText}>{cta.text}</p> : null}
+          {cta.buttonLabel ? (
+            <div className={styles.actions}>
+              <Link href={cta.buttonHref || "/contact"} className={styles.btnPrimary}>
+                {cta.buttonLabel} <span aria-hidden="true">&rarr;</span>
+              </Link>
+            </div>
+          ) : null}
         </div>
       </section>
     </div>

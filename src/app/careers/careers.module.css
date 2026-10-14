@@ -578,3 +578,127 @@ a.endRow:focus-visible {
     transform: none;
   }
 }
+
+/* ---------- current openings ---------- */
+.jobs {
+  padding: 4.5rem 0 0;
+  background: var(--sv-bg);
+}
+
+.jobList {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.job {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  min-width: 0;
+  padding: 1.75rem;
+  background: var(--sv-card);
+  border: 1px solid var(--sv-line);
+  border-radius: 24px;
+  box-shadow: 0 30px 56px -46px rgba(11, 31, 68, 0.5);
+  transition: border-color 0.25s ease, transform 0.25s ease;
+}
+
+.job:hover {
+  border-color: var(--sv-tint-border);
+  transform: translateY(-3px);
+}
+
+.jobTitle {
+  margin: 0;
+  font-size: 1.375rem;
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -0.03em;
+  color: var(--sv-heading);
+}
+
+.jobMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.jobPill {
+  padding: 0.25rem 0.7rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: #1d4ed8;
+  background: var(--sv-tint);
+  border: 1px solid var(--sv-tint-border);
+  border-radius: 999px;
+}
+
+.jobText {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--sv-text);
+}
+
+.jobReqs {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin: 0;
+  padding: 0 0 0 1.15rem;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: var(--sv-text);
+}
+
+.jobReqs li::marker {
+  color: #1d4ed8;
+}
+
+.jobApply {
+  align-self: flex-start;
+  margin-top: auto;
+  padding-top: 0.25rem;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: #1d4ed8;
+  text-decoration: none;
+}
+
+.jobApply:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+@media (max-width: 800px) {
+  .jobList {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 700px) {
+  .jobs {
+    padding-top: 3rem;
+  }
+
+  .job {
+    padding: 1.4rem 1.25rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .job {
+    transition: none;
+  }
+
+  .job:hover {
+    transform: none;
+  }
+}

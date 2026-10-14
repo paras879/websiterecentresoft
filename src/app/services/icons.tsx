@@ -32,6 +32,10 @@ export const iconPaths = {
   arrowRight:"M5 12h14M13 6l6 6-6 6",
   tune: "M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0M14 4v4M8 10v4M16 16v4",
   phone:"M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2z",
+  gear: "M12 8a4 4 0 100 8 4 4 0 000-8zM12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1",
+  wrench: "M14.7 6.3a4 4 0 00-5.4 5.4L3 18v3h3l6.3-6.3a4 4 0 005.4-5.4l-2.5 2.5-2.4-.6-.6-2.4 2.5-2.5z",
+  calendar: "M3 5h18v14H3zM3 9h18M8 3v4M16 3v4",
+  pen: "M4 20h4L18 10l-4-4L4 16v4zM14 6l4 4",
 } as const;
 
 export type IconName = keyof typeof iconPaths;

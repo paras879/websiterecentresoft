@@ -1,99 +1,26 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { Icon, type IconName } from "../services/icons";
+import { getSiteContent } from "@/lib/content";
+import { pageMetadata } from "@/lib/seo";
+import { Icon, iconPaths, type IconName } from "../services/icons";
 import styles from "../services/services.module.css";
 
-export const metadata: Metadata = {
-  title: "About Us | Recenturesoft Infotech",
-  description:
-    "Learn about Recenturesoft Infotech Pvt Ltd, our engineering capabilities, software development approach, and enterprise technology solutions.",
-  alternates: {
-    canonical: "/about",
-  },
-  openGraph: {
-    title: "About Us | Recenturesoft Infotech",
-    description:
-      "Learn about Recenturesoft Infotech Pvt Ltd, our engineering capabilities, software development approach, and enterprise technology solutions.",
-    url: "https://www.recenturesoft.com/about",
-    images: [
-      {
-        url: "/images/about.jpg",
-        width: 1200,
-        height: 630,
-        alt: "About Recenturesoft Infotech Engineering Team",
-      },
-    ],
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const { about } = await getSiteContent();
+  return pageMetadata(about.meta, "/about");
+}
 
-const info = [
-  { label: "Registered Office", value: "Sector 63, Noida, UP" },
-  { label: "Focus", value: "Software & AI Automation" },
-  { label: "Collaboration", value: "Direct access to the engineering team" },
-];
+const isIcon = (name: string): name is IconName => name in iconPaths;
 
-const pragmatic: { icon: IconName; title: string; desc: string }[] = [
-  {
-    icon: "terminal",
-    title: "Core Architectural Discipline",
-    desc: "Built on clean modular code, predictable release cycles and transparent communication. Every system is structured for testability and straightforward maintenance.",
-  },
-  {
-    icon: "architecture",
-    title: "Direct Technical Collaboration",
-    desc: "Clients work directly with the developers and architects building their applications, which keeps decisions quick and context intact.",
-  },
-  {
-    icon: "check",
-    title: "Objective Business Impact",
-    desc: "We avoid speculative buzzwords. Every line of code and automation is built to solve a defined business bottleneck and reduce operational overhead.",
-  },
-];
+function Glyph({ name, className }: { name: string; className?: string }) {
+  return isIcon(name) ? <Icon name={name} className={className} /> : null;
+}
 
-const principles: { icon: IconName; label: string; title: string; desc: string }[] = [
-  {
-    icon: "code",
-    label: "01 / ARCHITECTURE",
-    title: "Maintainable Codebases",
-    desc: "Documented, modular code on modern frameworks, designed for longevity and low technical debt.",
-  },
-  {
-    icon: "database",
-    label: "02 / LOGIC",
-    title: "Predictable Logic",
-    desc: "Reliable APIs, transactional integrity and predictable automated pipelines rather than black-box experiments.",
-  },
-  {
-    icon: "shield",
-    label: "03 / GOVERNANCE",
-    title: "Security-Conscious Development",
-    desc: "Security considered from schema design through production deployment.",
-  },
-  {
-    icon: "eye",
-    label: "04 / OPERATIONS",
-    title: "Transparent Collaboration",
-    desc: "Visibility into sprint progress, regular code walkthroughs and proactive technical updates.",
-  },
-];
+export default async function AboutPage() {
+  const content = await getSiteContent();
+  const { hero, pragmatic, principles, teams, cta } = content.about;
 
-const podPoints = [
-  {
-    title: "Cross-functional teams:",
-    desc: "Frontend engineers, backend engineers and QA work together for quicker coordination.",
-  },
-  {
-    title: "Whiteboard sessions:",
-    desc: "Complex domain logic is mapped collaboratively before schemas are written.",
-  },
-  {
-    title: "Clear communication:",
-    desc: "Regular updates and walkthroughs keep timelines and expectations aligned.",
-  },
-];
-
-export default function AboutPage() {
   return (
     <div className={styles.page}>
       {/* Hero */}
@@ -101,35 +28,34 @@ export default function AboutPage() {
         <div className={`container ${styles.heroGrid}`}>
           <div className={styles.heroCopy}>
             <h1 id="about-intro-heading" className={styles.heroTitle}>
-              Engineering Dependable Software from Sector 63, Noida
+              {hero.title}
             </h1>
-            <p className={styles.heroText}>
-              Recenturesoft Infotech Pvt. Ltd. is a custom software engineering and AI
-              automation company. We partner with organisations to build robust web
-              applications, maintainable backend architectures, and practical workflow
-              automation that solves real operational challenges.
-            </p>
-            <div className={styles.infoGrid}>
-              {info.map((item) => (
-                <div key={item.label}>
-                  <span className={styles.infoLabel}>{item.label}</span>
-                  <p className={styles.infoValue}>{item.value}</p>
-                </div>
-              ))}
-            </div>
+            {hero.text ? <p className={styles.heroText}>{hero.text}</p> : null}
+            {hero.facts.length > 0 ? (
+              <div className={styles.infoGrid}>
+                {hero.facts.map((item, index) => (
+                  <div key={`${item.label}-${index}`}>
+                    <span className={styles.infoLabel}>{item.label}</span>
+                    <p className={styles.infoValue}>{item.value}</p>
+                  </div>
+                ))}
+              </div>
+            ) : null}
           </div>
 
-          <div className={styles.photoFrame}>
-            <Image
-              src="/images/home-hero.jpg"
-              alt="Engineers collaborating around architecture diagrams in a Noida office"
-              width={1200}
-              height={896}
-              priority
-              sizes="(max-width: 1024px) 100vw, 560px"
-              className={styles.photo}
-            />
-          </div>
+          {hero.image ? (
+            <div className={styles.photoFrame}>
+              <Image
+                src={hero.image}
+                alt={hero.imageAlt}
+                width={1200}
+                height={896}
+                priority
+                sizes="(max-width: 1024px) 100vw, 560px"
+                className={styles.photo}
+              />
+            </div>
+          ) : null}
         </div>
       </section>
 
@@ -139,35 +65,40 @@ export default function AboutPage() {
           <header className={styles.pragIntro}>
             <span className={styles.pragBar} aria-hidden="true" />
             <h2 id="pragmatic-heading" className={styles.pragTitle}>
-              Pragmatic Engineering,{" "}
-              <span className={styles.pragGradient}>Zero Hype</span>
+              {pragmatic.title}
+              {pragmatic.highlight ? (
+                <>
+                  {" "}
+                  <span className={styles.pragGradient}>{pragmatic.highlight}</span>
+                </>
+              ) : null}
             </h2>
-            <p className={styles.pragLead}>
-              Our approach prioritises long-term software sustainability over passing
-              technology trends. We care about reliable systems and real efficiency gains for
-              the people who use them.
-            </p>
-            <Link href="/contact" className={styles.pragLink}>
-              Talk to our team <span aria-hidden="true">&rarr;</span>
-            </Link>
+            {pragmatic.lead ? <p className={styles.pragLead}>{pragmatic.lead}</p> : null}
+            {pragmatic.linkLabel ? (
+              <Link href={pragmatic.linkHref || "/contact"} className={styles.pragLink}>
+                {pragmatic.linkLabel} <span aria-hidden="true">&rarr;</span>
+              </Link>
+            ) : null}
           </header>
 
-          <ol className={styles.pragList}>
-            {pragmatic.map((item, index) => (
-              <li key={item.title} className={styles.pragRow}>
-                <span className={styles.pragNum} aria-hidden="true">
-                  {String(index + 1).padStart(2, "0")}
-                </span>
-                <div className={styles.pragBody}>
-                  <h3 className={styles.pragRowTitle}>{item.title}</h3>
-                  <p className={styles.body}>{item.desc}</p>
-                </div>
-                <span className={styles.pragIcon} aria-hidden="true">
-                  <Icon name={item.icon} className={styles.icon} />
-                </span>
-              </li>
-            ))}
-          </ol>
+          {pragmatic.items.length > 0 ? (
+            <ol className={styles.pragList}>
+              {pragmatic.items.map((item, index) => (
+                <li key={`${item.title}-${index}`} className={styles.pragRow}>
+                  <span className={styles.pragNum} aria-hidden="true">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  <div className={styles.pragBody}>
+                    <h3 className={styles.pragRowTitle}>{item.title}</h3>
+                    <p className={styles.body}>{item.desc}</p>
+                  </div>
+                  <span className={styles.pragIcon} aria-hidden="true">
+                    <Glyph name={item.icon} className={styles.icon} />
+                  </span>
+                </li>
+              ))}
+            </ol>
+          ) : null}
         </div>
       </section>
 
@@ -176,62 +107,64 @@ export default function AboutPage() {
         <div className="container">
           <header className={styles.prinHead}>
             <h2 id="principles-heading" className={styles.prinTitle}>
-              Our Engineering Principles
+              {principles.title}
             </h2>
-            <p className={styles.prinLead}>
-              The standards that guide how our team designs, refactors and deploys business
-              systems.
-            </p>
+            {principles.lead ? <p className={styles.prinLead}>{principles.lead}</p> : null}
           </header>
 
-          <div className={styles.prinPanel}>
-            {principles.map((item) => (
-              <article key={item.title} className={styles.prinItem}>
-                <span className={styles.prinLabel}>{item.label}</span>
-                <div className={styles.prinIcon}>
-                  <Icon name={item.icon} className={styles.icon} />
-                </div>
-                <h3 className={styles.prinItemTitle}>{item.title}</h3>
-                <p className={styles.prinText}>{item.desc}</p>
-              </article>
-            ))}
-          </div>
+          {principles.items.length > 0 ? (
+            <div className={styles.prinPanel}>
+              {principles.items.map((item, index) => (
+                <article key={`${item.title}-${index}`} className={styles.prinItem}>
+                  <span className={styles.prinLabel}>
+                    {String(index + 1).padStart(2, "0")}
+                    {item.label ? ` / ${item.label}` : ""}
+                  </span>
+                  <div className={styles.prinIcon}>
+                    <Glyph name={item.icon} className={styles.icon} />
+                  </div>
+                  <h3 className={styles.prinItemTitle}>{item.title}</h3>
+                  <p className={styles.prinText}>{item.desc}</p>
+                </article>
+              ))}
+            </div>
+          ) : null}
         </div>
       </section>
 
       {/* Development pods */}
       <section className={styles.section} aria-labelledby="pods-heading">
         <div className={`container ${styles.split}`}>
-          <div className={styles.photoFrame}>
-            <Image
-              src="/images/services-team.jpg"
-              alt="Engineers discussing microservices architecture at a whiteboard"
-              width={1200}
-              height={896}
-              sizes="(max-width: 1024px) 100vw, 560px"
-              className={styles.photo}
-            />
-          </div>
+          {teams.image ? (
+            <div className={styles.photoFrame}>
+              <Image
+                src={teams.image}
+                alt={teams.imageAlt}
+                width={1200}
+                height={896}
+                sizes="(max-width: 1024px) 100vw, 560px"
+                className={styles.photo}
+              />
+            </div>
+          ) : null}
 
           <div className={styles.splitCopy}>
             <h2 id="pods-heading" className={styles.h2}>
-              Our Development Teams in Noida
+              {teams.title}
             </h2>
-            <p className={styles.lead}>
-              Our engineering and automation teams work out of Sector 63, Noida. Keeping
-              design, development and quality engineering close together supports quick
-              turnaround and shared understanding of your project.
-            </p>
-            <ul className={styles.checkItems}>
-              {podPoints.map((point) => (
-                <li key={point.title}>
-                  <Icon name="check" className={`${styles.icon} ${styles.smallCheck}`} />
-                  <span>
-                    <strong>{point.title}</strong> {point.desc}
-                  </span>
-                </li>
-              ))}
-            </ul>
+            {teams.lead ? <p className={styles.lead}>{teams.lead}</p> : null}
+            {teams.points.length > 0 ? (
+              <ul className={styles.checkItems}>
+                {teams.points.map((point, index) => (
+                  <li key={`${point.title}-${index}`}>
+                    <Icon name="check" className={`${styles.icon} ${styles.smallCheck}`} />
+                    <span>
+                      <strong>{point.title}</strong> {point.desc}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            ) : null}
           </div>
         </div>
       </section>
@@ -240,19 +173,20 @@ export default function AboutPage() {
       <section className={`${styles.ctaBand} ${styles.ctaAbout}`} aria-labelledby="about-cta-heading">
         <div className={`container ${styles.closeInner}`}>
           <h2 id="about-cta-heading" className={styles.closeTitle}>
-            Ready to discuss your software or automation requirements?
+            {cta.title}
           </h2>
-          <p className={styles.closeText}>
-            Connect with our Noida team. We&apos;ll review your existing setup, discuss
-            architecture options, and agree clear timelines.
-          </p>
+          {cta.text ? <p className={styles.closeText}>{cta.text}</p> : null}
           <div className={styles.actions}>
-            <Link href="/contact" className={styles.btnPrimary}>
-              Discuss Your Project <span aria-hidden="true">&rarr;</span>
-            </Link>
-            <Link href="/services/software-development" className={styles.btnGhost}>
-              Explore Services <span aria-hidden="true">&rsaquo;</span>
-            </Link>
+            {cta.primaryLabel ? (
+              <Link href={cta.primaryHref || "/contact"} className={styles.btnPrimary}>
+                {cta.primaryLabel} <span aria-hidden="true">&rarr;</span>
+              </Link>
+            ) : null}
+            {cta.secondaryLabel ? (
+              <Link href={cta.secondaryHref || "/"} className={styles.btnGhost}>
+                {cta.secondaryLabel} <span aria-hidden="true">&rsaquo;</span>
+              </Link>
+            ) : null}
           </div>
         </div>
       </section>

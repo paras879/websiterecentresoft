@@ -1,137 +1,37 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { siteConfig } from "@/lib/site-config";
+import { getSiteContent } from "@/lib/content";
+import { getSiteInfo } from "@/lib/site";
+import { pageMetadata } from "@/lib/seo";
 import { SeoFaq } from "@/components/seo-faq";
 import { SeoServicesExplorer } from "@/components/seo-services-explorer";
 import styles from "../services.module.css";
 import seo from "./seo.module.css";
 
-export const metadata: Metadata = {
-  title: "SEO Services | Recenturesoft Infotech",
-  description:
-    "Technical SEO, on-page SEO, off-page SEO, keyword research, local SEO and SEO audits from Recenturesoft Infotech, Noida.",
-  alternates: {
-    canonical: "/services/seo",
-  },
-  openGraph: {
-    title: "SEO Services | Recenturesoft Infotech",
-    description:
-      "Technical SEO, on-page SEO, off-page SEO, keyword research, local SEO and SEO audits from Recenturesoft Infotech, Noida.",
-    url: "https://www.recenturesoft.com/services/seo",
-    images: [
-      {
-        url: "/images/seo-hero.jpg",
-        width: 1200,
-        height: 630,
-        alt: "Recenturesoft SEO Services",
-      },
-    ],
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const { serviceSeo } = await getSiteContent();
+  return pageMetadata(serviceSeo.meta, "/services/seo");
+}
 
-const services = [
-  {
-    title: "Technical SEO",
-    desc: "Site architecture, crawlability, Core Web Vitals, mobile responsiveness and schema markup, so search engines can reach and understand every page.",
-    includes: ["Site architecture", "Crawlability", "Core Web Vitals", "Mobile responsiveness", "Schema markup"],
-    image: "/images/seo-hero.jpg",
-  },
-  {
-    title: "On-Page SEO",
-    desc: "Metadata, semantic content structure, internal linking and alignment with what people actually search for.",
-    includes: ["Metadata", "Content structure", "Internal linking", "Search intent"],
-    image: "/images/seo-dashboard.jpg",
-  },
-  {
-    title: "Off-Page SEO",
-    desc: "Quality backlink outreach, brand citations and digital PR that build domain trust.",
-    includes: ["Backlink outreach", "Brand citations", "Digital PR"],
-    image: "/images/services-team.jpg",
-  },
-  {
-    title: "Keyword Research",
-    desc: "Topic mapping, competitor gap analysis, keyword clustering and a review of where the real opportunities sit.",
-    includes: ["Topic mapping", "Competitor gaps", "Keyword clustering"],
-    image: "/images/services-overview.jpg",
-  },
-  {
-    title: "Local SEO",
-    desc: "Google Business Profile management, consistent citations and geo-targeted landing pages for nearby customers.",
-    includes: ["Business Profile", "Local citations", "Geo-targeted pages"],
-    image: "/images/home-hero.jpg",
-  },
-  {
-    title: "SEO Audits",
-    desc: "Technical diagnostics, competitor benchmarking and link profile checks, ending in a prioritised list of fixes.",
-    includes: ["Technical diagnostics", "Competitor benchmarking", "Link profile check", "Fix list"],
-    image: "/images/services-software.jpg",
-  },
-];
+export default async function SeoServicesPage() {
+  const content = await getSiteContent();
+  const info = await getSiteInfo();
+  const { hero, services, phases, why, faq, cta } = content.serviceSeo;
+  const { contact } = info;
 
-const phases = [
-  {
-    title: "Audit",
-    desc: "A technical crawl, indexation review and a benchmark against your search competitors.",
-  },
-  {
-    title: "Strategy",
-    desc: "A keyword architecture, content gap analysis and a clear execution plan.",
-  },
-  {
-    title: "Implementation",
-    desc: "Technical fixes, on-page optimisation and authority building, delivered in phases.",
-  },
-  {
-    title: "Optimisation",
-    desc: "Ongoing monitoring of rankings and traffic, with regular refinements.",
-  },
-];
+  const serviceItems = services.items.filter((item) => item.image);
+  const faqItems = faq.items.filter((item) => item.q);
 
-const reasons = [
-  {
-    lead: "Data decides the roadmap.",
-    text: "Search data, not guesswork, chooses what we work on first.",
-  },
-  {
-    lead: "You see every report.",
-    text: "Clear reporting on crawling, indexing, rankings and conversions, with no vanity metrics.",
-  },
-  {
-    lead: "White-hat only.",
-    text: "Methods aimed at rankings that hold up through algorithm updates.",
-  },
-  {
-    lead: "Built around your business.",
-    text: "Roadmaps shaped around your market, tech stack and competitors, not a generic template.",
-  },
-];
-
-const faqs = [
-  {
-    q: "How long does SEO take to show results?",
-    a: "SEO is gradual. Technical fixes can be picked up within weeks, while content and authority work usually takes a few months to show in rankings. We agree the timeline with you after the audit.",
-  },
-  {
-    q: "Do you guarantee a number one ranking?",
-    a: "No one can honestly guarantee a ranking, because search engines make that decision. We focus on the work that improves your chances and report on it openly.",
-  },
-  {
-    q: "What do you need from us to start?",
-    a: "Access to your website and, if you have it, your search and analytics accounts. We handle the audit and planning from there.",
-  },
-  {
-    q: "Can you work with our existing website?",
-    a: "Yes. We build websites ourselves, so we can make technical changes directly or work with your developers.",
-  },
-  {
-    q: "Do you only work with businesses in Noida?",
-    a: "No. We are based in Sector 63, Noida, but we work with businesses across locations and can also set up local SEO for your area.",
-  },
-];
-
-export default function SeoServicesPage() {
-  const { contact } = siteConfig;
+  // Chart geometry: the line climbs from bottom-left to top-right and passes through each phase node.
+  const count = phases.items.length;
+  const nodePoints = phases.items.map((_, index) => {
+    const x = ((index + 0.5) / count) * 1000;
+    const y = count > 1 ? 175 - index * (150 / (count - 1)) : 100;
+    return { x, y };
+  });
+  const linePath = ["M0 200", ...nodePoints.map((p) => `L${p.x} ${p.y}`), "L1000 0"].join(" ");
+  const areaPath = `${linePath} L1000 220 L0 220 Z`;
 
   return (
     <div className={styles.page}>
@@ -140,107 +40,110 @@ export default function SeoServicesPage() {
         <div className={`container ${styles.heroGrid}`}>
           <div className={styles.heroCopy}>
             <h1 id="seo-hero-heading" className={`${styles.heroTitle} ${seo.heroTitle}`}>
-              Grow Your Visibility. Win More Search Traffic.
+              {hero.title}
             </h1>
-            <p className={styles.heroText}>
-              Data-led search engine optimisation to strengthen your brand authority, reach
-              people searching for what you offer, and build a steady organic pipeline.
-            </p>
+            <p className={styles.heroText}>{hero.text}</p>
             <div className={styles.actions}>
-              <Link href="/contact" className={styles.btnPrimary}>
-                Book an SEO Consultation <span aria-hidden="true">&rarr;</span>
+              <Link href={hero.primaryHref || "/contact"} className={styles.btnPrimary}>
+                {hero.primaryLabel} <span aria-hidden="true">&rarr;</span>
               </Link>
-              <a href="#seo-services" className={styles.btnOutline}>
-                Explore Our SEO Services
-              </a>
+              {hero.secondaryLabel ? (
+                <a href={hero.secondaryHref || "#seo-services"} className={styles.btnOutline}>
+                  {hero.secondaryLabel}
+                </a>
+              ) : null}
             </div>
           </div>
 
-          <div className={styles.photoFrame}>
-            <Image
-              src="/images/seo-hero.jpg"
-              alt="Ultra-wide monitor showing a search performance dashboard"
-              width={1376}
-              height={768}
-              priority
-              sizes="(max-width: 1024px) 100vw, 560px"
-              className={styles.photo}
-            />
-          </div>
+          {hero.image ? (
+            <div className={styles.photoFrame}>
+              <Image
+                src={hero.image}
+                alt={hero.imageAlt}
+                width={1376}
+                height={768}
+                priority
+                sizes="(max-width: 1024px) 100vw, 560px"
+                className={styles.photo}
+              />
+            </div>
+          ) : null}
         </div>
       </section>
 
       {/* Services: colour-field mosaic */}
-      <section
-        id="seo-services"
-        className={seo.services}
-        aria-labelledby="seo-services-heading"
-      >
-        <div className="container">
-          <h2 id="seo-services-heading" className={seo.bigTitle}>
-            Six ways we move you up the results page
-          </h2>
+      {serviceItems.length > 0 ? (
+        <section id="seo-services" className={seo.services} aria-labelledby="seo-services-heading">
+          <div className="container">
+            <h2 id="seo-services-heading" className={seo.bigTitle}>
+              {services.title}
+            </h2>
 
-          <SeoServicesExplorer services={services} />
-        </div>
-      </section>
+            <SeoServicesExplorer services={serviceItems} linkPrefix={services.linkPrefix} />
+          </div>
+        </section>
+      ) : null}
 
       {/* Framework: ascending steps */}
-      <section className={seo.climb} aria-labelledby="seo-framework-heading">
-        <div className="container">
-          <h2 id="seo-framework-heading" className={seo.bigTitle}>
-            A four-phase climb, one step at a time
-          </h2>
+      {count > 0 ? (
+        <section className={seo.climb} aria-labelledby="seo-framework-heading">
+          <div className="container">
+            <h2 id="seo-framework-heading" className={seo.bigTitle}>
+              {phases.title}
+            </h2>
 
-          <div className={seo.climbWrap}>
-            <div className={seo.chart} aria-hidden="true">
-              <svg className={seo.chartSvg} viewBox="0 0 1000 220" preserveAspectRatio="none">
-                <defs>
-                  <linearGradient id="seoArea" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.45" />
-                    <stop offset="100%" stopColor="#3b82f6" stopOpacity="0" />
-                  </linearGradient>
-                </defs>
-                <path className={seo.chartArea} d="M0 200 L125 175 L375 125 L625 75 L875 25 L1000 0 L1000 220 L0 220 Z" />
-                <path className={seo.chartLine} d="M0 200 L125 175 L375 125 L625 75 L875 25 L1000 0" />
-              </svg>
-              {phases.map((phase, index) => (
-                <span
-                  key={phase.title}
-                  className={seo.node}
-                  style={{
-                    left: `${12.5 + index * 25}%`,
-                    top: `${((175 - index * 50) / 220) * 100}%`,
-                  }}
-                >
-                  {index + 1}
-                </span>
-              ))}
+            <div className={seo.climbWrap}>
+              <div className={seo.chart} aria-hidden="true">
+                <svg className={seo.chartSvg} viewBox="0 0 1000 220" preserveAspectRatio="none">
+                  <defs>
+                    <linearGradient id="seoArea" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.45" />
+                      <stop offset="100%" stopColor="#3b82f6" stopOpacity="0" />
+                    </linearGradient>
+                  </defs>
+                  <path className={seo.chartArea} d={areaPath} />
+                  <path className={seo.chartLine} d={linePath} />
+                </svg>
+                {phases.items.map((phase, index) => (
+                  <span
+                    key={`${phase.title}-${index}`}
+                    className={seo.node}
+                    style={{
+                      left: `${((index + 0.5) / count) * 100}%`,
+                      top: `${(nodePoints[index].y / 220) * 100}%`,
+                    }}
+                  >
+                    {index + 1}
+                  </span>
+                ))}
+              </div>
+
+              <ol className={seo.stairs}>
+                {phases.items.map((phase, index) => (
+                  <li key={`${phase.title}-${index}`} className={seo.stair}>
+                    <span className={seo.stairPhase}>
+                      {phases.phaseWord} {index + 1}
+                    </span>
+                    <h3 className={seo.stairTitle}>{phase.title}</h3>
+                    <p className={seo.stairText}>{phase.desc}</p>
+                  </li>
+                ))}
+              </ol>
             </div>
-
-            <ol className={seo.stairs}>
-              {phases.map((phase, index) => (
-                <li key={phase.title} className={seo.stair}>
-                  <span className={seo.stairPhase}>Phase {index + 1}</span>
-                  <h3 className={seo.stairTitle}>{phase.title}</h3>
-                  <p className={seo.stairText}>{phase.desc}</p>
-                </li>
-              ))}
-            </ol>
           </div>
-        </div>
-      </section>
+        </section>
+      ) : null}
 
       {/* Why: dark band with photo bleeding to the edge */}
       <section className={seo.why} aria-labelledby="seo-why-heading">
         <div className={seo.whyInner}>
           <div className={seo.whyCopy}>
             <h2 id="seo-why-heading" className={seo.whyTitle}>
-              Why teams choose Recenturesoft
+              {why.title}
             </h2>
             <dl className={seo.reasons}>
-              {reasons.map((item) => (
-                <div key={item.lead} className={seo.reason}>
+              {why.items.map((item, index) => (
+                <div key={`${item.lead}-${index}`} className={seo.reason}>
                   <dt className={seo.reasonLead}>{item.lead}</dt>
                   <dd className={seo.reasonText}>{item.text}</dd>
                 </div>
@@ -248,15 +151,17 @@ export default function SeoServicesPage() {
             </dl>
           </div>
 
-          <div className={seo.whyPhoto}>
-            <Image
-              src="/images/seo-dashboard.jpg"
-              alt="Laptop showing a search performance dashboard"
-              fill
-              sizes="(max-width: 900px) 100vw, 50vw"
-              className={seo.whyImg}
-            />
-          </div>
+          {why.image ? (
+            <div className={seo.whyPhoto}>
+              <Image
+                src={why.image}
+                alt={why.imageAlt}
+                fill
+                sizes="(max-width: 900px) 100vw, 50vw"
+                className={seo.whyImg}
+              />
+            </div>
+          ) : null}
         </div>
       </section>
 
@@ -265,27 +170,27 @@ export default function SeoServicesPage() {
         <div className={`container ${seo.faqGrid}`}>
           <div className={seo.faqIntro}>
             <h2 id="seo-faq-heading" className={seo.bigTitle}>
-              Questions we hear most
+              {faq.title}
             </h2>
             <p className={seo.faqLead}>
-              Can&apos;t find your answer? Write to{" "}
+              {faq.leadText}{" "}
               <a href={`mailto:${contact.email}`} className={seo.faqLink}>
                 {contact.email}
               </a>
               .
             </p>
             <div className={seo.faqCard}>
-              <p className={seo.faqCardTitle}>Still have questions?</p>
-              <p className={seo.faqCardText}>
-                Tell us about your website and we will suggest where to start.
-              </p>
-              <Link href="/contact" className={seo.faqCardBtn}>
-                Talk to our team <span aria-hidden="true">&rarr;</span>
-              </Link>
+              <p className={seo.faqCardTitle}>{faq.cardTitle}</p>
+              <p className={seo.faqCardText}>{faq.cardText}</p>
+              {faq.cardButtonLabel ? (
+                <Link href={faq.cardButtonHref || "/contact"} className={seo.faqCardBtn}>
+                  {faq.cardButtonLabel} <span aria-hidden="true">&rarr;</span>
+                </Link>
+              ) : null}
             </div>
           </div>
 
-          <SeoFaq items={faqs} />
+          {faqItems.length > 0 ? <SeoFaq items={faqItems} /> : null}
         </div>
       </section>
 
@@ -303,18 +208,18 @@ export default function SeoServicesPage() {
 
         <div className={`container ${seo.ctaInner}`}>
           <h2 id="seo-cta-heading" className={seo.ctaTitle}>
-            Ready to grow your organic traffic?
+            {cta.title}
           </h2>
           <div className={seo.ctaSide}>
-            <p className={seo.ctaText}>
-              Talk to our team about an SEO audit or a long-term plan for your website.
-            </p>
+            <p className={seo.ctaText}>{cta.text}</p>
             <div className={seo.ctaActions}>
-              <Link href="/contact" className={seo.ctaBtn}>
-                Consult an SEO Specialist <span aria-hidden="true">&rarr;</span>
-              </Link>
+              {cta.buttonLabel ? (
+                <Link href={cta.buttonHref || "/contact"} className={seo.ctaBtn}>
+                  {cta.buttonLabel} <span aria-hidden="true">&rarr;</span>
+                </Link>
+              ) : null}
               <a href={`tel:${contact.phoneRaw}`} className={seo.ctaBtnGhost}>
-                Call {contact.phone}
+                {cta.callLabel} {contact.phone}
               </a>
             </div>
           </div>

@@ -3,11 +3,13 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { siteConfig } from "@/lib/site-config";
+import type { SiteContent } from "@/content";
+import type { SiteInfo } from "@/lib/site";
 import { ThemeToggle } from "./theme-toggle";
 import styles from "./mobile-navigation.module.css";
 
-export function MobileNavigation() {
+export function MobileNavigation({ site, info }: { site: SiteContent["site"]; info: SiteInfo }) {
+  const { header } = site;
   const [isOpen, setIsOpen] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
@@ -112,7 +114,7 @@ export function MobileNavigation() {
               R
             </span>
             <span className={styles.brandText}>
-              {siteConfig.name}
+              {info.name}
               <span className={styles.brandAccent}>.</span>
             </span>
           </div>
@@ -134,114 +136,69 @@ export function MobileNavigation() {
 
         <div className={styles.navBody}>
           <div className={styles.navList}>
-            <Link
-              href="/"
-              className={`${styles.navLink} ${pathname === "/" ? styles.activeNavLink : ""}`}
-              aria-current={pathname === "/" ? "page" : undefined}
-              onClick={closeMenu}
-            >
-              Home
-            </Link>
-            <Link
-              href="/about"
-              className={`${styles.navLink} ${pathname === "/about" ? styles.activeNavLink : ""}`}
-              aria-current={pathname === "/about" ? "page" : undefined}
-              onClick={closeMenu}
-            >
-              About Us
-            </Link>
-
-            <div className={styles.servicesGroup}>
-              <div className={styles.groupLabel}>Services</div>
-              <Link
-                href="/services/software-development"
-                className={`${styles.subNavLink} ${
-                  pathname === "/services/software-development" ? styles.activeSubNavLink : ""
-                }`}
-                aria-current={
-                  pathname === "/services/software-development" ? "page" : undefined
-                }
-                onClick={closeMenu}
-              >
-                Software Development
-              </Link>
-              <Link
-                href="/services/ai-automation"
-                className={`${styles.subNavLink} ${
-                  pathname === "/services/ai-automation" ? styles.activeSubNavLink : ""
-                }`}
-                aria-current={pathname === "/services/ai-automation" ? "page" : undefined}
-                onClick={closeMenu}
-              >
-                AI Automation
-              </Link>
-              <Link
-                href="/services/custom-development"
-                className={`${styles.subNavLink} ${
-                  pathname === "/services/custom-development" ? styles.activeSubNavLink : ""
-                }`}
-                aria-current={pathname === "/services/custom-development" ? "page" : undefined}
-                onClick={closeMenu}
-              >
-                Custom Development
-              </Link>
-              <Link
-                href="/services/seo"
-                className={`${styles.subNavLink} ${
-                  pathname === "/services/seo" ? styles.activeSubNavLink : ""
-                }`}
-                aria-current={pathname === "/services/seo" ? "page" : undefined}
-                onClick={closeMenu}
-              >
-                SEO Services
-              </Link>
-            </div>
-
-            <Link
-              href="/contact"
-              className={`${styles.navLink} ${pathname === "/contact" ? styles.activeNavLink : ""}`}
-              aria-current={pathname === "/contact" ? "page" : undefined}
-              onClick={closeMenu}
-            >
-              Contact Us
-            </Link>
-
-            <Link
-              href="/careers"
-              className={`${styles.navLink} ${pathname === "/careers" ? styles.activeNavLink : ""}`}
-              aria-current={pathname === "/careers" ? "page" : undefined}
-              onClick={closeMenu}
-            >
-              Careers
-            </Link>
+            {header.items.map((item, index) => {
+              if (!item.hasMenu) {
+                const current = pathname === item.href;
+                return (
+                  <Link
+                    key={`${item.label}-${index}`}
+                    href={item.href}
+                    className={`${styles.navLink} ${current ? styles.activeNavLink : ""}`}
+                    aria-current={current ? "page" : undefined}
+                    onClick={closeMenu}
+                  >
+                    {item.label}
+                  </Link>
+                );
+              }
+              return (
+                <div key={`${item.label}-${index}`} className={styles.servicesGroup}>
+                  <div className={styles.groupLabel}>{item.label}</div>
+                  {header.menu.map((entry) => {
+                    const current = pathname === entry.href;
+                    return (
+                      <Link
+                        key={`${entry.href}-${entry.title}`}
+                        href={entry.href}
+                        className={`${styles.subNavLink} ${current ? styles.activeSubNavLink : ""}`}
+                        aria-current={current ? "page" : undefined}
+                        onClick={closeMenu}
+                      >
+                        {entry.title}
+                      </Link>
+                    );
+                  })}
+                </div>
+              );
+            })}
           </div>
         </div>
 
         <div className={styles.panelFooter}>
           <Link
-            href="/contact"
+            href={header.ctaHref || "/contact"}
             className={`btn btn-primary ${styles.ctaButton}`}
             onClick={closeMenu}
           >
-            Get in Touch
+            {header.ctaLabel}
           </Link>
           <div className={styles.quickContact}>
             <span>
               Direct:{" "}
               <a
-                href={`tel:${siteConfig.contact.phoneRaw}`}
+                href={`tel:${info.contact.phoneRaw}`}
                 className={styles.quickContactLink}
               >
-                {siteConfig.contact.phone}
+                {info.contact.phone}
               </a>
             </span>
             <span>
               Email:{" "}
               <a
-                href={`mailto:${siteConfig.contact.email}`}
+                href={`mailto:${info.contact.email}`}
                 className={styles.quickContactLink}
               >
-                {siteConfig.contact.email}
+                {info.contact.email}
               </a>
             </span>
           </div>

@@ -47,3 +47,9 @@ CLAUDE_ANTIGRAVITY_PROMPT.md
 PROJECT_STRUCTURE.md
 # Playwright CLI output (may contain credentials)
 .playwright-cli/
+
+# Private uploads (resumes & confidential candidate records)
+private_uploads/
+
+# Admin panel local data (saved edits, messages) when working on this computer
+.data/

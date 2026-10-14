@@ -1,83 +1,28 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { siteConfig } from "@/lib/site-config";
-import { Icon, type IconName } from "../icons";
+import { getSiteContent } from "@/lib/content";
+import { getSiteInfo } from "@/lib/site";
+import { pageMetadata } from "@/lib/seo";
+import { Icon, iconPaths, type IconName } from "../icons";
 import styles from "./ai-automation.module.css";
 
-export const metadata: Metadata = {
-  title: "AI Automation Services | Recenturesoft Infotech",
-  description:
-    "Explore AI workflow automation, repetitive task minimization, and process engineering solutions by Recenturesoft Infotech Pvt Ltd.",
-  alternates: {
-    canonical: "/services/ai-automation",
-  },
-  openGraph: {
-    title: "AI Automation Services | Recenturesoft Infotech",
-    description:
-      "Explore AI workflow automation, repetitive task minimization, and process engineering solutions by Recenturesoft Infotech Pvt Ltd.",
-    url: "https://www.recenturesoft.com/services/ai-automation",
-    images: [
-      {
-        url: "/images/ai-automation.jpg",
-        width: 1200,
-        height: 630,
-        alt: "Recenturesoft AI Automation Services",
-      },
-    ],
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const { serviceAi } = await getSiteContent();
+  return pageMetadata(serviceAi.meta, "/services/ai-automation");
+}
 
-const pillars: { icon: IconName; title: string; desc: string; flow: string[] }[] = [
-  {
-    icon: "workflow",
-    flow: ["CRM", "Webhook", "ERP"],
-    title: "Targeted Workflow Automation",
-    desc: "Connecting disparate software systems to trigger automated, error-free tasks. We eliminate manual handoffs between CRM, ERP, and bespoke customer databases through hardened webhook pipelines.",
-  },
-  {
-    icon: "document",
-    flow: ["Invoices & forms", "Extract", "Validate"],
-    title: "Intelligent Document Processing",
-    desc: "Extracting, categorizing, and validating information from invoices, onboarding forms, and business records with multi-stage schema validation and confidence scoring thresholds.",
-  },
-  {
-    icon: "assist",
-    flow: ["Summarise", "Classify", "Validate"],
-    title: "Integrated AI Assistive Features",
-    desc: "Embedding smart summarization, classification, and validation directly into your daily enterprise tools so your personnel make faster, data-backed decisions without leaving their primary interface.",
-  },
-];
+const isIcon = (name: string): name is IconName => name in iconPaths;
 
-const steps = [
-  {
-    step: "01",
-    title: "Discover",
-    desc: "Mapping current operational workflows and identifying high-friction manual bottlenecks.",
-  },
-  {
-    step: "02",
-    title: "Assess",
-    desc: "Evaluating technical feasibility, ROI projections, and security requirements.",
-  },
-  {
-    step: "03",
-    title: "Design",
-    desc: "Architecting API connections, schemas, and human-in-the-loop review gates.",
-  },
-  {
-    step: "04",
-    title: "Integrate",
-    desc: "Deploying automation modules and connecting core enterprise software environments.",
-  },
-  {
-    step: "05",
-    title: "Validate",
-    desc: "Testing accuracy with historical datasets and running monitored production rollouts.",
-  },
-];
+function Glyph({ name, className }: { name: string; className?: string }) {
+  return isIcon(name) ? <Icon name={name} className={className} /> : null;
+}
 
-export default function AIAutomationPage() {
+export default async function AIAutomationPage() {
+  const { serviceAi: c } = await getSiteContent();
+  const info = await getSiteInfo();
+  const { hero, practical, process, cta } = c;
+
   return (
     <div className={styles.page}>
       {/* Hero */}
@@ -85,138 +30,153 @@ export default function AIAutomationPage() {
         <div className={`container ${styles.heroGrid}`}>
           <div className={styles.heroCopy}>
             <h1 id="ai-hero-heading" className={styles.heroTitle}>
-              Make Workflows Smarter with AI Automation
+              {hero.title}
             </h1>
-            <p className={styles.heroText}>
-              Recenturesoft implements practical AI and intelligent automation solutions to
-              eliminate repetitive manual bottlenecks, accelerate document handling, and
-              improve operational accuracy.
-            </p>
+            <p className={styles.heroText}>{hero.text}</p>
             <div className={styles.actions}>
-              <Link href="/contact" className={styles.btnPrimary}>
-                <span>Discuss Automation Opportunities</span>
-                <Icon
-                  name="arrowRight"
-                  className={`${styles.icon} ${styles.btnIcon}`}
-                />
-              </Link>
-              <a href="#practical" className={styles.btnOutline}>
-                <span>Explore Practical Use Cases</span>
-                <Icon name="tune" className={`${styles.icon} ${styles.btnIcon}`} />
-              </a>
+              {hero.primaryLabel ? (
+                <Link href={hero.primaryHref || "/contact"} className={styles.btnPrimary}>
+                  <span>{hero.primaryLabel}</span>
+                  <Icon name="arrowRight" className={`${styles.icon} ${styles.btnIcon}`} />
+                </Link>
+              ) : null}
+              {hero.secondaryLabel ? (
+                <a href="#practical" className={styles.btnOutline}>
+                  <span>{hero.secondaryLabel}</span>
+                  <Icon name="tune" className={`${styles.icon} ${styles.btnIcon}`} />
+                </a>
+              ) : null}
             </div>
           </div>
 
-          <div className={styles.photoFrame}>
-            <div className={styles.photoWrap}>
-              <Image
-                src="/images/services-ai.jpg"
-                alt="Enterprise AI workflow automation control room"
-                fill
-                priority
-                sizes="(max-width: 1023px) 100vw, 600px"
-                className={styles.photo}
-              />
+          {hero.image ? (
+            <div className={styles.photoFrame}>
+              <div className={styles.photoWrap}>
+                <Image
+                  src={hero.image}
+                  alt={hero.imageAlt}
+                  fill
+                  priority
+                  sizes="(max-width: 1023px) 100vw, 600px"
+                  className={styles.photo}
+                />
+              </div>
             </div>
-          </div>
+          ) : null}
         </div>
       </section>
 
       {/* Practical AI */}
-      <section id="practical" className={styles.prac} aria-labelledby="practical-heading">
-        <div className="container">
-          <div className={styles.pracHead}>
-            <h2 id="practical-heading" className={styles.pracTitle}>
-              What We Mean by{" "}
-              <span className={styles.pracGradient}>Practical AI Automation</span>
-            </h2>
-            <p className={styles.pracLead}>
-              We focus exclusively on grounded, realistic software systems. Rather than
-              pursuing speculative hype or unchecked autonomy, our implementations solve
-              tangible operational friction across verified business pipelines.
-            </p>
-          </div>
+      {practical.items.length > 0 ? (
+        <section id="practical" className={styles.prac} aria-labelledby="practical-heading">
+          <div className="container">
+            <div className={styles.pracHead}>
+              <h2 id="practical-heading" className={styles.pracTitle}>
+                {practical.title}
+                {practical.highlight ? (
+                  <>
+                    {" "}
+                    <span className={styles.pracGradient}>{practical.highlight}</span>
+                  </>
+                ) : null}
+              </h2>
+              {practical.lead ? <p className={styles.pracLead}>{practical.lead}</p> : null}
+            </div>
 
-          <div className={styles.pracGrid}>
-            {pillars.map((pillar) => (
-              <article key={pillar.title} className={styles.pracItem}>
-                <div className={styles.flow} aria-label={`Flow: ${pillar.flow.join(", ")}`}>
-                  {pillar.flow.map((step, i) => (
-                    <span key={step} className={styles.flowGroup}>
-                      <span className={styles.flowStep}>{step}</span>
-                      {i < pillar.flow.length - 1 && (
-                        <span className={styles.flowLink} aria-hidden="true" />
-                      )}
-                    </span>
-                  ))}
-                </div>
+            <div className={styles.pracGrid}>
+              {practical.items.map((pillar, index) => (
+                <article key={`${pillar.title}-${index}`} className={styles.pracItem}>
+                  {pillar.flow.length > 0 ? (
+                    <div
+                      className={styles.flow}
+                      aria-label={`${practical.flowLabel || "Flow"}: ${pillar.flow.join(", ")}`}
+                    >
+                      {pillar.flow.map((step, i) => (
+                        <span key={`${step}-${i}`} className={styles.flowGroup}>
+                          <span className={styles.flowStep}>{step}</span>
+                          {i < pillar.flow.length - 1 && (
+                            <span className={styles.flowLink} aria-hidden="true" />
+                          )}
+                        </span>
+                      ))}
+                    </div>
+                  ) : null}
 
-                <div className={styles.pracBody}>
-                  <div className={styles.pracIcon}>
-                    <Icon name={pillar.icon} className={styles.icon} />
+                  <div className={styles.pracBody}>
+                    <div className={styles.pracIcon}>
+                      <Glyph name={pillar.icon} className={styles.icon} />
+                    </div>
+                    <h3 className={styles.pracItemTitle}>{pillar.title}</h3>
+                    <p className={styles.body}>{pillar.desc}</p>
                   </div>
-                  <h3 className={styles.pracItemTitle}>{pillar.title}</h3>
-                  <p className={styles.body}>{pillar.desc}</p>
-                </div>
-              </article>
-            ))}
+                </article>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      ) : null}
 
       {/* Implementation */}
-      <section className={styles.impl} aria-labelledby="process-heading">
-        <div className="container">
-          <div className={styles.implHead}>
-            <h2 id="process-heading" className={styles.implTitle}>
-              Implementation <span className={styles.pracGradient}>Process</span>
-            </h2>
-            <p className={styles.implLead}>
-              A structured 5-stage framework to ensure reliable delivery and immediate
-              operational value.
-            </p>
-          </div>
+      {process.items.length > 0 ? (
+        <section className={styles.impl} aria-labelledby="process-heading">
+          <div className="container">
+            <div className={styles.implHead}>
+              <h2 id="process-heading" className={styles.implTitle}>
+                {process.title}
+                {process.highlight ? (
+                  <>
+                    {" "}
+                    <span className={styles.pracGradient}>{process.highlight}</span>
+                  </>
+                ) : null}
+              </h2>
+              {process.lead ? <p className={styles.implLead}>{process.lead}</p> : null}
+            </div>
 
-          <ol className={styles.implList}>
-            {steps.map((item, index) => (
-              <li key={item.step} className={styles.implItem}>
-                <div
-                  className={styles.ring}
-                  style={{ "--p": `${((index + 1) / steps.length) * 100}%` } as React.CSSProperties}
-                >
-                  <span className={styles.ringInner}>{item.step}</span>
-                </div>
-                <h3 className={styles.implItemTitle}>{item.title}</h3>
-                <p className={styles.implText}>{item.desc}</p>
-                <span className={styles.implTag}>
-                  Phase {index + 1} of {steps.length}
-                </span>
-              </li>
-            ))}
-          </ol>
-        </div>
-      </section>
+            <ol className={styles.implList}>
+              {process.items.map((item, index) => (
+                <li key={`${item.title}-${index}`} className={styles.implItem}>
+                  <div
+                    className={styles.ring}
+                    style={
+                      { "--p": `${((index + 1) / process.items.length) * 100}%` } as React.CSSProperties
+                    }
+                  >
+                    <span className={styles.ringInner}>{String(index + 1).padStart(2, "0")}</span>
+                  </div>
+                  <h3 className={styles.implItemTitle}>{item.title}</h3>
+                  <p className={styles.implText}>{item.desc}</p>
+                  <span className={styles.implTag}>
+                    {process.phaseWord} {index + 1} {process.ofWord} {process.items.length}
+                  </span>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </section>
+      ) : null}
 
       {/* CTA */}
       <section className={styles.cta} aria-labelledby="ai-cta-heading">
         <div className="container">
           <div className={styles.closeInner}>
             <h2 id="ai-cta-heading" className={styles.closeTitle}>
-              Transform Your Repetitive Workflows
+              {cta.title}
             </h2>
-            <p className={styles.closeText}>
-              Speak directly with our automation engineers in Noida to identify high-impact
-              processes ready for automation.
-            </p>
+            {cta.text ? <p className={styles.closeText}>{cta.text}</p> : null}
             <div className={styles.closeActions}>
-              <Link href="/contact" className={styles.btnPrimary}>
-                <span>Discuss Automation Opportunities</span>
-                <Icon name="arrowRight" className={`${styles.icon} ${styles.btnIcon}`} />
-              </Link>
-              <a href={`tel:${siteConfig.contact.phoneRaw}`} className={styles.btnGhost}>
-                <Icon name="phone" className={`${styles.icon} ${styles.btnIcon}`} />
-                <span>{siteConfig.contact.phone}</span>
-              </a>
+              {cta.primaryLabel ? (
+                <Link href={cta.primaryHref || "/contact"} className={styles.btnPrimary}>
+                  <span>{cta.primaryLabel}</span>
+                  <Icon name="arrowRight" className={`${styles.icon} ${styles.btnIcon}`} />
+                </Link>
+              ) : null}
+              {cta.showPhone && info.contact.phone ? (
+                <a href={`tel:${info.contact.phoneRaw}`} className={styles.btnGhost}>
+                  <Icon name="phone" className={`${styles.icon} ${styles.btnIcon}`} />
+                  <span>{info.contact.phone}</span>
+                </a>
+              ) : null}
             </div>
           </div>
         </div>

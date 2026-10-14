@@ -267,3 +267,17 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* Hidden spam-trap field: people never see or fill it in. */
+.honeypot {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.submitBtn:disabled {
+  opacity: 0.7;
+  cursor: wait;
+}

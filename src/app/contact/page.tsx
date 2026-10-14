@@ -1,38 +1,23 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { siteConfig } from "@/lib/site-config";
+import { getSiteContent } from "@/lib/content";
+import { getSiteInfo } from "@/lib/site";
+import { pageMetadata } from "@/lib/seo";
 import { ContactForm } from "@/components/contact-form";
 import { Icon, type IconName } from "../services/icons";
 import styles from "./contact.module.css";
 
-export const metadata: Metadata = {
-  title: "Contact Us | Recenturesoft Infotech",
-  description:
-    "Contact Recenturesoft Infotech Pvt Ltd in Noida for custom software development, web engineering, and enterprise AI automation inquiries.",
-  alternates: {
-    canonical: "/contact",
-  },
-  openGraph: {
-    title: "Contact Us | Recenturesoft Infotech",
-    description:
-      "Contact Recenturesoft Infotech Pvt Ltd in Noida for custom software development, web engineering, and enterprise AI automation inquiries.",
-    url: "https://www.recenturesoft.com/contact",
-    images: [
-      {
-        url: "/images/hero.jpg",
-        width: 1200,
-        height: 630,
-        alt: "Contact Recenturesoft Infotech Corporate Team",
-      },
-    ],
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const { contact } = await getSiteContent();
+  return pageMetadata(contact.meta, "/contact");
+}
 
-const mapsUrl = siteConfig.contact.mapUrl;
-
-export default function ContactPage() {
-  const { contact } = siteConfig;
+export default async function ContactPage() {
+  const content = await getSiteContent();
+  const info = await getSiteInfo();
+  const { contact } = info;
+  const { hero, form, channels: copy, office, closing, careers, backLabel } = content.contact;
 
   const channels: {
     icon: IconName;
@@ -43,26 +28,26 @@ export default function ContactPage() {
   }[] = [
     {
       icon: "mailIcon",
-      label: "Official Email",
+      label: copy.emailLabel,
       value: contact.email,
       href: `mailto:${contact.email}`,
     },
     {
       icon: "phone",
-      label: "Phone Number",
+      label: copy.phoneLabel,
       value: contact.phone,
       href: `tel:${contact.phoneRaw}`,
     },
     {
       icon: "chat",
-      label: "WhatsApp",
-      value: "Message us on WhatsApp",
+      label: copy.whatsappLabel,
+      value: copy.whatsappText,
       href: contact.whatsappUrl,
       external: true,
     },
     {
       icon: "pin",
-      label: "Registered Office Address",
+      label: copy.addressLabel,
       value: contact.address,
     },
   ];
@@ -71,91 +56,87 @@ export default function ContactPage() {
     <div className={styles.page}>
       {/* Hero */}
       <section className={styles.hero} aria-labelledby="contact-heading">
-        <Image
-          src="/images/home-hero.jpg"
-          alt=""
-          fill
-          priority
-          sizes="100vw"
-          className={styles.heroImage}
-        />
+        {hero.image ? (
+          <Image src={hero.image} alt="" fill priority sizes="100vw" className={styles.heroImage} />
+        ) : null}
         <div className={styles.heroOverlay} aria-hidden="true" />
         <div className={`container ${styles.heroInner}`}>
           <h1 id="contact-heading" className={styles.heroTitle}>
-            Let&apos;s Build Something Great Together
+            {hero.title}
           </h1>
-          <p className={styles.heroText}>
-            Have a custom software development or enterprise AI automation project in mind?
-            Share your requirements with our technical team today.
-          </p>
+          {hero.text ? <p className={styles.heroText}>{hero.text}</p> : null}
         </div>
       </section>
 
       {/* Form + channels */}
       <section className={styles.section} aria-label="Contact form and details">
         <div className={`container ${styles.mainGrid}`}>
-          <ContactForm />
+          <ContactForm services={form.services} recipientEmail={contact.email} />
 
           <aside className={styles.side}>
             <div className={styles.channels}>
-              <h2 className={styles.sideTitle}>Direct Channels</h2>
+              <h2 className={styles.sideTitle}>{copy.title}</h2>
               <ul className={styles.channelList}>
-                {channels.map((item) => {
-                  const body = (
-                    <>
-                      <span className={styles.channelIcon}>
-                        <Icon name={item.icon} className={styles.icon} />
-                      </span>
-                      <span className={styles.channelText}>
-                        <span className={styles.channelLabel}>{item.label}</span>
-                        <span className={styles.channelValue}>{item.value}</span>
-                      </span>
-                    </>
-                  );
-                  return (
-                    <li key={item.label}>
-                      {item.href ? (
-                        <a
-                          href={item.href}
-                          className={`${styles.channel} ${styles.channelLink}`}
-                          {...(item.external
-                            ? { target: "_blank", rel: "noopener noreferrer" }
-                            : {})}
-                        >
-                          {body}
-                        </a>
-                      ) : (
-                        <div className={styles.channel}>{body}</div>
-                      )}
-                    </li>
-                  );
-                })}
+                {channels
+                  .filter((item) => item.value)
+                  .map((item) => {
+                    const body = (
+                      <>
+                        <span className={styles.channelIcon}>
+                          <Icon name={item.icon} className={styles.icon} />
+                        </span>
+                        <span className={styles.channelText}>
+                          <span className={styles.channelLabel}>{item.label}</span>
+                          <span className={styles.channelValue}>{item.value}</span>
+                        </span>
+                      </>
+                    );
+                    return (
+                      <li key={item.icon}>
+                        {item.href ? (
+                          <a
+                            href={item.href}
+                            className={`${styles.channel} ${styles.channelLink}`}
+                            {...(item.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                          >
+                            {body}
+                          </a>
+                        ) : (
+                          <div className={styles.channel}>{body}</div>
+                        )}
+                      </li>
+                    );
+                  })}
               </ul>
             </div>
 
             <div className={styles.office}>
-              <div className={styles.officePhoto}>
-                <Image
-                  src="/images/services-team.jpg"
-                  alt="Engineering team discussing architecture at the Noida office"
-                  fill
-                  sizes="(max-width: 1024px) 100vw, 420px"
-                  className={styles.officeImage}
-                />
-              </div>
+              {office.image ? (
+                <div className={styles.officePhoto}>
+                  <Image
+                    src={office.image}
+                    alt={office.imageAlt}
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 420px"
+                    className={styles.officeImage}
+                  />
+                </div>
+              ) : null}
               <div className={styles.officeBody}>
                 <div>
-                  <p className={styles.officeTitle}>Noida Development Center</p>
-                  <p className={styles.officeSub}>Sector 63, Noida, UP</p>
+                  <p className={styles.officeTitle}>{office.title}</p>
+                  <p className={styles.officeSub}>{office.subtitle}</p>
                 </div>
-                <a
-                  href={mapsUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={styles.officeLink}
-                >
-                  Get directions <span aria-hidden="true">&rarr;</span>
-                </a>
+                {office.linkLabel ? (
+                  <a
+                    href={contact.mapUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={styles.officeLink}
+                  >
+                    {office.linkLabel} <span aria-hidden="true">&rarr;</span>
+                  </a>
+                ) : null}
               </div>
             </div>
           </aside>
@@ -167,20 +148,21 @@ export default function ContactPage() {
         <div className="container">
           <div className={styles.closingInner}>
             <h2 id="contact-cta-heading" className={styles.closingTitle}>
-              Tell Us What You&apos;re Looking to Build
+              {closing.title}
             </h2>
-            <p className={styles.closingText}>
-              Have a custom software development or enterprise AI automation project in mind?
-              Share your requirements with our technical team today.
-            </p>
+            {closing.text ? <p className={styles.closingText}>{closing.text}</p> : null}
             <div className={styles.closingActions}>
-              <a href={`tel:${contact.phoneRaw}`} className={styles.btnPrimary}>
-                <Icon name="phone" className={styles.icon} />
-                Call Noida Labs Now
-              </a>
-              <a href={`mailto:${contact.email}`} className={styles.btnGhost}>
-                Email Technical Team
-              </a>
+              {closing.callLabel ? (
+                <a href={`tel:${contact.phoneRaw}`} className={styles.btnPrimary}>
+                  <Icon name="phone" className={styles.icon} />
+                  {closing.callLabel}
+                </a>
+              ) : null}
+              {closing.emailLabel ? (
+                <a href={`mailto:${contact.email}`} className={styles.btnGhost}>
+                  {closing.emailLabel}
+                </a>
+              ) : null}
             </div>
           </div>
         </div>
@@ -191,29 +173,33 @@ export default function ContactPage() {
         <div className={`container ${styles.careersInner}`}>
           <div>
             <h2 id="careers-heading" className={styles.careersTitle}>
-              Careers
+              {careers.title}
             </h2>
             <p className={styles.careersText}>
-              No current openings are listed at this time. For future opportunities, write to{" "}
-              <a href="mailto:hr@recenturesoft.com" className={styles.textLink}>
-                hr@recenturesoft.com
+              {careers.text}{" "}
+              <a href={`mailto:${contact.hrEmail}`} className={styles.textLink}>
+                {contact.hrEmail}
               </a>
               .
             </p>
           </div>
-          <a href="mailto:hr@recenturesoft.com" className={styles.btnOutline}>
-            Email HR Team <span aria-hidden="true">&rarr;</span>
-          </a>
+          {careers.buttonLabel ? (
+            <a href={`mailto:${contact.hrEmail}`} className={styles.btnOutline}>
+              {careers.buttonLabel} <span aria-hidden="true">&rarr;</span>
+            </a>
+          ) : null}
         </div>
       </section>
 
-      <div className={styles.backRow}>
-        <div className="container">
-          <Link href="/" className={styles.textLink}>
-            &larr; Back to Recenturesoft Home
-          </Link>
+      {backLabel ? (
+        <div className={styles.backRow}>
+          <div className="container">
+            <Link href="/" className={styles.textLink}>
+              &larr; {backLabel}
+            </Link>
+          </div>
         </div>
-      </div>
+      ) : null}
     </div>
   );
 }

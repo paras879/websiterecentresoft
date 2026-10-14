@@ -11,7 +11,17 @@ export interface JourneyStep {
   icon: IconName;
 }
 
-export function ProcessJourney({ steps }: { steps: JourneyStep[] }) {
+export function ProcessJourney({
+  steps,
+  sideLead = "",
+  stepWord = "Step",
+  getsLabel = "You get",
+}: {
+  steps: JourneyStep[];
+  sideLead?: string;
+  stepWord?: string;
+  getsLabel?: string;
+}) {
   const listRef = useRef<HTMLOListElement>(null);
   const [progress, setProgress] = useState(0);
   const [reached, setReached] = useState(0);
@@ -50,7 +60,7 @@ export function ProcessJourney({ steps }: { steps: JourneyStep[] }) {
   return (
     <div className={styles.wrap}>
       <aside className={styles.side}>
-        <p className={styles.sideLead}>From first call to a live system, in four clear steps.</p>
+        {sideLead ? <p className={styles.sideLead}>{sideLead}</p> : null}
         <ol className={styles.mini} aria-hidden="true">
           {steps.map((s, i) => (
             <li key={s.title} className={`${styles.miniItem} ${i < reached ? styles.miniDone : ""}`}>
@@ -73,11 +83,11 @@ export function ProcessJourney({ steps }: { steps: JourneyStep[] }) {
                 <Icon name={step.icon} className={styles.nodeIcon} />
               </span>
               <div className={styles.card}>
-                <span className={styles.step}>Step {index + 1}</span>
+                <span className={styles.step}>{stepWord} {index + 1}</span>
                 <h3 className={styles.title}>{step.title}</h3>
                 <p className={styles.text}>{step.desc}</p>
                 <p className={styles.gets}>
-                  <span className={styles.getsLabel}>You get</span>
+                  <span className={styles.getsLabel}>{getsLabel}</span>
                   {step.gets}
                 </p>
               </div>

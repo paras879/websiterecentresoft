@@ -1,0 +1,38 @@
+/* Pictures that ship with the website. Regenerate with `node scripts/list-images.mjs` after adding files to public/images or public/tech. */
+export const builtinImages: string[] = [
+  "/images/about.jpg",
+  "/images/ai-automation.jpg",
+  "/images/custom-hero.jpg",
+  "/images/custom-work.jpg",
+  "/images/hero.jpg",
+  "/images/home-hero.jpg",
+  "/images/seo-dashboard.jpg",
+  "/images/seo-hero.jpg",
+  "/images/services-ai.jpg",
+  "/images/services-overview.jpg",
+  "/images/services-software.jpg",
+  "/images/services-team.jpg",
+  "/images/software.jpg",
+  "/images/team-meeting.webp",
+];
+
+export const builtinLogos: string[] = [
+  "/tech/amazonwebservices.svg",
+  "/tech/docker.svg",
+  "/tech/dotnet.svg",
+  "/tech/go.svg",
+  "/tech/googlecloud.svg",
+  "/tech/kubernetes.svg",
+  "/tech/mongodb.svg",
+  "/tech/mysql.svg",
+  "/tech/nextdotjs.svg",
+  "/tech/nodedotjs.svg",
+  "/tech/openjdk.svg",
+  "/tech/postgresql.svg",
+  "/tech/python.svg",
+  "/tech/react.svg",
+  "/tech/redis.svg",
+  "/tech/tailwindcss.svg",
+  "/tech/typescript.svg",
+  "/tech/vuedotjs.svg",
+];
