@@ -96,6 +96,7 @@ const defaults = {
           { label: "Contact Us", href: "/contact" },
           { label: "Careers", href: "/careers" },
           { label: "Sitemap", href: "/sitemap" },
+          { label: "Privacy Policy", href: "/privacy-policy" },
         ],
       },
       {
