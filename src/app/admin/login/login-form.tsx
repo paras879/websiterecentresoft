@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useRef, useState } from "react";
 import styles from "../admin.module.css";
 
@@ -61,13 +62,25 @@ export function LoginForm({
     <div role="main" className={styles.loginPage}>
       <div className={styles.loginBox}>
         <div className={styles.loginBrand}>
-          <span className={styles.brandMark} aria-hidden="true">
-            R
-          </span>
-          <span className={styles.brandText}>
-            Recenturesoft
-            <small>Website admin</small>
-          </span>
+          <Link href="/" className={styles.brandLogoLink} title="Recenturesoft">
+            <Image
+              src="/images/recenturesoft-logo.png"
+              alt="Recenturesoft"
+              width={180}
+              height={50}
+              priority
+              className={styles.brandLogoLight}
+            />
+            <Image
+              src="/images/logo_white.PNG"
+              alt="Recenturesoft"
+              width={180}
+              height={50}
+              priority
+              className={styles.brandLogoDark}
+            />
+          </Link>
+          <span className={styles.brandBadge}>Website Admin</span>
         </div>
         <h1 className={styles.loginTitle}>Sign in</h1>
         <p className={styles.loginLead}>Manage the pages, pictures and messages of your website.</p>

@@ -384,8 +384,59 @@
 .brand {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 18px 20px;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 18px 20px 14px;
+}
+
+.brandLogoLink {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  transition: opacity 0.15s ease;
+}
+
+.brandLogoLink:hover {
+  opacity: 0.88;
+}
+
+.brandLogoLight {
+  display: block;
+  height: 38px;
+  width: auto;
+  max-width: 155px;
+  object-fit: contain;
+}
+
+.brandLogoDark {
+  display: none;
+  height: 34px;
+  width: auto;
+  max-width: 155px;
+  object-fit: contain;
+}
+
+:global([data-theme="dark"]) .brandLogoLight {
+  display: none;
+}
+
+:global([data-theme="dark"]) .brandLogoDark {
+  display: block;
+}
+
+.brandBadge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--ad-accent);
+  background: var(--ad-accent-soft);
+  border: 1px solid var(--ad-accent-line);
+  border-radius: 999px;
+  white-space: nowrap;
 }
 
 .brandMark {
@@ -1930,7 +1981,19 @@ textarea.input {
 .loginBrand {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 12px;
+  padding-bottom: 6px;
+}
+
+.loginBrand .brandLogoLight {
+  height: 44px;
+  max-width: 190px;
+}
+
+.loginBrand .brandLogoDark {
+  height: 40px;
+  max-width: 190px;
 }
 
 .loginTitle {

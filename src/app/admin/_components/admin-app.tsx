@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import Image from "next/image";
 import { modules, type SiteContent } from "@/content";
 import { ThemeToggle } from "@/components/theme-toggle";
 import styles from "../admin.module.css";
@@ -261,13 +262,33 @@ function Shell({ initialContent, initialInquiries, system }: AdminProps) {
 
         <aside className={cx(styles.sidebar, navOpen && styles.sidebarOpen)} aria-label="Admin navigation">
           <div className={styles.brand}>
-            <span className={styles.brandMark} aria-hidden="true">
-              R
-            </span>
-            <span className={styles.brandText}>
-              Recenturesoft
-              <small>Website admin</small>
-            </span>
+            <a
+              href="#overview"
+              onClick={(e) => {
+                e.preventDefault();
+                go("#overview");
+              }}
+              className={styles.brandLogoLink}
+              title="Recenturesoft Overview"
+            >
+              <Image
+                src="/images/recenturesoft-logo.png"
+                alt="Recenturesoft"
+                width={160}
+                height={46}
+                priority
+                className={styles.brandLogoLight}
+              />
+              <Image
+                src="/images/logo_white.PNG"
+                alt="Recenturesoft"
+                width={160}
+                height={46}
+                priority
+                className={styles.brandLogoDark}
+              />
+            </a>
+            <span className={styles.brandBadge}>Admin</span>
           </div>
           <nav className={styles.nav}>
             {groups.map((g, gi) => (
