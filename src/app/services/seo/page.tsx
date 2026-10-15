@@ -154,7 +154,7 @@ export default async function SeoServicesPage() {
           {why.image ? (
             <div className={seo.whyPhoto}>
               <Image
-                src={why.image}
+                src={why.image === "/images/seo-dashboard.jpg" ? "/images/seo-team.webp" : why.image}
                 alt={why.imageAlt}
                 fill
                 sizes="(max-width: 900px) 100vw, 50vw"
