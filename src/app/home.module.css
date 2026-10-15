@@ -1033,14 +1033,77 @@
   text-align: center;
 }
 
+.stageFrontBody {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  margin: 0.35rem 0 0.85rem;
+  width: 100%;
+}
+
 .stageBigTitle {
-  margin: 0.25rem 0 1.25rem;
-  font-size: 1.6rem;
+  margin: 0 0 0.35rem;
+  font-size: 1.5rem;
   font-weight: 800;
   line-height: 1.15;
   letter-spacing: -0.025em;
   color: var(--hp-heading);
   text-align: center;
+}
+
+.stageTagline {
+  margin: 0 0 0.75rem;
+  font-size: 0.78125rem;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--hp-text);
+  opacity: 0.85;
+  text-align: center;
+}
+
+.stageChips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  width: 100%;
+}
+
+.stageChip {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.55rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--hp-heading);
+  background: var(--hp-tint);
+  border: 1px solid var(--hp-tint-border);
+  border-radius: 6px;
+  white-space: nowrap;
+  transition: border-color 0.25s ease, background-color 0.25s ease, transform 0.25s ease;
+}
+
+.stage:hover .stageChip,
+.stageActive .stageChip {
+  border-color: rgba(37, 99, 235, 0.4);
+  background: rgba(37, 99, 235, 0.08);
+  transform: translateY(-1px);
+}
+
+:global([data-theme="dark"]) .stageChip {
+  color: #e2e8f0;
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+:global([data-theme="dark"]) .stage:hover .stageChip,
+:global([data-theme="dark"]) .stageActive .stageChip {
+  background: rgba(56, 189, 248, 0.12);
+  border-color: rgba(56, 189, 248, 0.35);
 }
 
 .stageFlipHint {

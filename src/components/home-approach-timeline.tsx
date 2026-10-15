@@ -13,10 +13,31 @@ function Glyph({ name, className }: { name: string; className?: string }) {
 
 export interface ApproachItem {
   title: string;
+  tagline?: string;
+  chips?: string[];
   desc: string;
   outcome?: string;
   icon: string;
 }
+
+const defaultHighlights: Record<string, { tagline: string; chips: string[] }> = {
+  Discover: {
+    tagline: "Scoping & Technical Strategy",
+    chips: ["Roadmap", "Feasibility", "Architecture"],
+  },
+  Design: {
+    tagline: "System Schemas & Prototyping",
+    chips: ["UI/UX Wireframes", "Microservices", "Database"],
+  },
+  Build: {
+    tagline: "Agile Engineering & QA",
+    chips: ["Clean Code", "2-Week Sprints", "Automated QA"],
+  },
+  Deliver: {
+    tagline: "Cloud Launch & Support",
+    chips: ["CI/CD Pipelines", "Code Handover", "24/7 SLA"],
+  },
+};
 
 export interface ApproachProps {
   approach: {
@@ -127,12 +148,32 @@ export function HomeApproachTimeline({ approach }: ApproachProps) {
                 {/* Compact 3D Flip Card */}
                 <div className={styles.stageFlipCard}>
                   <div className={styles.stageFlipInner}>
-                    {/* Front Face: Compact & Bold */}
+                    {/* Front Face: Centered, rich & informative */}
                     <div className={styles.stageFlipFront}>
                       <span className={styles.stageLabel}>
                         {approach.stepWord} {String(index + 1).padStart(2, "0")}
                       </span>
-                      <h3 className={styles.stageBigTitle}>{item.title}</h3>
+
+                      <div className={styles.stageFrontBody}>
+                        <h3 className={styles.stageBigTitle}>{item.title}</h3>
+                        <p className={styles.stageTagline}>
+                          {item.tagline ||
+                            defaultHighlights[item.title]?.tagline ||
+                            "Engineering & Delivery"}
+                        </p>
+
+                        <div className={styles.stageChips}>
+                          {(item.chips && item.chips.length > 0
+                            ? item.chips
+                            : defaultHighlights[item.title]?.chips || []
+                          ).map((chip, cIdx) => (
+                            <span key={`${chip}-${cIdx}`} className={styles.stageChip}>
+                              {chip}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+
                       <div className={styles.stageFlipHint}>
                         <span>Hover to explore</span>
                         <span className={styles.stageFlipHintIcon} aria-hidden="true">
