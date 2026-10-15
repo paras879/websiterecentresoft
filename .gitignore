@@ -56,6 +56,7 @@ private_uploads/
 
 # IDE & Skill cache
 .claude/
+.agents/
 .taste-skill/
 skills-lock.json
 

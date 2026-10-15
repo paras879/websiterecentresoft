@@ -5,16 +5,16 @@ import { PrivacyPolicyView } from "./privacy-policy-view";
 export const metadata: Metadata = {
   title: "Privacy Policy",
   description:
-    "How Recenturesoft Infotech Pvt Ltd collects, uses, protects and shares information on www.recenturesoft.com, and how to reach our Grievance Officer.",
+    "How Recenturesoft Infotech Pvt Ltd collects, uses, protects and shares information on https://websiterecentresoft.vercel.app/, and how to reach our Grievance Officer.",
   alternates: {
     canonical: "/privacy-policy",
   },
   openGraph: {
     title: "Privacy Policy | Recenturesoft Infotech Pvt Ltd",
     description:
-      "How Recenturesoft Infotech Pvt Ltd collects, uses, protects and shares information on www.recenturesoft.com.",
+      "How Recenturesoft Infotech Pvt Ltd collects, uses, protects and shares information on https://websiterecentresoft.vercel.app/.",
     type: "website",
-    url: "https://www.recenturesoft.com/privacy-policy",
+    url: "https://websiterecentresoft.vercel.app/privacy-policy",
   },
 };
 

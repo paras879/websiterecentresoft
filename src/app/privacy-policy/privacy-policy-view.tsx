@@ -107,9 +107,9 @@ export function PrivacyPolicyView({ company, email, phone, phoneRaw, address, ma
         <div className="container">
           <h1 className={styles.title}>Privacy Policy</h1>
           <p className={styles.lead}>
-            How {company} collects, uses, protects and shares information on www.recenturesoft.com.
+            How {company} collects, uses, protects and shares information on https://websiterecentresoft.vercel.app/.
           </p>
-          <p className={styles.printMeta}>{company} &middot; www.recenturesoft.com/privacy-policy</p>
+          <p className={styles.printMeta}>{company} &middot; https://websiterecentresoft.vercel.app/privacy-policy</p>
 
           <ul className={styles.glance} aria-label="Quick links">
             {GLANCE.map((g, i) => (
@@ -173,8 +173,8 @@ export function PrivacyPolicyView({ company, email, phone, phoneRaw, address, ma
             <p className={styles.note}>
               This Privacy Policy is a legally binding document between you and the Company (both the terms defined above). The terms of this Privacy Policy will be effective upon your acceptance of the same (directly or indirectly in electronic form, by clicking on the I accept tab or by
               use of the website or by other means) and will govern the relationship between you and the Company for your use of the website{" "}
-              <a href="https://www.recenturesoft.com" target="_blank" rel="noopener noreferrer">
-                www.recenturesoft.com
+              <a href="https://websiterecentresoft.vercel.app/" target="_blank" rel="noopener noreferrer">
+                https://websiterecentresoft.vercel.app/
               </a>{" "}
               (referred to as &ldquo;website&rdquo; or &ldquo;site&rdquo; in this document).
             </p>

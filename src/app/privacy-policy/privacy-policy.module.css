@@ -834,8 +834,14 @@
 
 @media print {
   @page {
-    size: A4;
-    margin: 16mm 15mm;
+    size: auto;
+    margin: 0mm;
+  }
+
+  html,
+  body {
+    margin: 0 !important;
+    padding: 0 !important;
   }
 
   /* the site header, footer and chat button are not part of the document */
@@ -859,7 +865,7 @@
     --pp-tint: #eef4ff;
     --pp-tint-line: #c3d4fb;
 
-    padding-bottom: 0;
+    padding: 14mm 16mm 14mm 16mm !important;
     color: #1f2937;
     background: #ffffff;
     -webkit-print-color-adjust: exact;

@@ -4,7 +4,7 @@ A minimal, premium and responsive corporate website for Recenturesoft.
 
 ## Official Website
 
-https://www.recenturesoft.com/
+https://websiterecentresoft.vercel.app/
 
 ## Technology Stack
 

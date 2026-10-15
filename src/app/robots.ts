@@ -6,6 +6,6 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: "*",
       allow: "/",
     },
-    sitemap: "https://www.recenturesoft.com/sitemap.xml",
+    sitemap: "https://websiterecentresoft.vercel.app/sitemap.xml",
   };
 }

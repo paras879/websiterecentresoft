@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = "https://www.recenturesoft.com";
+  const baseUrl = "https://websiterecentresoft.vercel.app";
   const lastModified = new Date();
 
   return [
@@ -61,6 +61,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
     {
       url: `${baseUrl}/privacy-policy`,
+      lastModified,
+      changeFrequency: "monthly",
+      priority: 0.5,
+    },
+    {
+      url: `${baseUrl}/terms-and-conditions`,
       lastModified,
       changeFrequency: "monthly",
       priority: 0.5,

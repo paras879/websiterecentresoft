@@ -6,7 +6,7 @@ PURPOSE:
 Create a new, minimal, premium corporate website for Recenturesoft. Use HCLTech and Accenture as design inspiration only. Do not copy their branding, logos, content, or exact layouts.
 
 OFFICIAL COMPANY WEBSITE:
-https://www.recenturesoft.com/
+https://websiterecentresoft.vercel.app/
 
 TECHNOLOGY:
 - Next.js App Router

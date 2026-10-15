@@ -26,14 +26,14 @@ export async function generateMetadata(): Promise<Metadata> {
       template: `%s | ${info.name}`,
     },
     description,
-    metadataBase: new URL("https://www.recenturesoft.com"),
+    metadataBase: new URL("https://websiterecentresoft.vercel.app"),
     alternates: {
       canonical: "/",
     },
     openGraph: {
       type: "website",
       locale: "en_US",
-      url: "https://www.recenturesoft.com",
+      url: "https://websiterecentresoft.vercel.app",
       siteName: info.legalName,
       title,
       description,
@@ -74,8 +74,8 @@ export default async function RootLayout({
     "@type": "Organization",
     name: info.name,
     legalName: info.legalName,
-    url: "https://www.recenturesoft.com",
-    logo: "https://www.recenturesoft.com/images/hero.jpg",
+    url: "https://websiterecentresoft.vercel.app",
+    logo: "https://websiterecentresoft.vercel.app/images/hero.jpg",
     description: info.description,
     address: {
       "@type": "PostalAddress",

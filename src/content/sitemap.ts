@@ -32,6 +32,8 @@ const defaults = {
       { label: "About Us", desc: "Who we are and how we work", href: "/about" },
       { label: "Contact Us", desc: "Talk to our team", href: "/contact" },
       { label: "Careers", desc: "Join the team and send your profile", href: "/careers" },
+      { label: "Privacy Policy", desc: "How we protect and use your data", href: "/privacy-policy" },
+      { label: "Terms & Conditions", desc: "Rules and terms governing website access", href: "/terms-and-conditions" },
     ],
   },
   services: {

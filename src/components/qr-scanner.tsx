@@ -333,7 +333,7 @@ export function QrScanner() {
           <input
             type="text"
             className={styles.manualInput}
-            placeholder="Paste code or URL (e.g. https://www.recenturesoft.com)"
+            placeholder="Paste code or URL (e.g. https://websiterecentresoft.vercel.app/)"
             value={manualInputValue}
             onChange={(e) => setManualInputValue(e.target.value)}
             aria-label="Manual QR code or URL input"

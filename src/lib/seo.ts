@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import type { PageMeta } from "@/content/fields";
 
-const ORIGIN = "https://www.recenturesoft.com";
+const ORIGIN = "https://websiterecentresoft.vercel.app";
 
 /** Builds the page <head> data from the editable "Search & sharing" fields of a page. */
 export function pageMetadata(meta: PageMeta, path: string): Metadata {

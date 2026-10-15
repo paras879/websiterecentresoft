@@ -97,6 +97,7 @@ const defaults = {
           { label: "Careers", href: "/careers" },
           { label: "Sitemap", href: "/sitemap" },
           { label: "Privacy Policy", href: "/privacy-policy" },
+          { label: "Terms & Conditions", href: "/terms-and-conditions" },
         ],
       },
       {
