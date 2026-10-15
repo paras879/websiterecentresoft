@@ -731,7 +731,7 @@
    ========================================================================== */
 .approach {
   position: relative;
-  padding: 2.75rem 0 1.25rem;
+  padding: 1.75rem 0 1.5rem;
   overflow: hidden;
   background:
     radial-gradient(50% 60% at 50% 0%, rgba(37, 99, 235, 0.08) 0%, rgba(37, 99, 235, 0) 70%),
@@ -741,7 +741,7 @@
 .stages {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 2rem;
+  gap: 1.25rem;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -759,35 +759,80 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 64px;
-  margin-bottom: 1rem;
+  height: 56px;
+  margin-bottom: 0.75rem;
 }
 
-.stageTrack::after {
-  content: "";
+/* Base connector line to the next node */
+.stageConnector {
   position: absolute;
   top: 50%;
-  left: calc(50% + 44px);
-  width: calc(100% + 2rem - 88px);
+  left: calc(50% + 28px);
+  width: calc(100% + 1.25rem - 56px);
   height: 3px;
   margin-top: -1.5px;
-  border-radius: 3px;
-  background: linear-gradient(90deg, var(--hp-tint-border) 0%, var(--hp-blue) 50%, var(--hp-tint-border) 100%);
-  background-size: 200% 100%;
-  animation: stageFlow 4s linear infinite;
+  border-radius: 999px;
+  background: var(--hp-line);
+  overflow: visible;
+  pointer-events: none;
+  z-index: 0;
 }
 
-.stage:last-child .stageTrack::after {
-  display: none;
+/* Active animated line fill running across from node i to node i+1 */
+.stageConnectorFill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 0%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #1d4ed8 0%, #38bdf8 100%);
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.75);
 }
 
-@keyframes stageFlow {
-  from {
-    background-position: 200% 0;
-  }
-  to {
-    background-position: 0 0;
-  }
+.stageConnectorFill::after {
+  content: "";
+  position: absolute;
+  right: -3px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 0 10px 2px #38bdf8;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+/* Already completed lines (e.g. 1-2 when on step 3): solid 100%, NO re-animation */
+.stageConnectorCompleted {
+  width: 100% !important;
+  transition: none !important;
+}
+
+.stageConnectorCompleted::after {
+  opacity: 0 !important;
+}
+
+/* Active incoming line: actively animates across from 0% to 100% with glowing head */
+.stageConnectorActive {
+  width: 100% !important;
+  transition: width 0.65s cubic-bezier(0.35, 0, 0.25, 1) !important;
+}
+
+.stageConnectorActive::after {
+  opacity: 1 !important;
+}
+
+/* Inactive future lines or when resetting on mouse leave */
+.stageConnectorInactive {
+  width: 0% !important;
+  transition: width 0.4s ease !important;
+}
+
+.stageConnectorInactive::after {
+  opacity: 0 !important;
 }
 
 .stageNode {
@@ -796,98 +841,297 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 64px;
-  height: 64px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform 0.3s cubic-bezier(0.34, 1.25, 0.64, 1);
+}
+
+/* Rotating high-vibrancy chromatic ring over/around the icon circle */
+.stageNodeRing {
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    #00f0ff 0deg,
+    #38bdf8 60deg,
+    #6366f1 120deg,
+    #a855f7 180deg,
+    #ec4899 240deg,
+    #f59e0b 300deg,
+    #00f0ff 360deg
+  );
+  opacity: 0;
+  transform: scale(0.92);
+  transition: opacity 0.35s ease, transform 0.35s ease;
+  pointer-events: none;
+  z-index: 0;
+  filter: drop-shadow(0 0 10px rgba(0, 240, 255, 0.85)) drop-shadow(0 0 16px rgba(168, 85, 247, 0.55));
+}
+
+.stageNodeReached .stageNodeRing,
+.stageNodeActive .stageNodeRing,
+.stage:hover .stageNodeRing {
+  opacity: 1;
+  transform: scale(1);
+  animation: stageNodeRingRotate 2.2s linear infinite;
+}
+
+@keyframes stageNodeRingRotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Solid inner circle holding the steady upright icon */
+.stageNodeInner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
   color: #ffffff;
   background: linear-gradient(135deg, #1d4ed8 0%, #0b1f44 100%);
-  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.25);
   box-shadow:
-    0 0 0 6px var(--hp-tint),
-    0 0 0 7px var(--hp-tint-border),
-    0 14px 24px -10px rgba(37, 99, 235, 0.6);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+    0 0 0 4px var(--hp-tint),
+    0 0 0 5px var(--hp-tint-border),
+    0 8px 18px -6px rgba(37, 99, 235, 0.5);
+  transition: background 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
 }
 
-:global([data-theme="dark"]) .stageNode {
-  background: linear-gradient(135deg, #38bdf8 0%, #1d4ed8 100%);
+:global([data-theme="dark"]) .stageNodeInner {
+  background: linear-gradient(135deg, #1e40af 0%, #0b224d 100%);
+  border: 2px solid rgba(255, 255, 255, 0.2);
 }
 
+.stageNodeReached {
+  transform: scale(1.05);
+}
+
+.stageNodeReached .stageNodeInner {
+  box-shadow:
+    0 0 0 4px var(--hp-tint),
+    0 0 0 5px rgba(0, 240, 255, 0.8),
+    0 10px 22px -6px rgba(0, 240, 255, 0.45);
+}
+
+.stageNodeActive {
+  transform: scale(1.12);
+}
+
+.stageNodeActive .stageNodeInner,
+.stage:hover .stageNodeInner {
+  box-shadow:
+    0 0 0 4px var(--hp-tint),
+    0 0 0 6px #00f0ff,
+    0 14px 28px -6px rgba(0, 240, 255, 0.65);
+}
+
+/* Icon stays completely steady and upright - NOT rotating! */
 .stageNode .icon {
   display: block;
-  width: 26px;
-  height: 26px;
+  width: 22px;
+  height: 22px;
   margin: auto;
+  transform: none !important;
+  animation: none !important;
 }
 
-.stage:hover .stageNode {
-  transform: scale(1.1);
-  box-shadow:
-    0 0 0 6px var(--hp-tint),
-    0 0 0 9px var(--hp-blue),
-    0 18px 28px -10px rgba(37, 99, 235, 0.7);
+.stage:hover .stageNode,
+.stageNodeActive {
+  transform: scale(1.08);
 }
 
-.stageBody {
+/* ==========================================================================
+   Compact 3D Flip Card Process Cards (Discover, Design, Build, Deliver)
+   ========================================================================== */
+.stageFlipCard {
   position: relative;
-  display: flex;
+  width: 100%;
   flex: 1;
-  flex-direction: column;
-  padding: 1.5rem;
-  overflow: hidden;
-  background: var(--hp-card);
-  border: 1px solid var(--hp-line);
-  border-radius: 16px;
-  box-shadow: var(--hp-shadow);
-  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  perspective: 1200px;
 }
 
-.stage:hover .stageBody {
-  transform: translateY(-6px);
+.stageFlipInner {
+  position: relative;
+  width: 100%;
+  min-height: 220px;
+  height: 100%;
+  transition: transform 0.7s cubic-bezier(0.34, 1.25, 0.64, 1);
+  transform-style: preserve-3d;
+}
+
+.stage:hover .stageFlipInner,
+.stage:focus-within .stageFlipInner {
+  transform: rotateY(180deg);
+}
+
+.stageFlipFront,
+.stageFlipBack {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  padding: 1.35rem 1.15rem;
+  border-radius: 16px;
+  border: 1px solid var(--hp-line);
+  background: transparent;
+  box-shadow: var(--hp-shadow);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Front Face: Transparent background, centered content */
+.stageFlipFront {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: transparent;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.stageActive .stageFlipFront,
+.stage:hover .stageFlipFront {
   border-color: var(--hp-blue);
-  box-shadow: 0 22px 40px -20px rgba(11, 31, 68, 0.35);
+  box-shadow: 0 12px 24px -10px rgba(37, 99, 235, 0.25);
+  background: transparent;
+}
+
+:global([data-theme="dark"]) .stageFlipFront {
+  background: transparent;
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+:global([data-theme="dark"]) .stageActive .stageFlipFront,
+:global([data-theme="dark"]) .stage:hover .stageFlipFront {
+  border-color: #38bdf8;
+  box-shadow: 0 12px 24px -10px rgba(56, 189, 248, 0.25);
 }
 
 .stageLabel {
-  margin-bottom: 0.5rem;
-  font-size: 0.75rem;
+  margin-bottom: 0.4rem;
+  font-size: 0.6875rem;
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--hp-blue);
+  text-align: center;
 }
 
-.stageTitle {
-  margin: 0 0 0.6rem;
-  font-size: 1.375rem;
+.stageBigTitle {
+  margin: 0.25rem 0 1.25rem;
+  font-size: 1.6rem;
   font-weight: 800;
-  line-height: 1.2;
-  letter-spacing: -0.02em;
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+  color: var(--hp-heading);
+  text-align: center;
+}
+
+.stageFlipHint {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: auto;
+  padding: 0.3rem 0.75rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--hp-blue);
+  background: var(--hp-tint);
+  border: 1px solid var(--hp-tint-border);
+  border-radius: 999px;
+  transition: transform 0.25s ease, background-color 0.25s ease, color 0.25s ease;
+}
+
+.stage:hover .stageFlipHint,
+.stageActive .stageFlipHint {
+  background: var(--hp-blue);
+  color: #ffffff;
+  border-color: var(--hp-blue);
+}
+
+.stageFlipHintIcon {
+  font-size: 0.75rem;
+  transition: transform 0.25s ease;
+}
+
+.stage:hover .stageFlipHintIcon {
+  transform: translateX(3px);
+}
+
+/* Back Face: Revealed on flip with description and outcome */
+.stageFlipBack {
+  transform: rotateY(180deg);
+  border-color: var(--hp-blue);
+  background: var(--hp-bg);
+  box-shadow: 0 16px 32px -12px rgba(11, 31, 68, 0.22);
+  justify-content: space-between;
+}
+
+:global([data-theme="dark"]) .stageFlipBack {
+  box-shadow: 0 16px 32px -12px rgba(0, 0, 0, 0.75);
+  border-color: rgba(56, 189, 248, 0.35);
+}
+
+.stageBackHeader {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.4rem;
+  margin-bottom: 0.35rem;
+}
+
+.stageBackStep {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--hp-blue);
+}
+
+.stageBackTitle {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 700;
   color: var(--hp-heading);
 }
 
 .stageText {
-  margin: 0 0 1.25rem;
-  font-size: 0.9375rem;
-  line-height: 1.65;
+  margin: 0 0 0.5rem;
+  font-size: 0.8125rem;
+  line-height: 1.45;
   color: var(--hp-text);
 }
 
 .stageOutcome {
   display: flex;
   align-items: flex-start;
-  gap: 0.6rem;
+  gap: 0.45rem;
   margin: auto 0 0;
-  padding-top: 1rem;
-  font-size: 0.875rem;
+  padding-top: 0.5rem;
+  font-size: 0.75rem;
   font-weight: 600;
-  line-height: 1.4;
+  line-height: 1.35;
   color: var(--hp-heading);
   border-top: 1px dashed var(--hp-line);
 }
 
 .stageCheck {
-  width: 18px;
-  height: 18px;
+  width: 15px;
+  height: 15px;
   flex-shrink: 0;
   margin-top: 1px;
   stroke: var(--hp-blue);
@@ -910,7 +1154,7 @@
 .approachCta {
   display: flex;
   justify-content: center;
-  margin-top: 1.25rem;
+  margin-top: 2rem;
 }
 
 .approach .sectionHead {
@@ -924,11 +1168,11 @@
 @media (max-width: 1100px) {
   .stages {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    row-gap: 2.5rem;
+    row-gap: 2rem;
   }
 
   /* Connector only between the two columns of each row */
-  .stage:nth-child(even) .stageTrack::after {
+  .stage:nth-child(even) .stageConnector {
     display: none;
   }
 }
@@ -949,9 +1193,8 @@
     padding-bottom: 1.75rem;
   }
 
-  /* Hide the horizontal connector; the vertical one is drawn on the step itself */
-  .stageTrack::after,
-  .stage:nth-child(even) .stageTrack::after {
+  /* Hide horizontal connectors on mobile */
+  .stageConnector {
     display: none;
   }
 
@@ -967,7 +1210,7 @@
   }
 
   .stageTrack {
-    margin-bottom: 1rem;
+    margin-bottom: 0.75rem;
   }
 
   .approachCta .btnPrimary {
@@ -976,17 +1219,19 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .stageTrack::after {
+  .stageNodeRing {
     animation: none;
   }
 
-  .stageNode,
-  .stageBody {
+  .stageConnectorFill {
     transition: none;
   }
 
-  .stage:hover .stageNode,
-  .stage:hover .stageBody {
+  .stageNode {
+    transition: none;
+  }
+
+  .stage:hover .stageNode {
     transform: none;
   }
 }

@@ -86,7 +86,7 @@
   --color-bg-dropdown: #081a33;
   --color-bg-footer: #02070e;
   --color-bg-footer-card: rgba(255, 255, 255, 0.04);
-  --color-bg-header: rgba(4, 13, 26, 0.72);
+  --color-bg-header: rgba(4, 13, 26, 0.85);
 
   /* Borders */
   --color-border-subtle: rgba(255, 255, 255, 0.08);
@@ -223,7 +223,7 @@ body {
   font-family: var(--font-sans);
   font-size: var(--font-size-base);
   line-height: var(--line-height-normal);
-  overflow-x: hidden;
+  overflow-x: clip;
   font-feature-settings: "cv11", "ss01";
   text-rendering: optimizeLegibility;
   transition: background-color var(--transition-base), color var(--transition-base);

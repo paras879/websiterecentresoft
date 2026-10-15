@@ -5,6 +5,7 @@ import { getSiteContent } from "@/lib/content";
 import { getSiteInfo } from "@/lib/site";
 import { pageMetadata } from "@/lib/seo";
 import { Icon, iconPaths, type IconName } from "@/app/services/icons";
+import { HomeApproachTimeline } from "@/components/home-approach-timeline";
 import styles from "./home.module.css";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -200,52 +201,7 @@ export default async function HomePage() {
       </section>
 
       {/* Approach */}
-      <section className={styles.approach} aria-labelledby="approach-heading">
-        <div className="container">
-          <header className={`${styles.sectionHead} ${styles.centered}`}>
-            <h2 id="approach-heading" className={styles.h2}>
-              {approach.title}
-            </h2>
-            <p className={styles.lead}>{approach.lead}</p>
-          </header>
-
-          <ol className={styles.stages}>
-            {approach.items.map((item, index) => (
-              <li key={`${item.title}-${index}`} className={styles.stage}>
-                <div className={styles.stageTrack} aria-hidden="true">
-                  <span className={styles.stageNode}>
-                    <Glyph name={item.icon} className={styles.icon} />
-                  </span>
-                </div>
-                <div className={styles.stageBody}>
-                  <span className={styles.stageLabel}>
-                    {approach.stepWord} {String(index + 1).padStart(2, "0")}
-                  </span>
-                  <h3 className={styles.stageTitle}>{item.title}</h3>
-                  <p className={styles.stageText}>{item.desc}</p>
-                  {item.outcome ? (
-                    <p className={styles.stageOutcome}>
-                      <Icon name="check" className={styles.stageCheck} />
-                      <span>
-                        <span className={styles.stageOutcomeLabel}>{approach.outcomeLabel}</span>
-                        {item.outcome}
-                      </span>
-                    </p>
-                  ) : null}
-                </div>
-              </li>
-            ))}
-          </ol>
-
-          {approach.buttonLabel ? (
-            <div className={styles.approachCta}>
-              <Link href={approach.buttonHref || "/contact"} className={styles.btnPrimary}>
-                {approach.buttonLabel} <span aria-hidden="true">&rarr;</span>
-              </Link>
-            </div>
-          ) : null}
-        </div>
-      </section>
+      <HomeApproachTimeline approach={approach} />
 
       {/* Contact CTA */}
       <section className={styles.contactBand} aria-labelledby="contact-heading">

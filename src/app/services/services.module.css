@@ -832,9 +832,35 @@
 /* ==========================================================================
    About - Pragmatic engineering (editorial list)
    ========================================================================== */
+.overlapWrapper {
+  position: relative;
+}
+
 .pragSection {
+  position: relative;
+  z-index: 1;
   padding: 5rem 0;
   background: var(--sv-bg);
+}
+
+@media (min-width: 1025px) {
+  .pragSection {
+    position: sticky;
+    top: 76px;
+    height: calc(100vh - 76px);
+    display: flex;
+    align-items: center;
+    padding: 2.5rem 0;
+  }
+
+  .pragSection > :global(.container) {
+    width: 100%;
+  }
+
+  .pragIntro {
+    position: relative;
+    top: auto;
+  }
 }
 
 .pragLayout {
@@ -1114,9 +1140,12 @@
    ========================================================================== */
 .prinSection {
   position: relative;
-  padding: 5rem 0;
+  z-index: 2;
+  border-radius: 40px 40px 0 0;
+  box-shadow: 0 -25px 60px rgba(0, 0, 0, 0.45);
   overflow: hidden;
   color: #ffffff;
+  padding: 6.5rem 0 6rem;
   background:
     radial-gradient(50% 70% at 15% 0%, rgba(37, 99, 235, 0.35) 0%, rgba(37, 99, 235, 0) 70%),
     radial-gradient(45% 60% at 90% 100%, rgba(37, 99, 235, 0.22) 0%, rgba(37, 99, 235, 0) 70%),
@@ -1318,6 +1347,14 @@
 
   .prinItem:hover .prinIcon {
     transform: none;
+  }
+}
+
+@media (max-width: 1024px) {
+  .prinSection {
+    margin-top: -32px;
+    border-radius: 26px 26px 0 0;
+    padding: 4.5rem 0 4rem;
   }
 }
 

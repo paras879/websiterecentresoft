@@ -59,78 +59,81 @@ export default async function AboutPage() {
         </div>
       </section>
 
-      {/* Pragmatic engineering */}
-      <section className={styles.pragSection} aria-labelledby="pragmatic-heading">
-        <div className={`container ${styles.pragLayout}`}>
-          <header className={styles.pragIntro}>
-            <span className={styles.pragBar} aria-hidden="true" />
-            <h2 id="pragmatic-heading" className={styles.pragTitle}>
-              {pragmatic.title}
-              {pragmatic.highlight ? (
-                <>
-                  {" "}
-                  <span className={styles.pragGradient}>{pragmatic.highlight}</span>
-                </>
+      {/* Isolated overlap container for Pragmatic -> Principles only */}
+      <div className={styles.overlapWrapper}>
+        {/* Pragmatic engineering */}
+        <section className={styles.pragSection} aria-labelledby="pragmatic-heading">
+          <div className={`container ${styles.pragLayout}`}>
+            <header className={styles.pragIntro}>
+              <span className={styles.pragBar} aria-hidden="true" />
+              <h2 id="pragmatic-heading" className={styles.pragTitle}>
+                {pragmatic.title}
+                {pragmatic.highlight ? (
+                  <>
+                    {" "}
+                    <span className={styles.pragGradient}>{pragmatic.highlight}</span>
+                  </>
+                ) : null}
+              </h2>
+              {pragmatic.lead ? <p className={styles.pragLead}>{pragmatic.lead}</p> : null}
+              {pragmatic.linkLabel ? (
+                <Link href={pragmatic.linkHref || "/contact"} className={styles.pragLink}>
+                  {pragmatic.linkLabel} <span aria-hidden="true">&rarr;</span>
+                </Link>
               ) : null}
-            </h2>
-            {pragmatic.lead ? <p className={styles.pragLead}>{pragmatic.lead}</p> : null}
-            {pragmatic.linkLabel ? (
-              <Link href={pragmatic.linkHref || "/contact"} className={styles.pragLink}>
-                {pragmatic.linkLabel} <span aria-hidden="true">&rarr;</span>
-              </Link>
+            </header>
+
+            {pragmatic.items.length > 0 ? (
+              <ol className={styles.pragList}>
+                {pragmatic.items.map((item, index) => (
+                  <li key={`${item.title}-${index}`} className={styles.pragRow}>
+                    <span className={styles.pragNum} aria-hidden="true">
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                    <div className={styles.pragBody}>
+                      <h3 className={styles.pragRowTitle}>{item.title}</h3>
+                      <p className={styles.body}>{item.desc}</p>
+                    </div>
+                    <span className={styles.pragIcon} aria-hidden="true">
+                      <Glyph name={item.icon} className={styles.icon} />
+                    </span>
+                  </li>
+                ))}
+              </ol>
             ) : null}
-          </header>
+          </div>
+        </section>
 
-          {pragmatic.items.length > 0 ? (
-            <ol className={styles.pragList}>
-              {pragmatic.items.map((item, index) => (
-                <li key={`${item.title}-${index}`} className={styles.pragRow}>
-                  <span className={styles.pragNum} aria-hidden="true">
-                    {String(index + 1).padStart(2, "0")}
-                  </span>
-                  <div className={styles.pragBody}>
-                    <h3 className={styles.pragRowTitle}>{item.title}</h3>
-                    <p className={styles.body}>{item.desc}</p>
-                  </div>
-                  <span className={styles.pragIcon} aria-hidden="true">
-                    <Glyph name={item.icon} className={styles.icon} />
-                  </span>
-                </li>
-              ))}
-            </ol>
-          ) : null}
-        </div>
-      </section>
+        {/* Principles */}
+        <section className={styles.prinSection} aria-labelledby="principles-heading">
+          <div className="container">
+            <header className={styles.prinHead}>
+              <h2 id="principles-heading" className={styles.prinTitle}>
+                {principles.title}
+              </h2>
+              {principles.lead ? <p className={styles.prinLead}>{principles.lead}</p> : null}
+            </header>
 
-      {/* Principles */}
-      <section className={styles.prinSection} aria-labelledby="principles-heading">
-        <div className="container">
-          <header className={styles.prinHead}>
-            <h2 id="principles-heading" className={styles.prinTitle}>
-              {principles.title}
-            </h2>
-            {principles.lead ? <p className={styles.prinLead}>{principles.lead}</p> : null}
-          </header>
-
-          {principles.items.length > 0 ? (
-            <div className={styles.prinPanel}>
-              {principles.items.map((item, index) => (
-                <article key={`${item.title}-${index}`} className={styles.prinItem}>
-                  <span className={styles.prinLabel}>
-                    {String(index + 1).padStart(2, "0")}
-                    {item.label ? ` / ${item.label}` : ""}
-                  </span>
-                  <div className={styles.prinIcon}>
-                    <Glyph name={item.icon} className={styles.icon} />
-                  </div>
-                  <h3 className={styles.prinItemTitle}>{item.title}</h3>
-                  <p className={styles.prinText}>{item.desc}</p>
-                </article>
-              ))}
-            </div>
-          ) : null}
-        </div>
-      </section>
+            {principles.items.length > 0 ? (
+              <div className={styles.prinPanel}>
+                {principles.items.map((item, index) => (
+                  <article key={`${item.title}-${index}`} className={styles.prinItem}>
+                    <span className={styles.prinLabel}>
+                      {String(index + 1).padStart(2, "0")}
+                      {item.label ? ` / ${item.label}` : ""}
+                    </span>
+                    <div className={styles.prinIcon}>
+                      <Glyph name={item.icon} className={styles.icon} />
+                    </div>
+                    <h3 className={styles.prinItemTitle}>{item.title}</h3>
+                    <p className={styles.prinText}>{item.desc}</p>
+                  </article>
+                ))}
+              </div>
+            ) : null}
+          </div>
+        </section>
+      </div>
 
       {/* Development pods */}
       <section className={styles.section} aria-labelledby="pods-heading">
