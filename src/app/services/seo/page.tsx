@@ -169,16 +169,18 @@ export default async function SeoServicesPage() {
       <section className={seo.faq} aria-labelledby="seo-faq-heading">
         <div className={`container ${seo.faqGrid}`}>
           <div className={seo.faqIntro}>
-            <h2 id="seo-faq-heading" className={seo.bigTitle}>
-              {faq.title}
-            </h2>
-            <p className={seo.faqLead}>
-              {faq.leadText}{" "}
-              <a href={`mailto:${contact.email}`} className={seo.faqLink}>
-                {contact.email}
-              </a>
-              .
-            </p>
+            <div className={seo.faqIntroText}>
+              <h2 id="seo-faq-heading" className={seo.bigTitle}>
+                {faq.title}
+              </h2>
+              <p className={seo.faqLead}>
+                {faq.leadText}{" "}
+                <a href={`mailto:${contact.email}`} className={seo.faqLink}>
+                  {contact.email}
+                </a>
+                .
+              </p>
+            </div>
             <div className={seo.faqCard}>
               <p className={seo.faqCardTitle}>{faq.cardTitle}</p>
               <p className={seo.faqCardText}>{faq.cardText}</p>

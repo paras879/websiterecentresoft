@@ -445,11 +445,22 @@
   .heroGrid,
   .aboutGrid {
     grid-template-columns: 1fr;
-    gap: 3rem;
+    gap: 2.5rem;
   }
 
   .hero {
     padding: 2.5rem 0 3rem;
+  }
+
+  .photoFrame {
+    max-width: 680px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .photo {
+    max-height: 420px;
+    aspect-ratio: 16 / 10;
   }
 
   .section {
@@ -1186,8 +1197,33 @@
     right: 1.25rem;
   }
 
+  .aboutActions {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 0.75rem;
+  }
+
   .aboutActions .btnPrimary {
     width: 100%;
+    justify-content: center;
+  }
+
+  .aboutActions .textLink {
+    width: 100%;
+    justify-content: center;
+    padding: 0.75rem 1.25rem;
+    text-align: center;
+    border: 1px solid var(--hp-line);
+    border-radius: 8px;
+    background: var(--hp-card);
+    transition: border-color 0.15s ease, background-color 0.15s ease;
+  }
+
+  .aboutActions .textLink:hover {
+    text-decoration: none;
+    border-color: var(--hp-blue);
+    background: var(--hp-tint);
   }
 }
 

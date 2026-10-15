@@ -684,6 +684,21 @@
   }
 }
 
+@media (min-width: 641px) and (max-width: 1024px) {
+  .faqIntro {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(280px, 1fr);
+    gap: 2.25rem;
+    align-items: start;
+    margin-bottom: 2rem;
+  }
+
+  .faqCard {
+    margin-top: 0;
+    max-width: 100%;
+  }
+}
+
 @media (max-width: 640px) {
   .services,
   .faq {

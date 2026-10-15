@@ -1023,7 +1023,7 @@
 
 @media (max-width: 1024px) {
   .pragSection {
-    padding: 3.5rem 0;
+    padding: 2rem 0 3.5rem;
   }
 
   .pragLayout {
@@ -1033,10 +1033,47 @@
 
   .pragIntro {
     position: static;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+  }
+
+  .pragBar {
+    display: none;
+  }
+
+  .pragTitle {
+    text-align: center;
+  }
+
+  .pragLead {
+    max-width: 54ch;
+    padding-left: 0;
+    text-align: center;
+    margin: 0 auto;
+  }
+
+  .pragLead::before {
+    display: none;
+  }
+
+  .pragLink {
+    align-self: center;
+    margin: 0.5rem auto 0;
   }
 }
 
 @media (max-width: 720px) {
+  .pragSection {
+    padding: 1.25rem 0 3rem;
+  }
+
+  .pragBar {
+    display: none;
+  }
+
   .pragRow {
     grid-template-columns: 48px minmax(0, 1fr);
     gap: 1rem;
