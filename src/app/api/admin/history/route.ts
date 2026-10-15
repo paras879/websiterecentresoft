@@ -1,3 +1,4 @@
+import { revalidatePath } from "next/cache";
 import { getDefaultContent, getHistoryDoc, listHistory, saveSiteContent } from "@/lib/content";
 import { failure, guardAdmin, json } from "@/lib/api";
 
@@ -24,6 +25,9 @@ export async function POST(req: Request) {
     if (!doc) return json({ success: false, error: "That version is no longer available." }, 404);
 
     const content = await saveSiteContent(doc, id === "original" ? "Restored the original content" : "Restored an earlier version");
+    try {
+      revalidatePath("/", "layout");
+    } catch {}
     return json({ success: true, content });
   } catch (error) {
     return failure(error, "Could not restore that version.");

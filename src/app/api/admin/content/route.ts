@@ -1,3 +1,4 @@
+import { revalidatePath } from "next/cache";
 import { getDefaultContent, getSiteContent, saveSiteContent } from "@/lib/content";
 import { failure, guardAdmin, json } from "@/lib/api";
 import { getStore } from "@/lib/store";
@@ -25,6 +26,9 @@ export async function PUT(req: Request) {
     }
     const note = typeof body.note === "string" ? body.note : "";
     const content = await saveSiteContent(body.content, note);
+    try {
+      revalidatePath("/", "layout");
+    } catch {}
     return json({ success: true, content });
   } catch (error) {
     return failure(error, "Your changes could not be saved. Please try again.");

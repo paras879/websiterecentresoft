@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Inter } from "next/font/google";
 import { getSiteContent } from "@/lib/content";
 import { buildSiteInfo } from "@/lib/site";
 import { SiteShell } from "@/components/site-shell";
@@ -10,8 +11,15 @@ import { ThemeProvider } from "@/components/theme-provider";
 import "./globals.css";
 import "./theme-hcl.css";
 
-// Page content comes from the admin panel, so pages are rendered on request instead of at build time.
-export const dynamic = "force-dynamic";
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
+  display: "swap",
+  variable: "--font-inter",
+});
+
+// Revalidate cached pages on edge every 60s or on-demand via admin panel
+export const revalidate = 60;
 
 export async function generateMetadata(): Promise<Metadata> {
   const { site } = await getSiteContent();
@@ -119,7 +127,7 @@ export default async function RootLayout({
   };
 
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" className={inter.variable} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
         <script

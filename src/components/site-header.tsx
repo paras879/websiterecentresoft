@@ -108,7 +108,6 @@ export function SiteHeader({ site, info }: Props) {
             alt="Recenturesoft"
             width={240}
             height={96}
-            priority
             className={styles.brandLogoDark}
           />
         </Link>
