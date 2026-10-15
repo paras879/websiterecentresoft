@@ -43,6 +43,15 @@ export async function generateMetadata(): Promise<Metadata> {
       description,
       images: [image],
     },
+    icons: {
+      icon: [
+        { url: "/favicon.ico", sizes: "any" },
+        { url: "/icon.png", type: "image/png" },
+        { url: "/favicon.png", type: "image/png" },
+      ],
+      shortcut: "/favicon.ico",
+      apple: "/apple-touch-icon.png",
+    },
   };
 }
 
@@ -75,7 +84,7 @@ export default async function RootLayout({
         name: info.name,
         legalName: info.legalName,
         url: "https://websiterecentresoft.vercel.app",
-        logo: "https://websiterecentresoft.vercel.app/images/hero.jpg",
+        logo: "https://websiterecentresoft.vercel.app/images/recenturesoft-logo.png",
         description: info.description,
         address: {
           "@type": "PostalAddress",

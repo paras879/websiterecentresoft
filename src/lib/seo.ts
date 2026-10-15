@@ -27,6 +27,15 @@ export function pageMetadata(meta: PageMeta, path: string): Metadata {
       description: meta.description,
       images: meta.image ? [meta.image] : [],
     },
+    icons: {
+      icon: [
+        { url: "/favicon.ico", sizes: "any" },
+        { url: "/icon.png", type: "image/png" },
+        { url: "/favicon.png", type: "image/png" },
+      ],
+      shortcut: "/favicon.ico",
+      apple: "/apple-touch-icon.png",
+    },
   };
 }
 
