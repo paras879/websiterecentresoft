@@ -8,6 +8,7 @@ import { SiteFooter } from "@/components/site-footer";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ThemeProvider } from "@/components/theme-provider";
+import { SmoothScroll } from "@/components/smooth-scroll";
 import "./globals.css";
 import "./theme-hcl.css";
 
@@ -138,6 +139,7 @@ export default async function RootLayout({
         />
       </head>
       <body>
+        <SmoothScroll />
         <ThemeProvider>
           <SiteShell
             header={<SiteHeader site={site} info={info} />}

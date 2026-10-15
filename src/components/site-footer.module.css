@@ -53,20 +53,14 @@
   --ft-contact-hover: #ffffff;
 }
 
-/* Gradient accent line on top */
+/* Gradient accent line on top removed as requested */
 .footer::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, #1d4ed8 0%, #38bdf8 50%, #1d4ed8 100%);
+  display: none;
 }
 
 .mainSection {
   position: relative;
-  padding-top: 4.5rem;
+  padding-top: 2.5rem;
   padding-bottom: 3.5rem;
 }
 
