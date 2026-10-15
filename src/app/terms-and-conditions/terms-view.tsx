@@ -110,7 +110,7 @@ export function TermsView({ company, email, phone, phoneRaw, address, mapUrl, wh
       <header className={styles.top}>
         <Image
           src="/images/hero.jpg"
-          alt=""
+          alt="Recenturesoft Infotech Terms and Conditions Hero Banner"
           fill
           priority
           sizes="100vw"

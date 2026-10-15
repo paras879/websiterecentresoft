@@ -2,7 +2,7 @@ import { defineModule, group, image, longtext, seoFields, strings, text } from "
 
 const defaults = {
   meta: {
-    title: "Contact Us | Recenturesoft Infotech",
+    title: "Contact Recenturesoft Infotech | Software Project Inquiries",
     description:
       "Contact Recenturesoft Infotech Pvt Ltd in Noida for custom software development, web engineering, and enterprise AI automation inquiries.",
     image: "/images/hero.jpg",

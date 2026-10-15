@@ -100,7 +100,7 @@ export function ApproachExplorer({ steps }: { steps: ApproachStep[] }) {
           <Image
             key={`img-${active}`}
             src={current.image}
-            alt=""
+            alt={current.title}
             fill
             sizes="(max-width: 800px) 100vw, 400px"
             className={styles.panelImg}

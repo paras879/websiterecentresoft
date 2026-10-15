@@ -2,7 +2,7 @@ import { defineModule, group, image, list, longtext, seoFields, strings, text, u
 
 const defaults = {
   meta: {
-    title: "SEO Services | Recenturesoft Infotech",
+    title: "Technical & Local SEO Services | Recenturesoft Infotech",
     description:
       "Technical SEO, on-page SEO, off-page SEO, keyword research, local SEO and SEO audits from Recenturesoft Infotech, Noida.",
     image: "/images/seo-hero.jpg",

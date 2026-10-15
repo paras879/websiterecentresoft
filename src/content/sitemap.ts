@@ -15,9 +15,9 @@ const links = () =>
 
 const defaults = {
   meta: {
-    title: "Sitemap | Recenturesoft Infotech",
+    title: "Sitemap | Recenturesoft Infotech Web Pages & Services Index",
     description:
-      "Browse every page of the Recenturesoft Infotech website: company information, services, contact details and more.",
+      "Browse every page of the Recenturesoft Infotech website: company information, engineering services, contact details, legal policies and more.",
     image: "",
   },
   hero: {

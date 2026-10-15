@@ -152,7 +152,7 @@ export default async function SoftwareDevelopmentPage() {
                     {item.image ? (
                       <Image
                         src={item.image}
-                        alt=""
+                        alt={item.title}
                         fill
                         loading={index === 0 ? "eager" : "lazy"}
                         sizes="(max-width: 900px) 100vw, 420px"

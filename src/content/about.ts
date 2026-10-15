@@ -2,7 +2,7 @@ import { defineModule, group, icon, image, list, longtext, seoFields, text, url 
 
 const defaults = {
   meta: {
-    title: "About Us | Recenturesoft Infotech",
+    title: "About Recenturesoft Infotech | Custom Software Engineering",
     description:
       "Learn about Recenturesoft Infotech Pvt Ltd, our engineering capabilities, software development approach, and enterprise technology solutions.",
     image: "/images/about.jpg",

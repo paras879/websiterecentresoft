@@ -2,7 +2,7 @@ import { defineModule, group, icon, image, list, longtext, seoFields, strings, t
 
 const defaults = {
   meta: {
-    title: "AI Automation Services | Recenturesoft Infotech",
+    title: "Enterprise AI Automation Services | Recenturesoft Infotech",
     description:
       "Explore AI workflow automation, repetitive task minimization, and process engineering solutions by Recenturesoft Infotech Pvt Ltd.",
     image: "/images/ai-automation.jpg",

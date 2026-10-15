@@ -54,7 +54,7 @@ export function BuildShowcase({
             <Image
               key={item.image + index}
               src={item.image}
-              alt={index === active ? item.alt : ""}
+              alt={item.alt}
               aria-hidden={index === active ? undefined : true}
               fill
               sizes="(max-width: 1000px) 0px, 1100px"

@@ -27,9 +27,6 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     description,
     metadataBase: new URL("https://websiterecentresoft.vercel.app"),
-    alternates: {
-      canonical: "/",
-    },
     openGraph: {
       type: "website",
       locale: "en_US",
@@ -69,32 +66,47 @@ export default async function RootLayout({
   const { site } = content;
   const info = buildSiteInfo(site);
 
-  const organizationSchema = {
+  const structuredData = {
     "@context": "https://schema.org",
-    "@type": "Organization",
-    name: info.name,
-    legalName: info.legalName,
-    url: "https://websiterecentresoft.vercel.app",
-    logo: "https://websiterecentresoft.vercel.app/images/hero.jpg",
-    description: info.description,
-    address: {
-      "@type": "PostalAddress",
-      streetAddress: "A-125, 1st Floor, Sector-63",
-      addressLocality: "Noida",
-      addressRegion: "Uttar Pradesh",
-      postalCode: "201301",
-      addressCountry: "IN",
-    },
-    contactPoint: [
+    "@graph": [
       {
-        "@type": "ContactPoint",
-        telephone: info.contact.phone,
-        contactType: "customer service",
-        areaServed: "IN",
-        availableLanguage: ["English", "Hindi"],
+        "@type": "Organization",
+        "@id": "https://websiterecentresoft.vercel.app/#organization",
+        name: info.name,
+        legalName: info.legalName,
+        url: "https://websiterecentresoft.vercel.app",
+        logo: "https://websiterecentresoft.vercel.app/images/hero.jpg",
+        description: info.description,
+        address: {
+          "@type": "PostalAddress",
+          streetAddress: "A-125, 1st Floor, Sector-63",
+          addressLocality: "Noida",
+          addressRegion: "Uttar Pradesh",
+          postalCode: "201301",
+          addressCountry: "IN",
+        },
+        contactPoint: [
+          {
+            "@type": "ContactPoint",
+            telephone: info.contact.phone,
+            contactType: "customer service",
+            areaServed: "IN",
+            availableLanguage: ["English", "Hindi"],
+          },
+        ],
+        sameAs: site.socials.map((s) => s.href),
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://websiterecentresoft.vercel.app/#website",
+        url: "https://websiterecentresoft.vercel.app",
+        name: info.name,
+        description: info.description,
+        publisher: {
+          "@id": "https://websiterecentresoft.vercel.app/#organization",
+        },
       },
     ],
-    sameAs: site.socials.map((s) => s.href),
   };
 
   return (
@@ -103,7 +115,9 @@ export default async function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(structuredData).replace(/</g, "\\u003c"),
+          }}
         />
       </head>
       <body>

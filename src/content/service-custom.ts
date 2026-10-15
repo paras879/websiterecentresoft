@@ -4,7 +4,7 @@ const defaults = {
   meta: {
     title: "Custom Development Services | Recenturesoft Infotech",
     description:
-      "Custom web applications, enterprise software, SaaS products, API development, business process automation and legacy modernisation from Recenturesoft Infotech, Noida.",
+      "Custom web applications, enterprise software, SaaS products, APIs, and business automation solutions from Recenturesoft Infotech, Noida.",
     image: "/images/custom-hero.jpg",
   },
   hero: {

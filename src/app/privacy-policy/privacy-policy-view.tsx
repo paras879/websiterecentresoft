@@ -96,7 +96,7 @@ export function PrivacyPolicyView({ company, email, phone, phoneRaw, address, ma
       <header className={styles.top}>
         <Image
           src="/images/hero.jpg"
-          alt=""
+          alt="Recenturesoft Infotech Privacy Policy Hero Banner"
           fill
           priority
           sizes="100vw"

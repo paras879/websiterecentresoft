@@ -3,16 +3,16 @@ import { getSiteInfo } from "@/lib/site";
 import { PrivacyPolicyView } from "./privacy-policy-view";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy",
+  title: "Privacy Policy | Recenturesoft Infotech Pvt Ltd",
   description:
-    "How Recenturesoft Infotech Pvt Ltd collects, uses, protects and shares information on https://websiterecentresoft.vercel.app/, and how to reach our Grievance Officer.",
+    "Official Privacy Policy of Recenturesoft Infotech Pvt Ltd explaining how we collect, protect, and use user information on websiterecentresoft.vercel.app.",
   alternates: {
     canonical: "/privacy-policy",
   },
   openGraph: {
     title: "Privacy Policy | Recenturesoft Infotech Pvt Ltd",
     description:
-      "How Recenturesoft Infotech Pvt Ltd collects, uses, protects and shares information on https://websiterecentresoft.vercel.app/.",
+      "Official Privacy Policy of Recenturesoft Infotech Pvt Ltd explaining how we collect, protect, and use user information on websiterecentresoft.vercel.app.",
     type: "website",
     url: "https://websiterecentresoft.vercel.app/privacy-policy",
   },

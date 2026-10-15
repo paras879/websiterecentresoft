@@ -57,7 +57,7 @@ export default async function ContactPage() {
       {/* Hero */}
       <section className={styles.hero} aria-labelledby="contact-heading">
         {hero.image ? (
-          <Image src={hero.image} alt="" fill priority sizes="100vw" className={styles.heroImage} />
+          <Image src={hero.image} alt="Recenturesoft Infotech Noida Office Contact Desk" fill priority sizes="100vw" className={styles.heroImage} />
         ) : null}
         <div className={styles.heroOverlay} aria-hidden="true" />
         <div className={`container ${styles.heroInner}`}>

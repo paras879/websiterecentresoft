@@ -82,7 +82,7 @@ export function SeoServicesExplorer({ services, linkPrefix = "Ask about" }: { se
         <div className={styles.photo} key={`p-${active}`}>
           <Image
             src={current.image}
-            alt=""
+            alt={current.title}
             fill
             sizes="(max-width: 900px) 100vw, 640px"
             className={styles.photoImg}

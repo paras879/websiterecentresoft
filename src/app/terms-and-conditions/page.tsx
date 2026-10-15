@@ -5,14 +5,14 @@ import { TermsView } from "./terms-view";
 export const metadata: Metadata = {
   title: "Terms & Conditions | Recenturesoft Infotech Pvt Ltd",
   description:
-    "Official Terms and Conditions of Recenturesoft Infotech Pvt Ltd governing website access, acceptable use, intellectual property, security rules, and limitation of liability.",
+    "Official Terms and Conditions of Recenturesoft Infotech Pvt Ltd governing website access, acceptable use, intellectual property, and limitation of liability.",
   alternates: {
     canonical: "/terms-and-conditions",
   },
   openGraph: {
     title: "Terms & Conditions | Recenturesoft Infotech Pvt Ltd",
     description:
-      "Read the terms, acceptable use policies, intellectual property rights, and legal guidelines governing your access to Recenturesoft Infotech Pvt Ltd.",
+      "Official Terms and Conditions of Recenturesoft Infotech Pvt Ltd governing website access, acceptable use, intellectual property, and limitation of liability.",
     type: "website",
     url: "https://websiterecentresoft.vercel.app/terms-and-conditions",
   },

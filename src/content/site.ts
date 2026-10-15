@@ -21,7 +21,7 @@ const defaults = {
     legalName: "Recenturesoft Infotech Pvt Ltd",
     tagline: "Software Engineering & AI Automation",
     description:
-      "Recenturesoft Infotech Pvt Ltd is a premier software development company offering custom software development, web application engineering, and AI-driven automation solutions.",
+      "Recenturesoft Infotech delivers custom software development, web application engineering, and enterprise AI automation solutions from Noida, India.",
   },
   contact: {
     email: "info@recenturesoft.com",
