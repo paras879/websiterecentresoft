@@ -86,17 +86,17 @@
 
 .brandLogoLight {
   display: block;
-  height: 38px;
+  height: 44px;
   width: auto;
-  max-width: 150px;
+  max-width: 175px;
   object-fit: contain;
 }
 
 .brandLogoDark {
   display: none;
-  height: 38px;
+  height: 44px;
   width: auto;
-  max-width: 150px;
+  max-width: 175px;
   object-fit: contain;
 }
 

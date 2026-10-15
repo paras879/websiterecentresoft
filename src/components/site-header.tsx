@@ -98,16 +98,16 @@ export function SiteHeader({ site, info }: Props) {
           <Image
             src="/images/recenturesoft-logo.png"
             alt="Recenturesoft - A Hub of IT Services"
-            width={220}
-            height={80}
+            width={240}
+            height={96}
             priority
             className={styles.brandLogoLight}
           />
           <Image
             src="/images/logo_white.PNG"
             alt="Recenturesoft"
-            width={220}
-            height={80}
+            width={240}
+            height={96}
             priority
             className={styles.brandLogoDark}
           />
