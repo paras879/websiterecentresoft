@@ -284,13 +284,13 @@
 }
 
 .whyTitle {
-  max-width: none;
+  max-width: 20ch;
   margin: 0 0 2rem;
-  font-size: clamp(1.75rem, 3.2vw, 2.75rem);
-  white-space: nowrap;
+  font-size: clamp(1.5rem, 2.4vw, 2.25rem);
+  white-space: normal;
   font-weight: 800;
-  line-height: 1.08;
-  letter-spacing: -0.04em;
+  line-height: 1.15;
+  letter-spacing: -0.035em;
   color: #ffffff;
 }
 
@@ -355,6 +355,7 @@
 
 .whyImg {
   object-fit: cover;
+  object-position: center;
 }
 
 /* ----------------------------------------------------------------------- faq */

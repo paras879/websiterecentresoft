@@ -83,8 +83,8 @@ const defaults = {
   },
   why: {
     title: "Why teams choose Recenturesoft",
-    image: "/images/seo-dashboard.jpg",
-    imageAlt: "Laptop showing a search performance dashboard",
+    image: "/images/seo-team.webp",
+    imageAlt: "Recenturesoft SEO team reviewing search analytics and organic ranking reports",
     items: [
       {
         lead: "Data decides the roadmap.",
