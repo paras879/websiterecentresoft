@@ -101,7 +101,7 @@ export function MobileNavigation({ site, info }: { site: SiteContent["site"]; in
         onClick={closeMenu}
       />
 
-      <nav
+      <div
         id="mobile-nav-panel"
         ref={panelRef}
         className={`${styles.panel} ${isOpen ? styles.panelOpen : ""}`}
@@ -143,7 +143,7 @@ export function MobileNavigation({ site, info }: { site: SiteContent["site"]; in
         </div>
 
         <div className={styles.navBody}>
-          <div className={styles.navList}>
+          <nav className={styles.navList} aria-label="Mobile Navigation Menu">
             {header.items.map((item, index) => {
               if (!item.hasMenu) {
                 const current = pathname === item.href;
@@ -171,6 +171,7 @@ export function MobileNavigation({ site, info }: { site: SiteContent["site"]; in
                         className={`${styles.subNavLink} ${current ? styles.activeSubNavLink : ""}`}
                         aria-current={current ? "page" : undefined}
                         onClick={closeMenu}
+                        prefetch={false}
                       >
                         {entry.title}
                       </Link>
@@ -179,7 +180,7 @@ export function MobileNavigation({ site, info }: { site: SiteContent["site"]; in
                 </div>
               );
             })}
-          </div>
+          </nav>
         </div>
 
         <div className={styles.panelFooter}>
@@ -211,7 +212,7 @@ export function MobileNavigation({ site, info }: { site: SiteContent["site"]; in
             </span>
           </div>
         </div>
-      </nav>
+      </div>
     </>
   );
 }

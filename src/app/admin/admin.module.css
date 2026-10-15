@@ -410,7 +410,7 @@
 
 .brandLogoDark {
   display: none;
-  height: 34px;
+  height: 38px;
   width: auto;
   max-width: 155px;
   object-fit: contain;
@@ -1992,7 +1992,7 @@ textarea.input {
 }
 
 .loginBrand .brandLogoDark {
-  height: 40px;
+  height: 44px;
   max-width: 190px;
 }
 

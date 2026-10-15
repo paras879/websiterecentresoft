@@ -88,7 +88,7 @@ export function SiteFooter({ site, info }: { site: SiteContent["site"]; info: Si
               <ul className={styles.linkList}>
                 {column.links.map((link) => (
                   <li key={`${link.label}-${link.href}`}>
-                    <Link href={link.href} className={styles.link}>
+                    <Link href={link.href} className={styles.link} prefetch={false}>
                       {link.label}
                     </Link>
                   </li>
