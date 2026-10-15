@@ -26,14 +26,26 @@ export function SiteFooter({ site, info }: { site: SiteContent["site"]; info: Si
   const { contact } = info;
   const { footer, socials } = site;
 
-  // The privacy policy is a legal page, so it is always linked, even if the saved footer links do not include it.
+  // Legal pages (Privacy Policy and Terms & Conditions) are always linked, even if saved CMS links omit them.
   const hasPrivacyLink = footer.columns.some((c) => c.links.some((l) => l.href === "/privacy-policy"));
+  const hasTermsLink = footer.columns.some((c) =>
+    c.links.some((l) => l.href === "/terms-and-conditions" || l.href === "/terms"),
+  );
+
   const columns =
-    hasPrivacyLink || footer.columns.length === 0
+    footer.columns.length === 0
       ? footer.columns
-      : footer.columns.map((c, i) =>
-          i === 0 ? { ...c, links: [...c.links, { label: "Privacy Policy", href: "/privacy-policy" }] } : c,
-        );
+      : footer.columns.map((c, i) => {
+          if (i !== 0) return c;
+          const links = [...c.links];
+          if (!hasPrivacyLink && !links.some((l) => l.href === "/privacy-policy")) {
+            links.push({ label: "Privacy Policy", href: "/privacy-policy" });
+          }
+          if (!hasTermsLink && !links.some((l) => l.href === "/terms-and-conditions" || l.href === "/terms")) {
+            links.push({ label: "Terms & Conditions", href: "/terms-and-conditions" });
+          }
+          return { ...c, links };
+        });
 
   return (
     <footer className={styles.footer}>
@@ -141,6 +153,17 @@ export function SiteFooter({ site, info }: { site: SiteContent["site"]; info: Si
           <p className={styles.copy} suppressHydrationWarning>
             &copy; {currentYear} {info.legalName}. {footer.rightsText}
           </p>
+          <div className={styles.legalLinks}>
+            <Link href="/privacy-policy" className={styles.legalLink}>
+              Privacy Policy
+            </Link>
+            <span className={styles.legalDot} aria-hidden="true">
+              •
+            </span>
+            <Link href="/terms-and-conditions" className={styles.legalLink}>
+              Terms & Conditions
+            </Link>
+          </div>
           <span className={styles.officialNote}>{footer.bottomNote}</span>
         </div>
       </div>
