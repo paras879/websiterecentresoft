@@ -16,10 +16,40 @@ export interface HistoryEntry {
  * The live content: whatever the admin saved, validated against the schema, on top of the built-in
  * copy. Deduplicated per request so the header, footer and page share one read.
  */
+/**
+ * Services that must always be reachable from the menu, footer and forms. Content saved before a
+ * service existed does not list it, so it is added here (after its neighbour) instead of vanishing.
+ */
+const REQUIRED_SERVICES = [
+  { title: "Agentic AI", footer: "AI - Agentic", desc: "Autonomous enterprise agents, multi-agent swarms & MCP workflows", href: "/services/agentic-ai", icon: "assist", after: "/services/software-development" },
+  { title: "App Development", footer: "App Development", desc: "Native Android and iOS apps, from idea to the app stores", href: "/services/app-development", icon: "phone", after: "/services/ai-automation" },
+];
+
+function withRequiredServices(content: SiteContent): SiteContent {
+  const { header, footer } = content.site;
+  for (const req of REQUIRED_SERVICES) {
+    if (!header.menu.some((m) => m.href === req.href)) {
+      const at = header.menu.findIndex((m) => m.href === req.after);
+      header.menu.splice(at >= 0 ? at + 1 : header.menu.length, 0, {
+        title: req.title,
+        desc: req.desc,
+        href: req.href,
+        icon: req.icon,
+      });
+    }
+    const col = footer.columns.find((c) => c.links.some((l) => l.href.startsWith("/services/")));
+    if (col && !col.links.some((l) => l.href === req.href)) {
+      const at = col.links.findIndex((l) => l.href === req.after);
+      col.links.splice(at >= 0 ? at + 1 : col.links.length, 0, { label: req.footer, href: req.href });
+    }
+  }
+  return content;
+}
+
 export const getSiteContent = cache(async (): Promise<SiteContent> => {
   try {
     const raw = await getStore().get(CONTENT_KEY);
-    if (raw) return sanitizeContent(JSON.parse(raw));
+    if (raw) return withRequiredServices(sanitizeContent(JSON.parse(raw)));
   } catch (error) {
     console.error("Could not read saved content, using the built-in copy.", error);
   }
