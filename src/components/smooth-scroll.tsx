@@ -7,10 +7,12 @@ import "lenis/dist/lenis.css";
 
 export function SmoothScroll() {
   const pathname = usePathname();
+  // The admin panel has its own scrolling areas (sidebar, lists), so smooth scrolling stays off there.
+  const isAdmin = pathname?.startsWith("/admin") ?? false;
 
   useEffect(() => {
     // Respect user's motion preferences
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    if (isAdmin || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       return;
     }
 
@@ -30,7 +32,7 @@ export function SmoothScroll() {
       lenis.destroy();
       delete (window as unknown as { __lenis?: Lenis }).__lenis;
     };
-  }, []);
+  }, [isAdmin]);
 
   // Reset scroll to top on route change
   useEffect(() => {
