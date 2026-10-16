@@ -59,6 +59,12 @@ const defaults = {
         icon: "code",
       },
       {
+        title: "Agentic AI",
+        desc: "Autonomous enterprise agents, multi-agent swarms & MCP workflows",
+        href: "/services/agentic-ai",
+        icon: "workflow",
+      },
+      {
         title: "AI Automation",
         desc: "Intelligent enterprise process & workflow engineering",
         href: "/services/ai-automation",
@@ -104,6 +110,7 @@ const defaults = {
         title: "Services",
         links: [
           { label: "Software Development", href: "/services/software-development" },
+          { label: "AI - Agentic", href: "/services/agentic-ai" },
           { label: "AI Automation", href: "/services/ai-automation" },
           { label: "Custom Development", href: "/services/custom-development" },
           { label: "SEO Services", href: "/services/seo" },

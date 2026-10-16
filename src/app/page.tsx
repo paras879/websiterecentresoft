@@ -73,7 +73,24 @@ export default async function HomePage() {
           </header>
 
           <div className={styles.svcGrid}>
-            {services.items.map((service, index) => (
+            {(services.items.some((item) => item.href === "/services/agentic-ai")
+              ? services.items
+              : [
+                  ...services.items.slice(0, 1),
+                  {
+                    title: "AI - Agentic",
+                    desc: "Autonomous enterprise agents, multi-agent swarms, and verified human-in-the-loop workflows.",
+                    points: [
+                      "Autonomous goal reasoning and tool execution via MCP",
+                      "Multi-agent swarm coordination and supervisory routing",
+                      "Enterprise RBAC, PII sanitization and human audit gates",
+                    ],
+                    href: "/services/agentic-ai",
+                    icon: "assist",
+                  },
+                  ...services.items.slice(1),
+                ]
+            ).map((service, index) => (
               <article key={`${service.title}-${index}`} className={styles.svcBox}>
                 <span className={styles.svcNum} aria-hidden="true">
                   {String(index + 1).padStart(2, "0")}

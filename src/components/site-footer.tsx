@@ -31,18 +31,32 @@ export function SiteFooter({ site, info }: { site: SiteContent["site"]; info: Si
   const hasTermsLink = footer.columns.some((c) =>
     c.links.some((l) => l.href === "/terms-and-conditions" || l.href === "/terms"),
   );
+  const hasAgenticLink = footer.columns.some((c) =>
+    c.links.some((l) => l.href === "/services/agentic-ai"),
+  );
 
   const columns =
     footer.columns.length === 0
       ? footer.columns
       : footer.columns.map((c, i) => {
-          if (i !== 0) return c;
           const links = [...c.links];
-          if (!hasPrivacyLink && !links.some((l) => l.href === "/privacy-policy")) {
-            links.push({ label: "Privacy Policy", href: "/privacy-policy" });
+          if (i === 0) {
+            if (!hasPrivacyLink && !links.some((l) => l.href === "/privacy-policy")) {
+              links.push({ label: "Privacy Policy", href: "/privacy-policy" });
+            }
+            if (!hasTermsLink && !links.some((l) => l.href === "/terms-and-conditions" || l.href === "/terms")) {
+              links.push({ label: "Terms & Conditions", href: "/terms-and-conditions" });
+            }
           }
-          if (!hasTermsLink && !links.some((l) => l.href === "/terms-and-conditions" || l.href === "/terms")) {
-            links.push({ label: "Terms & Conditions", href: "/terms-and-conditions" });
+          if (i === 1 || c.title.toLowerCase() === "services") {
+            if (!hasAgenticLink && !links.some((l) => l.href === "/services/agentic-ai")) {
+              const aiIndex = links.findIndex((l) => l.href === "/services/ai-automation");
+              if (aiIndex >= 0) {
+                links.splice(aiIndex, 0, { label: "AI - Agentic", href: "/services/agentic-ai" });
+              } else {
+                links.push({ label: "AI - Agentic", href: "/services/agentic-ai" });
+              }
+            }
           }
           return { ...c, links };
         });

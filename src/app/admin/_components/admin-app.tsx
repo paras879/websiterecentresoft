@@ -233,7 +233,7 @@ function Shell({ initialContent, initialInquiries, system }: AdminProps) {
         editItem("sitemap", "layers"),
       ],
     },
-    { title: "Services", items: ["serviceSoftware", "serviceAi", "serviceCustom", "serviceSeo"].map((id) => editItem(id, "code")) },
+    { title: "Services", items: ["serviceSoftware", "serviceAi", "serviceAgentic", "serviceCustom", "serviceSeo"].map((id) => editItem(id, "code")) },
     { title: "Site-wide", items: [{ ...editItem("site", "sliders"), label: "Header, footer & contact" }] },
     {
       title: "Library",

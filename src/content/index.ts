@@ -6,6 +6,7 @@ import { softwareModule } from "./service-software";
 import { aiModule } from "./service-ai";
 import { customModule } from "./service-custom";
 import { seoModule } from "./service-seo";
+import { agenticModule } from "./service-agentic";
 import { aboutModule } from "./about";
 import { contactModule } from "./contact";
 import { sitemapModule } from "./sitemap";
@@ -21,6 +22,7 @@ export const modules: ContentModule[] = [
   sitemapModule,
   softwareModule,
   aiModule,
+  agenticModule,
   customModule,
   seoModule,
 ];
@@ -36,6 +38,7 @@ export const defaultContent = {
   sitemap: sitemapModule.defaults,
   serviceSoftware: softwareModule.defaults,
   serviceAi: aiModule.defaults,
+  serviceAgentic: agenticModule.defaults,
 };
 
 export type SiteContent = typeof defaultContent;

@@ -162,7 +162,19 @@ export function MobileNavigation({ site, info }: { site: SiteContent["site"]; in
               return (
                 <div key={`${item.label}-${index}`} className={styles.servicesGroup}>
                   <div className={styles.groupLabel}>{item.label}</div>
-                  {header.menu.map((entry) => {
+                  {(header.menu.some((m) => m.href === "/services/agentic-ai")
+                    ? header.menu
+                    : [
+                        ...header.menu.slice(0, 1),
+                        {
+                          title: "AI - Agentic",
+                          desc: "Autonomous enterprise agents, multi-agent swarms & MCP workflows",
+                          href: "/services/agentic-ai",
+                          icon: "assist",
+                        },
+                        ...header.menu.slice(1),
+                      ]
+                  ).map((entry) => {
                     const current = pathname === entry.href;
                     return (
                       <Link

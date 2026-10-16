@@ -19,7 +19,7 @@ const defaults = {
   },
   services: {
     title: "Our Services",
-    lead: "Four capabilities, delivered with the same engineering discipline.",
+    lead: "Enterprise capabilities, delivered with the same engineering discipline.",
     linkPrefix: "Learn more about",
     items: [
       {
@@ -32,6 +32,17 @@ const defaults = {
         ],
         href: "/services/software-development",
         icon: "code",
+      },
+      {
+        title: "AI - Agentic",
+        desc: "Autonomous enterprise agents, multi-agent swarms, and verified human-in-the-loop workflows.",
+        points: [
+          "Autonomous goal reasoning and tool execution via MCP",
+          "Multi-agent swarm coordination and supervisory routing",
+          "Enterprise RBAC, PII sanitization and human audit gates",
+        ],
+        href: "/services/agentic-ai",
+        icon: "assist",
       },
       {
         title: "AI Automation",

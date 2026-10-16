@@ -48,9 +48,23 @@ export function SiteHeader({ site, info }: Props) {
 
   useEffect(() => clearCloseTimer, []);
 
+  const hasAgenticMenu = header.menu.some((m) => m.href === "/services/agentic-ai");
+  const menuEntries = hasAgenticMenu
+    ? header.menu
+    : [
+      ...header.menu.slice(0, 1),
+      {
+        title: "Agentic AI",
+        desc: "Autonomous enterprise agents, multi-agent swarms & MCP workflows",
+        href: "/services/agentic-ai",
+        icon: "assist",
+      },
+      ...header.menu.slice(1),
+    ];
+
   const menuIndex = header.items.findIndex((item) => item.hasMenu);
   const isServicesActive =
-    header.menu.some((m) => pathname === m.href) || Boolean(pathname?.startsWith("/services"));
+    menuEntries.some((m) => pathname === m.href) || Boolean(pathname?.startsWith("/services"));
 
   // Close dropdown on outside click or Escape (returning focus to trigger)
   useEffect(() => {
@@ -142,9 +156,8 @@ export function SiteHeader({ site, info }: Props) {
                   ref={triggerRef}
                   type="button"
                   id="services-menu-button"
-                  className={`${styles.dropdownTrigger} ${
-                    isServicesActive ? styles.activeTrigger : ""
-                  }`}
+                  className={`${styles.dropdownTrigger} ${isServicesActive ? styles.activeTrigger : ""
+                    }`}
                   aria-expanded={servicesOpen}
                   aria-controls="services-dropdown-menu"
                   onClick={(e) =>
@@ -183,15 +196,14 @@ export function SiteHeader({ site, info }: Props) {
                         </div>
 
                         <div className={styles.dropdownItems}>
-                          {header.menu.map((entry) => {
+                          {menuEntries.map((entry) => {
                             const isCurrent = pathname === entry.href;
                             return (
                               <Link
                                 key={`${entry.href}-${entry.title}`}
                                 href={entry.href}
-                                className={`${styles.dropdownItem} ${
-                                  isCurrent ? styles.dropdownItemCurrent : ""
-                                }`}
+                                className={`${styles.dropdownItem} ${isCurrent ? styles.dropdownItemCurrent : ""
+                                  }`}
                                 aria-current={isCurrent ? "page" : undefined}
                                 onClick={() => setServicesOpen(false)}
                               >
