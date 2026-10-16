@@ -5,6 +5,7 @@ import { pageMetadata } from "@/lib/seo";
 import { Icon, iconPaths, type IconName } from "../icons";
 import { TechStackSection } from "./tech-stack";
 import { SecuritySection } from "./security-section";
+import { JsonLd } from "@/components/json-ld";
 import styles from "./agentic-ai.module.css";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -30,8 +31,51 @@ export default async function AgenticAiPage() {
   const { serviceAgentic: c } = await getSiteContent();
   const { hero, build, flow, services, useCases, safety, stack, delivery, cta } = c;
 
+  const pageUrl = "https://websiterecentresoft.vercel.app/services/agentic-ai";
+  const jsonLd = [
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: "https://websiterecentresoft.vercel.app",
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Services",
+          item: "https://websiterecentresoft.vercel.app/services/agentic-ai",
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: "Agentic AI",
+          item: pageUrl,
+        },
+      ],
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "Service",
+      name: "Agentic AI Development Services",
+      serviceType: "Agentic AI Development",
+      description: c.meta.description,
+      provider: {
+        "@type": "Organization",
+        name: "Recenturesoft Infotech",
+        url: "https://websiterecentresoft.vercel.app",
+      },
+      url: pageUrl,
+      areaServed: "Global",
+    },
+  ];
+
   return (
     <div className={styles.page}>
+      <JsonLd data={jsonLd} />
       {/* ------------------------------------------------------------ hero */}
       <section className={styles.hero} aria-labelledby="ag-hero-title">
         <span className={styles.heroGlow} aria-hidden="true" />

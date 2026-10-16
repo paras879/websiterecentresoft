@@ -231,9 +231,11 @@ function Shell({ initialContent, initialInquiries, system }: AdminProps) {
         { label: "Job openings", icon: "briefcase", hash: "#/edit/careers/openings", active: (v) => v.name === "edit" && v.module === "careers" && v.section === "openings" },
         editItem("contact", "mailIcon"),
         editItem("sitemap", "layers"),
+        editItem("privacy", "shield"),
+        editItem("terms", "document"),
       ],
     },
-    { title: "Services", items: ["serviceSoftware", "serviceAi", "serviceAgentic", "serviceCustom", "serviceSeo"].map((id) => editItem(id, "code")) },
+    { title: "Services", items: ["serviceSoftware", "serviceAi", "serviceAgentic", "serviceApp", "serviceCustom", "serviceSeo"].map((id) => editItem(id, "code")) },
     { title: "Site-wide", items: [{ ...editItem("site", "sliders"), label: "Header, footer & contact" }] },
     {
       title: "Library",

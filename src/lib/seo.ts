@@ -6,8 +6,12 @@ const ORIGIN = "https://websiterecentresoft.vercel.app";
 /** Builds the page <head> data from the editable "Search & sharing" fields of a page. */
 export function pageMetadata(meta: PageMeta, path: string): Metadata {
   const url = path === "/" ? ORIGIN : `${ORIGIN}${path}`;
+  const title = meta.title?.includes("Recenturesoft")
+    ? { absolute: meta.title }
+    : meta.title;
+
   return {
-    title: meta.title,
+    title,
     description: meta.description,
     alternates: { canonical: path },
     openGraph: {

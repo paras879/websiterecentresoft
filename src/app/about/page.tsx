@@ -4,6 +4,7 @@ import Link from "next/link";
 import { getSiteContent } from "@/lib/content";
 import { pageMetadata } from "@/lib/seo";
 import { Icon, iconPaths, type IconName } from "../services/icons";
+import { JsonLd } from "@/components/json-ld";
 import styles from "../services/services.module.css";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -21,8 +22,28 @@ export default async function AboutPage() {
   const content = await getSiteContent();
   const { hero, pragmatic, principles, teams, cta } = content.about;
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: "https://websiterecentresoft.vercel.app",
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "About Us",
+        item: "https://websiterecentresoft.vercel.app/about",
+      },
+    ],
+  };
+
   return (
     <div className={styles.page}>
+      <JsonLd data={jsonLd} />
       {/* Hero */}
       <section className={styles.hero} aria-labelledby="about-intro-heading">
         <div className={`container ${styles.heroGrid}`}>

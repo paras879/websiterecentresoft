@@ -6,6 +6,7 @@ import { getSiteInfo } from "@/lib/site";
 import { pageMetadata } from "@/lib/seo";
 import { SeoFaq } from "@/components/seo-faq";
 import { SeoServicesExplorer } from "@/components/seo-services-explorer";
+import { JsonLd } from "@/components/json-ld";
 import styles from "../services.module.css";
 import seo from "./seo.module.css";
 
@@ -33,8 +34,67 @@ export default async function SeoServicesPage() {
   const linePath = ["M0 200", ...nodePoints.map((p) => `L${p.x} ${p.y}`), "L1000 0"].join(" ");
   const areaPath = `${linePath} L1000 220 L0 220 Z`;
 
+  const pageUrl = "https://websiterecentresoft.vercel.app/services/seo";
+  const jsonLd = [
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: "https://websiterecentresoft.vercel.app",
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Services",
+          item: "https://websiterecentresoft.vercel.app/services/seo",
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: "SEO Services",
+          item: pageUrl,
+        },
+      ],
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "Service",
+      name: "Search Engine Optimization Services",
+      serviceType: "SEO & Digital Marketing",
+      description: content.serviceSeo.meta.description,
+      provider: {
+        "@type": "Organization",
+        name: info.name,
+        url: "https://websiterecentresoft.vercel.app",
+      },
+      url: pageUrl,
+      areaServed: "Global",
+    },
+    ...(faqItems.length > 0
+      ? [
+          {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: faqItems.map((item) => ({
+              "@type": "Question",
+              name: item.q,
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: item.a,
+              },
+            })),
+          },
+        ]
+      : []),
+  ];
+
   return (
     <div className={styles.page}>
+      <JsonLd data={jsonLd} />
       {/* Hero */}
       <section className={styles.hero} aria-labelledby="seo-hero-heading">
         <div className={`container ${styles.heroGrid}`}>

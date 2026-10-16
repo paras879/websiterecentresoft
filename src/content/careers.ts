@@ -14,7 +14,7 @@ export interface Opening {
 
 const defaults = {
   meta: {
-    title: "Careers at Recenturesoft Infotech | Engineering & Tech Jobs",
+    title: "Careers at Recenturesoft | Engineering and Tech Jobs",
     description:
       "Build your career with Recenturesoft Infotech, Noida. Send us your profile for software development, AI automation, custom development and SEO roles.",
     image: "",

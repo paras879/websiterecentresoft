@@ -1,24 +1,16 @@
 import type { Metadata } from "next";
+import { getSiteContent } from "@/lib/content";
 import { getSiteInfo } from "@/lib/site";
+import { pageMetadata } from "@/lib/seo";
 import { PrivacyPolicyView } from "./privacy-policy-view";
 
-export const metadata: Metadata = {
-  title: "Privacy Policy | Recenturesoft Infotech Pvt Ltd",
-  description:
-    "Official Privacy Policy of Recenturesoft Infotech Pvt Ltd explaining how we collect, protect, and use user information on websiterecentresoft.vercel.app.",
-  alternates: {
-    canonical: "/privacy-policy",
-  },
-  openGraph: {
-    title: "Privacy Policy | Recenturesoft Infotech Pvt Ltd",
-    description:
-      "Official Privacy Policy of Recenturesoft Infotech Pvt Ltd explaining how we collect, protect, and use user information on websiterecentresoft.vercel.app.",
-    type: "website",
-    url: "https://websiterecentresoft.vercel.app/privacy-policy",
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const { privacy } = await getSiteContent();
+  return pageMetadata(privacy.meta, "/privacy-policy");
+}
 
 export default async function PrivacyPolicyPage() {
+  const { privacy: content } = await getSiteContent();
   const { name, legalName, contact } = await getSiteInfo();
   return (
     <PrivacyPolicyView
@@ -30,6 +22,7 @@ export default async function PrivacyPolicyPage() {
       address={contact.address}
       mapUrl={contact.mapUrl}
       whatsappUrl={contact.whatsappUrl}
+      content={content}
     />
   );
 }

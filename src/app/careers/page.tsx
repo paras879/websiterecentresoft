@@ -7,6 +7,7 @@ import { pageMetadata } from "@/lib/seo";
 import { Icon, iconPaths, type IconName } from "../services/icons";
 import { CareerForm } from "@/components/career-form";
 import { CareerPerks, type Perk } from "@/components/career-perks";
+import { JsonLd } from "@/components/json-ld";
 import styles from "../services/services.module.css";
 import cr from "./careers.module.css";
 
@@ -36,8 +37,57 @@ export default async function CareersPage() {
       : apply.emptyStatus;
   const hrEmail = contact.hrEmail;
 
+  const pageUrl = "https://websiterecentresoft.vercel.app/careers";
+  const jsonLd = [
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: "https://websiterecentresoft.vercel.app",
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Careers",
+          item: pageUrl,
+        },
+      ],
+    },
+    ...openings.map((job) => ({
+      "@context": "https://schema.org",
+      "@type": "JobPosting",
+      title: job.title,
+      description: job.summary || `Join Recenturesoft Infotech as ${job.title}`,
+      datePosted: new Date().toISOString().split("T")[0],
+      validThrough: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString().split("T")[0],
+      employmentType: job.type?.toLowerCase().includes("part") ? "PART_TIME" : "FULL_TIME",
+      hiringOrganization: {
+        "@type": "Organization",
+        name: info.name,
+        sameAs: "https://websiterecentresoft.vercel.app",
+        logo: "https://websiterecentresoft.vercel.app/images/recenturesoft-logo.png",
+      },
+      jobLocation: {
+        "@type": "Place",
+        address: {
+          "@type": "PostalAddress",
+          streetAddress: "A-125, 1st Floor, Sector-63",
+          addressLocality: "Noida",
+          addressRegion: "Uttar Pradesh",
+          postalCode: "201301",
+          addressCountry: "IN",
+        },
+      },
+    })),
+  ];
+
   return (
     <div className={styles.page}>
+      <JsonLd data={jsonLd} />
       {/* Hero */}
       <section className={styles.hero} aria-labelledby="cr-hero-heading">
         <div className={`container ${styles.heroGrid}`}>

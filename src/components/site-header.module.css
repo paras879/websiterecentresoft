@@ -148,6 +148,7 @@
     opacity: 0;
     transform: translateY(-6px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -356,6 +357,7 @@
     opacity: 0;
     transform: translateY(-8px) scale(0.97);
   }
+
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
@@ -660,7 +662,7 @@
   pointer-events: none;
 }
 
-.dropdownAside > * {
+.dropdownAside>* {
   position: relative;
 }
 
@@ -752,6 +754,7 @@ a.asideRow:focus-visible {
    Mobile header — keep logo, theme toggle and menu button on one line
    ========================================================================== */
 @media (max-width: 900px) {
+
   /* Higher specificity than the global .btn rule so the CTA really hides on small screens */
   .actions .ctaBtn {
     display: none;

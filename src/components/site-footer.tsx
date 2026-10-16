@@ -26,11 +26,6 @@ export function SiteFooter({ site, info }: { site: SiteContent["site"]; info: Si
   const { contact } = info;
   const { footer, socials } = site;
 
-  // Legal pages (Privacy Policy and Terms & Conditions) are always linked, even if saved CMS links omit them.
-  const hasPrivacyLink = footer.columns.some((c) => c.links.some((l) => l.href === "/privacy-policy"));
-  const hasTermsLink = footer.columns.some((c) =>
-    c.links.some((l) => l.href === "/terms-and-conditions" || l.href === "/terms"),
-  );
   const hasAgenticLink = footer.columns.some((c) =>
     c.links.some((l) => l.href === "/services/agentic-ai"),
   );
@@ -40,12 +35,10 @@ export function SiteFooter({ site, info }: { site: SiteContent["site"]; info: Si
       ? footer.columns
       : footer.columns.map((c, i) => {
           const links = [...c.links];
+          // The legal pages are linked in the bottom bar only, so they are not repeated in the columns.
           if (i === 0) {
-            if (!hasPrivacyLink && !links.some((l) => l.href === "/privacy-policy")) {
-              links.push({ label: "Privacy Policy", href: "/privacy-policy" });
-            }
-            if (!hasTermsLink && !links.some((l) => l.href === "/terms-and-conditions" || l.href === "/terms")) {
-              links.push({ label: "Terms & Conditions", href: "/terms-and-conditions" });
+            for (let k = links.length - 1; k >= 0; k--) {
+              if (["/privacy-policy", "/terms-and-conditions", "/terms"].includes(links[k].href)) links.splice(k, 1);
             }
           }
           if (i === 1 || c.title.toLowerCase() === "services") {

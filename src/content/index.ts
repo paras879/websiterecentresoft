@@ -7,6 +7,9 @@ import { aiModule } from "./service-ai";
 import { customModule } from "./service-custom";
 import { seoModule } from "./service-seo";
 import { agenticModule } from "./service-agentic";
+import { appModule } from "./service-app";
+import { privacyModule } from "./legal-privacy";
+import { termsModule } from "./legal-terms";
 import { aboutModule } from "./about";
 import { contactModule } from "./contact";
 import { sitemapModule } from "./sitemap";
@@ -20,9 +23,12 @@ export const modules: ContentModule[] = [
   careersModule,
   contactModule,
   sitemapModule,
+  privacyModule,
+  termsModule,
   softwareModule,
   aiModule,
   agenticModule,
+  appModule,
   customModule,
   seoModule,
 ];
@@ -39,6 +45,9 @@ export const defaultContent = {
   serviceSoftware: softwareModule.defaults,
   serviceAi: aiModule.defaults,
   serviceAgentic: agenticModule.defaults,
+  serviceApp: appModule.defaults,
+  privacy: privacyModule.defaults,
+  terms: termsModule.defaults,
 };
 
 export type SiteContent = typeof defaultContent;

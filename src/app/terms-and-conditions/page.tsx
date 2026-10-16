@@ -1,24 +1,16 @@
 import type { Metadata } from "next";
+import { getSiteContent } from "@/lib/content";
 import { getSiteInfo } from "@/lib/site";
+import { pageMetadata } from "@/lib/seo";
 import { TermsView } from "./terms-view";
 
-export const metadata: Metadata = {
-  title: "Terms & Conditions | Recenturesoft Infotech Pvt Ltd",
-  description:
-    "Official Terms and Conditions of Recenturesoft Infotech Pvt Ltd governing website access, acceptable use, intellectual property, and limitation of liability.",
-  alternates: {
-    canonical: "/terms-and-conditions",
-  },
-  openGraph: {
-    title: "Terms & Conditions | Recenturesoft Infotech Pvt Ltd",
-    description:
-      "Official Terms and Conditions of Recenturesoft Infotech Pvt Ltd governing website access, acceptable use, intellectual property, and limitation of liability.",
-    type: "website",
-    url: "https://websiterecentresoft.vercel.app/terms-and-conditions",
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const { terms } = await getSiteContent();
+  return pageMetadata(terms.meta, "/terms-and-conditions");
+}
 
 export default async function TermsAndConditionsPage() {
+  const { terms: content } = await getSiteContent();
   const { name, legalName, contact } = await getSiteInfo();
   return (
     <TermsView
@@ -30,6 +22,7 @@ export default async function TermsAndConditionsPage() {
       address={contact.address}
       mapUrl={contact.mapUrl}
       whatsappUrl={contact.whatsappUrl}
+      content={content}
     />
   );
 }

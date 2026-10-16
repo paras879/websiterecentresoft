@@ -65,6 +65,12 @@ const defaults = {
         icon: "workflow",
       },
       {
+        title: "App Development",
+        desc: "Native Android and iOS apps, from idea to the app stores",
+        href: "/services/app-development",
+        icon: "phone",
+      },
+      {
         title: "AI Automation",
         desc: "Intelligent enterprise process & workflow engineering",
         href: "/services/ai-automation",
@@ -102,8 +108,6 @@ const defaults = {
           { label: "Contact Us", href: "/contact" },
           { label: "Careers", href: "/careers" },
           { label: "Sitemap", href: "/sitemap" },
-          { label: "Privacy Policy", href: "/privacy-policy" },
-          { label: "Terms & Conditions", href: "/terms-and-conditions" },
         ],
       },
       {
@@ -112,6 +116,7 @@ const defaults = {
           { label: "Software Development", href: "/services/software-development" },
           { label: "AI - Agentic", href: "/services/agentic-ai" },
           { label: "AI Automation", href: "/services/ai-automation" },
+          { label: "App Development", href: "/services/app-development" },
           { label: "Custom Development", href: "/services/custom-development" },
           { label: "SEO Services", href: "/services/seo" },
         ],

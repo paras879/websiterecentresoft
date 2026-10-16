@@ -2,9 +2,9 @@ import { defineModule, group, icon, list, longtext, select, seoFields, strings, 
 
 const defaults = {
   meta: {
-    title: "AI Agentic Development Services | Recenturesoft",
+    title: "Agentic AI Development Services | Recenturesoft Infotech",
     description:
-      "We design and develop intelligent AI agents that use business tools, connect systems and carry out multi-step workflows, with people kept in control where it matters.",
+      "We design and develop intelligent AI agents that connect systems, automate multi-step workflows, and keep humans in control where it matters.",
     image: "",
   },
   hero: {

@@ -8,8 +8,8 @@ const defaults = {
     image: "/images/hero.jpg",
   },
   hero: {
-    title: "Engineering Scalable Software & Intelligent AI Automation",
-    text: "Recenturesoft delivers custom software engineering, enterprise web applications, and AI-powered workflow automation designed to solve complex operational challenges with precision, security, and scale.",
+    title: "Software, Apps & Intelligent AI Agents Built Around Your Business",
+    text: "Recenturesoft delivers custom software, mobile apps, AI agents and workflow automation, plus the search visibility to be found, designed to solve real operational challenges with precision, security and scale.",
     primaryLabel: "Discuss Your Project",
     primaryHref: "/contact",
     secondaryLabel: "Explore Our Services",
@@ -56,6 +56,17 @@ const defaults = {
         icon: "gear",
       },
       {
+        title: "App Development",
+        desc: "Native Android and iOS apps, from first idea to the App Store and Google Play.",
+        points: [
+          "Native Swift and Kotlin, or cross-platform when it fits",
+          "Secure sign-in, offline sync and smooth performance",
+          "Release support for Apple and Google stores",
+        ],
+        href: "/services/app-development",
+        icon: "phone",
+      },
+      {
         title: "Custom Development",
         desc: "Tailored digital solutions built around your workflows, from web platforms to integrations.",
         points: [
@@ -80,10 +91,10 @@ const defaults = {
     ],
   },
   about: {
-    title: "Software Engineering and AI Automation,",
+    title: "Software, Apps and AI Automation,",
     highlight: "Built in Noida",
     lead1:
-      "Recenturesoft Infotech Pvt Ltd is a software development company based in Sector 63, Noida, offering custom software development, web application engineering and AI-driven automation.",
+      "Recenturesoft Infotech Pvt Ltd is a software development company based in Sector 63, Noida, offering custom software development, mobile apps, AI agents, workflow automation and SEO.",
     lead2: "Clean, maintainable code and transparent communication guide how our team works with yours.",
     image: "/images/services-team.jpg",
     imageAlt: "Engineering team discussing system architecture at the Noida office",
@@ -94,12 +105,12 @@ const defaults = {
         icon: "code",
       },
       {
-        title: "Enterprise web applications",
-        desc: "Reliable, maintainable and ready to grow with you.",
-        icon: "web",
+        title: "Mobile apps for Android and iOS",
+        desc: "Native apps built for speed, security and the app stores.",
+        icon: "phone",
       },
       {
-        title: "AI-powered workflow automation",
+        title: "AI agents and workflow automation",
         desc: "Less manual effort and faster day-to-day execution.",
         icon: "workflow",
       },
