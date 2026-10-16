@@ -25,6 +25,41 @@ const REQUIRED_SERVICES = [
   { title: "App Development", footer: "App Development", desc: "Native Android and iOS apps, from idea to the app stores", href: "/services/app-development", icon: "phone", after: "/services/ai-automation" },
 ];
 
+/** Career areas that must always appear on the Careers page. Added here so saved content from
+ *  before these services existed still shows them in the "Where you could fit in" section. */
+const REQUIRED_CAREER_AREAS = [
+  {
+    title: "Agentic AI",
+    desc: "Autonomous enterprise agents, multi-agent swarms and tool integrations.",
+    href: "/services/agentic-ai",
+    image: "/images/services-agentic.jpg",
+    after: "/services/software-development",
+  },
+  {
+    title: "App Development",
+    desc: "Native iOS and Android apps, cross-platform mobile engineering.",
+    href: "/services/app-development",
+    image: "/images/services-app.jpg",
+    after: "/services/ai-automation",
+  },
+];
+
+function withRequiredCareerAreas(content: SiteContent): SiteContent {
+  const items = content.careers.areas.items as Array<{ title: string; desc: string; href: string; image: string }>;
+  for (const req of REQUIRED_CAREER_AREAS) {
+    if (!items.some((a) => a.href === req.href)) {
+      const at = items.findIndex((a) => a.href === req.after);
+      items.splice(at >= 0 ? at + 1 : items.length, 0, {
+        title: req.title,
+        desc: req.desc,
+        href: req.href,
+        image: req.image,
+      });
+    }
+  }
+  return content;
+}
+
 function withRequiredServices(content: SiteContent): SiteContent {
   const { header, footer } = content.site;
   for (const req of REQUIRED_SERVICES) {
@@ -49,7 +84,7 @@ function withRequiredServices(content: SiteContent): SiteContent {
 export const getSiteContent = cache(async (): Promise<SiteContent> => {
   try {
     const raw = await getStore().get(CONTENT_KEY);
-    if (raw) return withRequiredServices(sanitizeContent(JSON.parse(raw)));
+    if (raw) return withRequiredCareerAreas(withRequiredServices(sanitizeContent(JSON.parse(raw))));
   } catch (error) {
     console.error("Could not read saved content, using the built-in copy.", error);
   }
