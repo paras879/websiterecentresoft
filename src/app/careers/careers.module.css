@@ -35,8 +35,8 @@
 
 .fit {
   display: flex;
-  gap: 1rem;
-  height: 440px;
+  gap: 0.85rem;
+  height: 450px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -51,7 +51,7 @@
 .fit:not(:hover) .fitItem:first-child,
 .fitItem:hover,
 .fitItem:focus-within {
-  flex: 3.4;
+  flex: 3;
 }
 
 .fit:hover .fitItem:first-child:not(:hover):not(:focus-within) {

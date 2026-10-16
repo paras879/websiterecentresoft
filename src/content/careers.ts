@@ -69,7 +69,7 @@ const defaults = {
   },
   areas: {
     title: "Where you could fit in",
-    lead: "Four practice areas, each with its own kind of work.",
+    lead: "Six practice areas, each with its own kind of work.",
     linkLabel: "View this area",
     items: [
       {
@@ -77,6 +77,18 @@ const defaults = {
         desc: "Web applications and business software, built to last.",
         href: "/services/software-development",
         image: "/images/services-software.jpg",
+      },
+      {
+        title: "Agentic AI",
+        desc: "Autonomous enterprise agents, multi-agent swarms and tool integrations.",
+        href: "/services/agentic-ai",
+        image: "/images/services-agentic.jpg",
+      },
+      {
+        title: "App Development",
+        desc: "Native iOS and Android apps, cross-platform mobile engineering.",
+        href: "/services/app-development",
+        image: "/images/services-app.jpg",
       },
       {
         title: "AI Automation",
