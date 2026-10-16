@@ -377,6 +377,7 @@
   flex-direction: column;
   height: 100dvh;
   overflow-y: auto;
+  overscroll-behavior: contain;
   background: var(--ad-surface);
   border-right: 1px solid var(--ad-line);
 }
@@ -2207,4 +2208,11 @@ textarea.input {
   .spinner {
     animation-duration: 2s;
   }
+}
+
+/* scrolling the menu never scrolls the page behind it */
+.pickBody,
+.inboxDetail,
+.mailList {
+  overscroll-behavior: contain;
 }
