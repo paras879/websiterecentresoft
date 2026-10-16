@@ -126,12 +126,12 @@ const defaults = {
   },
   stack: {
     title: "Tools we work with",
-    lead: "We use well-known agent frameworks, models and vector stores, so you are not tied to a proprietary stack.",
+    lead: "We use well-known agent frameworks, models and vector stores, so you are not tied to a proprietary stack. This gives you flexibility, better performance and long-term maintainability.",
     groups: [
-      { title: "Orchestration", desc: "Control flow, state and coordination", items: ["LangGraph", "CrewAI", "AutoGen", "LlamaIndex", "Semantic Kernel"] },
-      { title: "Models", desc: "Leading hosted and open models", items: ["OpenAI", "Anthropic Claude", "Google Gemini", "Meta Llama", "Mistral"] },
-      { title: "Memory and vectors", desc: "Retrieval and long-term memory", items: ["Postgres pgvector", "Pinecone", "Qdrant", "Weaviate", "Redis"] },
-      { title: "Cloud and monitoring", desc: "Hosting and visibility", items: ["AWS Bedrock", "Azure AI Foundry", "LangSmith", "Arize Phoenix", "OpenTelemetry"] },
+      { title: "Orchestration", desc: "Control flow, state and coordination for multi-agent systems.", items: ["LangGraph", "CrewAI", "AutoGen", "LlamaIndex", "Semantic Kernel"] },
+      { title: "Models", desc: "Leading hosted and open models for diverse use cases.", items: ["OpenAI", "Anthropic Claude", "Google Gemini", "Meta Llama", "Mistral"] },
+      { title: "Memory and vectors", desc: "Retrieval and long-term memory for context-aware agents.", items: ["Postgres pgvector", "Pinecone", "Qdrant", "Weaviate", "Redis"] },
+      { title: "Cloud and monitoring", desc: "Hosting, observability and evaluation for reliable operations.", items: ["AWS Bedrock", "Azure AI Foundry", "LangSmith", "Arize Phoenix", "OpenTelemetry"] },
     ],
   },
   delivery: {

@@ -1,0 +1,590 @@
+/* Technology Stack Section - Pixel-perfect match to modern AI stack blueprint */
+
+.stackSection {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  padding: 2.25rem 0 3.25rem;
+  overflow: hidden;
+  background: var(--color-bg-page, #ffffff);
+  color: var(--color-text-main, #09162a);
+  border-top-left-radius: 32px;
+  border-top-right-radius: 32px;
+  border-top: 1px solid var(--color-border-subtle, rgba(0, 0, 0, 0.08));
+  box-shadow: 0 -20px 45px -12px rgba(0, 0, 0, 0.16);
+  margin-top: clamp(1rem, 2.5vw, 2.5rem);
+  transform: translate3d(0, 0, 0);
+  -webkit-transform: translate3d(0, 0, 0);
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+:global([data-theme="dark"]) .stackSection {
+  background: #040914;
+  border-top-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 -35px 70px -15px rgba(0, 0, 0, 0.85);
+}
+
+.ambientGlow {
+  position: absolute;
+  top: 10%;
+  right: -5%;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.12) 0%, rgba(37, 99, 235, 0.06) 45%, transparent 70%);
+  pointer-events: none;
+}
+
+.wrap {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0 clamp(1.25rem, 4vw, 4.5rem);
+  position: relative;
+  z-index: 1;
+}
+
+/* ------------------------------------------------------------ Header */
+.headerRow {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+@media (min-width: 1024px) {
+  .headerRow {
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 2.5rem;
+  }
+}
+
+.headerCopy {
+  max-width: 680px;
+}
+
+.mainTitle {
+  margin: 0 0 0.85rem;
+  font-size: clamp(2.2rem, 4.2vw, 3.25rem);
+  font-weight: 700;
+  line-height: 1.12;
+  letter-spacing: -0.035em;
+  color: var(--color-text-heading, #040d1a);
+}
+
+:global([data-theme="dark"]) .mainTitle {
+  color: #f8fafc;
+}
+
+.titleBlue {
+  color: #0062e3;
+}
+
+:global([data-theme="dark"]) .titleBlue {
+  background: linear-gradient(135deg, #60a5fa 0%, #38bdf8 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.leadText {
+  margin: 0;
+  font-size: 1.0625rem;
+  line-height: 1.65;
+  color: var(--color-text-secondary, #475569);
+  max-width: 58ch;
+}
+
+:global([data-theme="dark"]) .leadText {
+  color: #94a3b8;
+}
+
+/* Feature Badges in Header */
+.featureBadges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+@media (min-width: 768px) {
+  .featureBadges {
+    flex-wrap: nowrap;
+    gap: 2rem;
+  }
+}
+
+.featureBadge {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  min-width: 160px;
+}
+
+.featureIconBox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+  background: rgba(0, 98, 227, 0.08);
+  border: 1px solid rgba(0, 98, 227, 0.18);
+  border-radius: 10px;
+  color: #0062e3;
+}
+
+:global([data-theme="dark"]) .featureIconBox {
+  background: rgba(56, 189, 248, 0.1);
+  border-color: rgba(56, 189, 248, 0.25);
+  color: #38bdf8;
+}
+
+.featureText {
+  display: flex;
+  flex-direction: column;
+}
+
+.featureTitle {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--color-text-heading, #040d1a);
+  margin-bottom: 0.15rem;
+}
+
+:global([data-theme="dark"]) .featureTitle {
+  color: #f1f5f9;
+}
+
+.featureDesc {
+  font-size: 0.7813rem;
+  line-height: 1.35;
+  color: var(--color-text-muted, #64748b);
+  max-width: 140px;
+}
+
+:global([data-theme="dark"]) .featureDesc {
+  color: #94a3b8;
+}
+
+/* ------------------------------------------------------------ Main Tech Canvas */
+.techCanvas {
+  position: relative;
+  width: 100%;
+  box-sizing: border-box;
+  padding: clamp(1.5rem, 2.5vw, 2.5rem) clamp(1.25rem, 2vw, 2.25rem);
+  border-radius: 28px;
+  background: radial-gradient(100% 120% at 50% 0%, #0d1e3a 0%, #060e1d 65%, #040914 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 30px 60px -25px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  margin-bottom: 1.5rem;
+}
+
+.techCanvasGlow {
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translate(-50%, -20%);
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(37, 99, 235, 0.22) 0%, rgba(56, 189, 248, 0.08) 45%, transparent 70%);
+  pointer-events: none;
+}
+
+.techGrid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.75rem;
+  align-items: center;
+  width: 100%;
+}
+
+@media (min-width: 1100px) {
+  .techGrid {
+    grid-template-columns: minmax(0, 1fr) minmax(260px, 320px) minmax(0, 1fr);
+    gap: clamp(1.5rem, 2vw, 2.5rem);
+  }
+}
+
+@media (min-width: 820px) and (max-width: 1099px) {
+  .techGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.5rem;
+  }
+
+  .stackCenterCol {
+    grid-column: span 2;
+    order: -1;
+    padding: 0.5rem 0;
+  }
+}
+
+/* Left & Right Card Columns */
+.cardsColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+
+/* The Dark Category Card */
+.categoryCard {
+  position: relative;
+  padding: 1.4rem 1.25rem 1.35rem;
+  background: #091730;
+  border: 1px solid rgba(56, 189, 248, 0.16);
+  border-radius: 20px;
+  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  overflow: hidden;
+}
+
+.categoryCard::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent 0%, rgba(56, 189, 248, 0.5) 50%, transparent 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.categoryCard:hover {
+  transform: translateY(-4px);
+  border-color: rgba(56, 189, 248, 0.35);
+  box-shadow: 0 20px 40px -18px rgba(0, 98, 227, 0.45);
+}
+
+.categoryCard:hover::before {
+  opacity: 1;
+}
+
+/* Card Header */
+.cardHeader {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.9rem;
+  margin-bottom: 1.25rem;
+}
+
+.cardNumBadge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #38bdf8;
+  background: rgba(37, 99, 235, 0.16);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  border-radius: 50%;
+  box-shadow: 0 0 16px rgba(56, 189, 248, 0.15);
+}
+
+.cardHeaderText {
+  flex: 1;
+  min-width: 0;
+}
+
+.cardTitle {
+  margin: 0 0 0.25rem;
+  font-size: 1.1875rem;
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  color: #ffffff;
+}
+
+.cardDesc {
+  margin: 0;
+  font-size: 0.8438rem;
+  line-height: 1.45;
+  color: rgba(203, 213, 225, 0.85);
+}
+
+.cardActionBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #94a3b8;
+  transition: all 0.2s ease;
+}
+
+.categoryCard:hover .cardActionBtn {
+  background: rgba(56, 189, 248, 0.18);
+  border-color: rgba(56, 189, 248, 0.45);
+  color: #ffffff;
+  transform: translateX(2px);
+}
+
+/* Tool Tiles Grid */
+.toolsGrid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0.45rem;
+}
+
+@media (max-width: 520px) {
+  .toolsGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.toolTile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0.75rem 0.25rem 0.65rem;
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 12px;
+  gap: 0.45rem;
+  transition: all 0.25s ease;
+  text-align: center;
+  min-height: 82px;
+}
+
+.toolTile:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(56, 189, 248, 0.4);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px -8px rgba(0, 0, 0, 0.5);
+}
+
+.toolIconWrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  color: #ffffff;
+}
+
+.toolName {
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: rgba(226, 232, 240, 0.92);
+  line-height: 1.25;
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
+  word-break: normal;
+  overflow-wrap: break-word;
+  text-align: center;
+  max-width: 100%;
+}
+
+.toolTile:hover .toolName {
+  color: #ffffff;
+}
+
+/* ------------------------------------------------------------ Center 3D Stack */
+.stackCenterCol {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: 1rem 0;
+}
+
+.stackGraphicWrapper {
+  position: relative;
+  width: 100%;
+  max-width: 320px;
+  height: 480px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ------------------------------------------------------------ Integrations Inside Canvas */
+.integrationsBanner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin-top: 2rem;
+  padding: 1.5rem 0.5rem 0.25rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.integrationsTopRow {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  width: 100%;
+}
+
+@media (min-width: 1024px) {
+  .integrationsTopRow {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2.5rem;
+  }
+}
+
+.integrationsCopy {
+  max-width: 340px;
+  flex-shrink: 0;
+}
+
+.integrationsTitle {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: -0.015em;
+  color: #ffffff;
+}
+
+.integrationsHighlight {
+  color: #38bdf8;
+}
+
+.integrationsRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.integrationTile {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  color: #ffffff;
+  transition: all 0.25s ease;
+  cursor: pointer;
+}
+
+.integrationTile:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(56, 189, 248, 0.5);
+  transform: translateY(-3px) scale(1.08);
+  box-shadow: 0 10px 22px -6px rgba(0, 98, 227, 0.45);
+  z-index: 20;
+}
+
+.tooltip {
+  position: absolute;
+  bottom: calc(100% + 9px);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  padding: 0.35rem 0.65rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #ffffff;
+  background: #08152e;
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  border-radius: 7px;
+  box-shadow: 0 8px 18px -4px rgba(0, 0, 0, 0.7), 0 0 12px rgba(56, 189, 248, 0.2);
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.2s ease;
+  z-index: 50;
+}
+
+.tooltip::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 5px;
+  border-style: solid;
+  border-color: #08152e transparent transparent transparent;
+}
+
+.integrationTile:hover .tooltip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+
+.moreIntegrationsBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-left: 0.4rem;
+  padding: 0.45rem 0.95rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.08);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  white-space: nowrap;
+}
+
+.moreIntegrationsBtn:hover {
+  background: rgba(56, 189, 248, 0.18);
+  border-color: rgba(56, 189, 248, 0.5);
+  transform: translateY(-2px);
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(56, 189, 248, 0.3);
+}
+
+.moreArrow {
+  display: inline-block;
+  font-size: 0.85rem;
+  transition: transform 0.2s ease;
+}
+
+.expandedIntegrations {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: 100%;
+  margin-top: 0.75rem;
+  padding: 1.1rem 1.25rem 0.85rem;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+  animation: expandFadeIn 0.3s ease-out;
+}
+
+.expandedLabel {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #94a3b8;
+}
+
+@keyframes expandFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

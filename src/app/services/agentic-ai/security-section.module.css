@@ -1,0 +1,538 @@
+/* Security & Governance Section - Ultra-Compact Pixel-Perfect Blueprint */
+
+.section {
+  position: relative;
+  width: 100%;
+  padding: 1rem 0 2rem;
+  background: var(--color-bg-page, #ffffff);
+  color: var(--color-text-main, #09162a);
+  transform: translate3d(0, 0, 0);
+  -webkit-transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+@media (min-width: 861px) {
+  .section {
+    position: sticky;
+    top: 84px;
+    z-index: 1;
+    will-change: transform;
+  }
+}
+
+:global([data-theme="dark"]) .section {
+  background: #040914;
+}
+
+.wrap {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0 clamp(1.25rem, 4vw, 4.5rem);
+  position: relative;
+  z-index: 1;
+}
+
+/* ------------------------------------------------------------ Main Canvas */
+.canvas {
+  position: relative;
+  width: 100%;
+  box-sizing: border-box;
+  padding: clamp(1.2rem, 1.8vw, 1.65rem) clamp(1.25rem, 2vw, 2rem);
+  border-radius: 20px;
+  background: radial-gradient(120% 140% at 20% 0%, #0d214a 0%, #061126 50%, #030814 100%);
+  border: 1px solid rgba(56, 189, 248, 0.22);
+  box-shadow: 0 25px 50px -20px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  overflow: hidden;
+  color: #ffffff;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+}
+
+:global([data-theme="light"]) .canvas {
+  box-shadow: 0 20px 45px -15px rgba(2, 6, 23, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+
+.canvasGlow {
+  position: absolute;
+  top: 15%;
+  left: 32%;
+  width: 380px;
+  height: 380px;
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.22) 0%, rgba(37, 99, 235, 0.1) 45%, transparent 70%);
+  pointer-events: none;
+}
+
+.layout {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.25rem;
+  align-items: center;
+}
+
+@media (min-width: 1180px) {
+  .layout {
+    grid-template-columns: minmax(0, 0.95fr) minmax(180px, 220px) minmax(0, 1.7fr);
+    gap: clamp(1rem, 1.6vw, 1.85rem);
+  }
+}
+
+@media (min-width: 860px) and (max-width: 1179px) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr);
+    gap: 1.25rem;
+  }
+
+  .hologramCol {
+    grid-column: span 2;
+    order: -1;
+    display: flex;
+    justify-content: center;
+  }
+}
+
+/* ------------------------------------------------------------ Left Column */
+.leftCol {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  min-height: 270px;
+  gap: 1rem;
+}
+
+.headerCopy {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.eyebrowBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  width: fit-content;
+  padding: 0.25rem 0.7rem;
+  font-size: 0.6563rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.08);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  border-radius: 999px;
+  box-shadow: 0 0 12px -2px rgba(56, 189, 248, 0.2);
+}
+
+.eyebrowIcon {
+  width: 12px;
+  height: 12px;
+  stroke: #38bdf8;
+  stroke-width: 2.2;
+}
+
+.mainTitle {
+  margin: 0;
+  font-size: clamp(1.35rem, 1.85vw, 1.85rem);
+  font-weight: 500;
+  line-height: 1.16;
+  letter-spacing: -0.025em;
+  color: #ffffff;
+}
+
+.titleCyan {
+  color: #38bdf8;
+}
+
+.leadText {
+  margin: 0;
+  font-size: 0.7813rem;
+  line-height: 1.48;
+  color: rgba(203, 213, 225, 0.88);
+  max-width: 42ch;
+}
+
+.govList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin: 0.2rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.govItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.45rem;
+  font-size: 0.7188rem;
+  line-height: 1.35;
+  color: rgba(203, 213, 225, 0.82);
+}
+
+.govItem strong {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.govDot {
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #38bdf8;
+  box-shadow: 0 0 6px rgba(56, 189, 248, 0.65);
+  flex-shrink: 0;
+  margin-top: 0.38em;
+}
+
+/* 3 Bottom Horizontal Value Badges */
+.leftBadges {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.65rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+@media (max-width: 580px) {
+  .leftBadges {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+.leftBadgeItem {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  flex: 1;
+}
+
+@media (min-width: 581px) {
+  .leftBadgeItem:not(:last-child) {
+    border-right: 1px solid rgba(255, 255, 255, 0.09);
+    padding-right: 0.5rem;
+  }
+}
+
+.leftBadgeIconBox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  border-radius: 6px;
+  color: #38bdf8;
+}
+
+.leftBadgeText {
+  font-size: 0.6875rem;
+  font-weight: 500;
+  color: rgba(241, 245, 249, 0.95);
+  line-height: 1.25;
+}
+
+/* ------------------------------------------------------------ Center Hologram */
+.hologramCol {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: 100%;
+}
+
+.hologramWrapper {
+  position: relative;
+  width: 100%;
+  max-width: 210px;
+  height: auto;
+  aspect-ratio: 340 / 370;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ------------------------------------------------------------ Right 2x2 Grid */
+.gridCol {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.65rem;
+  width: 100%;
+}
+
+@media (min-width: 600px) {
+  .gridCol {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Horizontal Split Security Card */
+.securityCard {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.65rem;
+  align-items: stretch;
+  padding: 0.75rem 0.85rem;
+  background: #091730;
+  border: 1px solid rgba(56, 189, 248, 0.16);
+  border-radius: 12px;
+  box-shadow: 0 10px 22px -10px rgba(0, 0, 0, 0.55);
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+  overflow: hidden;
+}
+
+.securityCard::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent 0%, rgba(56, 189, 248, 0.6) 50%, transparent 100%);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.securityCard:hover {
+  transform: translateY(-2px);
+  border-color: rgba(56, 189, 248, 0.4);
+  box-shadow: 0 14px 28px -12px rgba(0, 98, 227, 0.45);
+}
+
+.securityCard:hover::before {
+  opacity: 1;
+}
+
+/* Card Left Section */
+.cardLeft {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 0.45rem;
+  height: 100%;
+  min-width: 0;
+}
+
+.cardNum {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.7188rem;
+  font-weight: 700;
+  color: #38bdf8;
+  letter-spacing: 0.04em;
+}
+
+.cardNumLine {
+  display: inline-block;
+  width: 14px;
+  height: 2px;
+  background: currentColor;
+  opacity: 0.7;
+}
+
+.cardTextGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.cardTitle {
+  margin: 0;
+  font-size: 0.8438rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: #ffffff;
+  line-height: 1.25;
+}
+
+.cardDesc {
+  margin: 0;
+  font-size: 0.6875rem;
+  line-height: 1.35;
+  color: rgba(203, 213, 225, 0.82);
+}
+
+.cardActionBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  color: #38bdf8;
+  transition: all 0.2s ease;
+  margin-top: 0.2rem;
+}
+
+.securityCard:hover .cardActionBtn {
+  background: rgba(56, 189, 248, 0.22);
+  border-color: rgba(56, 189, 248, 0.6);
+  transform: translateX(2px);
+  color: #ffffff;
+}
+
+/* Card Right Section */
+.cardRight {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* ------------------------------------------------------------ Mini Preview Widgets */
+.widgetBox {
+  display: flex;
+  flex-direction: column;
+  padding: 0.45rem 0.55rem;
+  background: rgba(5, 13, 30, 0.88);
+  border: 1px solid rgba(56, 189, 248, 0.18);
+  border-radius: 8px;
+  width: 110px;
+  box-sizing: border-box;
+  gap: 0.28rem;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+/* Widget 1: Checklist */
+.widgetAvatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 17px;
+  height: 17px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #2563eb, #38bdf8);
+  margin-bottom: 0.1rem;
+  color: #ffffff;
+}
+
+.widgetCheckRow {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.5938rem;
+  color: rgba(226, 232, 240, 0.88);
+  white-space: nowrap;
+}
+
+.widgetCheckIcon {
+  width: 10px;
+  height: 10px;
+  flex-shrink: 0;
+  stroke: #38bdf8;
+  stroke-width: 2.2;
+}
+
+/* Widget 2: 3D Layers */
+.layersWidget {
+  display: flex;
+  flex-direction: column;
+  gap: 0.22rem;
+}
+
+.layerPill {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.2rem 0.4rem;
+  font-size: 0.5625rem;
+  font-weight: 500;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  color: rgba(226, 232, 240, 0.85);
+  white-space: nowrap;
+}
+
+.layerActive {
+  background: linear-gradient(90deg, #1d4ed8, #0284c7);
+  border-color: #38bdf8;
+  color: #ffffff;
+  box-shadow: 0 0 8px rgba(56, 189, 248, 0.35);
+}
+
+.layerLock {
+  opacity: 0.6;
+}
+
+/* Widget 3: Masked Data */
+.maskedHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.1rem;
+}
+
+.maskedTitlePill {
+  font-size: 0.5313rem;
+  font-weight: 600;
+  color: #38bdf8;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.maskedLockIcon {
+  width: 10px;
+  height: 10px;
+  color: #38bdf8;
+}
+
+.maskedRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.3rem;
+  font-size: 0.5625rem;
+  line-height: 1.25;
+  font-family: ui-monospace, monospace;
+}
+
+.maskedLabel {
+  color: rgba(148, 163, 184, 0.85);
+}
+
+.maskedStars {
+  color: #38bdf8;
+  letter-spacing: 0.06em;
+}
+
+/* Widget 4: Timeline Audit Stream */
+.timelineWidget {
+  display: flex;
+  flex-direction: column;
+  gap: 0.22rem;
+}
+
+.timelineRow {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.5625rem;
+  color: rgba(226, 232, 240, 0.9);
+  white-space: nowrap;
+}
+
+.timelineTime {
+  font-size: 0.5313rem;
+  color: #7dd3fc;
+  font-family: ui-monospace, monospace;
+}
+
+.timelineApproved {
+  color: #4ade80;
+  font-weight: 600;
+}

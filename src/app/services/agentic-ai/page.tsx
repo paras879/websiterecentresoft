@@ -3,6 +3,8 @@ import Link from "next/link";
 import { getSiteContent } from "@/lib/content";
 import { pageMetadata } from "@/lib/seo";
 import { Icon, iconPaths, type IconName } from "../icons";
+import { TechStackSection } from "./tech-stack";
+import { SecuritySection } from "./security-section";
 import styles from "./agentic-ai.module.css";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -37,13 +39,7 @@ export default async function AgenticAiPage() {
         <div className={`${styles.wrap} ${styles.heroLayout}`}>
           <div className={styles.heroCopy}>
             <h1 id="ag-hero-title" className={styles.heroTitle}>
-              {hero.titleStart}
-              {hero.titleAccent ? (
-                <>
-                  {" "}
-                  <span className={styles.heroAccent}>{hero.titleAccent}</span>
-                </>
-              ) : null}
+              {hero.titleStart}{hero.titleAccent ? ` ${hero.titleAccent}` : ""}
             </h1>
             <p className={styles.heroText}>{hero.text}</p>
             <div className={styles.heroActions}>
@@ -229,72 +225,11 @@ export default async function AgenticAiPage() {
         </section>
       ) : null}
 
-      {/* ------------------------------------------------------------ safety */}
-      {safety.items.length > 0 ? (
-        <section className={styles.section} aria-labelledby="ag-safety-title">
-          <div className={styles.wrap}>
-            <div className={styles.vault}>
-              <span className={styles.vaultGlow} aria-hidden="true" />
-              <div className={styles.vaultHead}>
-                <span className={styles.vaultMark}>
-                  <Icon name="shield" className={styles.vaultMarkSvg} />
-                </span>
-                <h2 id="ag-safety-title" className={styles.vaultTitle}>
-                  {safety.title}
-                </h2>
-                <p className={styles.vaultLead}>{safety.lead}</p>
-              </div>
-              <ol className={styles.layers}>
-                {safety.items.map((item, i) => (
-                  <li key={item.title} className={styles.layer}>
-                    <div className={styles.layerTop}>
-                      <span className={styles.layerIcon}>
-                        <Glyph name={item.icon} className={styles.chipSvg} />
-                      </span>
-                      <span className={styles.layerNum}>{`0${i + 1}`}</span>
-                    </div>
-                    <h3 className={styles.layerTitle}>{item.title}</h3>
-                    <p className={styles.layerText}>{item.desc}</p>
-                  </li>
-                ))}
-              </ol>
-            </div>
-          </div>
-        </section>
-      ) : null}
-
-      {/* ------------------------------------------------------------ stack */}
-      {stack.groups.length > 0 ? (
-        <section className={`${styles.section} ${styles.alt}`} aria-labelledby="ag-stack-title">
-          <div className={styles.wrap}>
-            <header className={styles.head}>
-              <h2 id="ag-stack-title" className={styles.title}>
-                {stack.title}
-              </h2>
-              <p className={styles.lead}>{stack.lead}</p>
-            </header>
-
-            <div className={styles.shelf}>
-              {stack.groups.map((g, i) => (
-                <div key={g.title} className={styles.shelfRow}>
-                  <div className={styles.shelfLabel}>
-                    <span className={styles.shelfNum}>{pad(i)}</span>
-                    <div>
-                      <h3 className={styles.shelfTitle}>{g.title}</h3>
-                      {g.desc ? <p className={styles.shelfText}>{g.desc}</p> : null}
-                    </div>
-                  </div>
-                  <ul className={styles.shelfItems}>
-                    {g.items.map((t) => (
-                      <li key={t}>{t}</li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-      ) : null}
+      {/* ------------------------------------------------------------ safety & stack overlap container */}
+      <div className={styles.deckWrapper}>
+        <SecuritySection />
+        <TechStackSection />
+      </div>
 
       {/* ------------------------------------------------------------ delivery */}
       {delivery.items.length > 0 ? (
