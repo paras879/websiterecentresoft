@@ -1,4 +1,4 @@
-import { defineModule, group, icon, image, list, longtext, seoFields, strings, text, toggle, url } from "./fields";
+import { faqSection, defineModule, group, icon, image, list, longtext, seoFields, strings, text, toggle, url } from "./fields";
 
 const defaults = {
   meta: {
@@ -199,6 +199,27 @@ const defaults = {
     primaryHref: "/contact",
     showEmail: true,
   },
+  faq: {
+    title: "Frequently asked questions",
+    items: [
+      {
+        q: "What does Recenturesoft Infotech do?",
+        a: "Recenturesoft Infotech is a software company based in Noida, India. We build custom software, mobile apps, AI automation and agentic AI systems, and we offer SEO services.",
+      },
+      {
+        q: "Where is your office?",
+        a: "Our office is at A-125, 1st Floor, Sector-63, Noida, Uttar Pradesh 201301. You can open it in Google Maps from the Contact page.",
+      },
+      {
+        q: "How do I start a project with you?",
+        a: "Send us a message from the Contact page, write to us by email or call us. Tell us what you want to build and we will reply with the next steps.",
+      },
+      {
+        q: "Which services can I ask about?",
+        a: "Custom software development, mobile app development, AI automation, agentic AI and SEO. Each service has its own page with more detail.",
+      },
+    ],
+  },
 };
 
 export const homeModule = defineModule({
@@ -339,5 +360,6 @@ export const homeModule = defineModule({
       ],
     },
     { id: "meta", title: "Search & sharing", fields: [seoFields()] },
+    faqSection(),
   ],
 });

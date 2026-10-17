@@ -1,4 +1,4 @@
-import { defineModule, group, icon, id, image, list, longtext, select, seoFields, strings, text, toggle, url } from "./fields";
+import { faqSection, defineModule, group, icon, id, image, list, longtext, select, seoFields, strings, text, toggle, url } from "./fields";
 
 export interface Opening {
   id: string;
@@ -156,6 +156,23 @@ const defaults = {
     whatsappValue: "Message us",
     showOffice: true,
     officeLabel: "Office · open in Maps",
+  },
+  faq: {
+    title: "Frequently asked questions",
+    items: [
+      {
+        q: "How do I apply?",
+        a: "Fill in the application form on this page. Choose the role or area you are interested in and tell us about yourself.",
+      },
+      {
+        q: "Which areas do you hire in?",
+        a: "The areas we hire for are listed on this page, together with any roles that are open right now.",
+      },
+      {
+        q: "What if I do not see a role that matches my skills?",
+        a: "Send an application through the form and tell us which area you are interested in and what you have worked on.",
+      },
+    ],
   },
 };
 
@@ -342,5 +359,6 @@ export const careersModule = defineModule({
         ]),
       ],
     },
+    faqSection(),
   ],
 });

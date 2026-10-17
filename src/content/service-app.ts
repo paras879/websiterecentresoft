@@ -1,4 +1,4 @@
-import { defineModule, group, icon, list, longtext, select, seoFields, strings, text, url } from "./fields";
+import { faqSection, defineModule, group, icon, list, longtext, select, seoFields, strings, text, url } from "./fields";
 
 const defaults = {
   meta: {
@@ -200,6 +200,27 @@ const defaults = {
     cardTitle: "What you can expect",
     notes: ["Talk directly with our team", "Confidential discussion", "Clear timeline and feasibility plan"],
   },
+  faq: {
+    title: "Frequently asked questions",
+    items: [
+      {
+        q: "Do you build both Android and iOS apps?",
+        a: "Yes. We offer Android app development and iOS app development.",
+      },
+      {
+        q: "What types of apps do you build?",
+        a: "Business and enterprise apps, e-commerce and retail apps, on-demand and real-time apps, SaaS mobile companions and apps with on-device AI features.",
+      },
+      {
+        q: "Do you help with App Store and Google Play submission?",
+        a: "Yes. Launch support, including help with Apple and Google submission, is part of our process.",
+      },
+      {
+        q: "What does your app development process look like?",
+        a: "Discover, design, develop, test and launch. Each step is described on this page.",
+      },
+    ],
+  },
 };
 
 const toneOptions = [
@@ -400,5 +421,6 @@ export const appModule = defineModule({
         ]),
       ],
     },
+    faqSection(),
   ],
 });

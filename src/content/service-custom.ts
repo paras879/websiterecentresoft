@@ -1,4 +1,4 @@
-import { defineModule, group, icon, image, list, longtext, seoFields, strings, text, url } from "./fields";
+import { faqSection, defineModule, group, icon, image, list, longtext, seoFields, strings, text, url } from "./fields";
 
 const defaults = {
   meta: {
@@ -226,6 +226,27 @@ const defaults = {
     whatsappLabel: "WhatsApp",
     whatsappText: "Message us",
   },
+  faq: {
+    title: "Frequently asked questions",
+    items: [
+      {
+        q: "What kinds of custom software do you build?",
+        a: "Custom web applications, enterprise software, SaaS products, API development and integration, business process automation and legacy system modernisation.",
+      },
+      {
+        q: "Can you improve or modernise our existing system?",
+        a: "Yes. Legacy system modernisation is one of our services. We start by understanding what you have today before suggesting changes.",
+      },
+      {
+        q: "What technologies do you work with?",
+        a: "Our technology expertise covers frontend, backend, cloud and DevOps, and database tools. The full list is on this page, and we choose what fits your requirements.",
+      },
+      {
+        q: "How do I get an estimate?",
+        a: "Contact us with your requirements. Cost and timeline depend on the scope, so we discuss the project with you before giving an estimate.",
+      },
+    ],
+  },
 };
 
 export const customModule = defineModule({
@@ -396,5 +417,6 @@ export const customModule = defineModule({
         ]),
       ],
     },
+    faqSection(),
   ],
 });

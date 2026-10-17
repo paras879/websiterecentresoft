@@ -1,4 +1,4 @@
-import { defineModule, group, image, longtext, seoFields, strings, text } from "./fields";
+import { faqSection, defineModule, group, image, longtext, seoFields, strings, text } from "./fields";
 
 const defaults = {
   meta: {
@@ -37,6 +37,27 @@ const defaults = {
     emailLabel: "Email Technical Team",
   },
   backLabel: "Back to Recenturesoft Home",
+  faq: {
+    title: "Frequently asked questions",
+    items: [
+      {
+        q: "How can I contact Recenturesoft Infotech?",
+        a: "You can send a message with the form on this page, email us, call us or message us on WhatsApp. All the details are listed on this page.",
+      },
+      {
+        q: "What should I include in my message?",
+        a: "A short description of what you want to build or improve, who it is for, and any deadline you have in mind. The more detail you share, the easier it is for us to reply usefully.",
+      },
+      {
+        q: "Where is your office?",
+        a: "A-125, 1st Floor, Sector-63, Noida, Uttar Pradesh 201301, India. A map link is on this page.",
+      },
+      {
+        q: "I want to work with you. Where do I apply?",
+        a: "Please use the Careers page, which lists the open roles and has an application form.",
+      },
+    ],
+  },
 };
 
 export const contactModule = defineModule({
@@ -113,5 +134,6 @@ export const contactModule = defineModule({
     },
     { id: "back", title: "Back link", fields: [text("backLabel", "Back link text")] },
     { id: "meta", title: "Search & sharing", fields: [seoFields()] },
+    faqSection(),
   ],
 });

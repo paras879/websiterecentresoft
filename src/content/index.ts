@@ -14,10 +14,12 @@ import { aboutModule } from "./about";
 import { contactModule } from "./contact";
 import { sitemapModule } from "./sitemap";
 import { careersModule } from "./careers";
+import { reviewsModule } from "./reviews";
 
 /** Every editable part of the website, in the order the admin panel lists them. */
 export const modules: ContentModule[] = [
   siteModule,
+  reviewsModule,
   homeModule,
   aboutModule,
   careersModule,
@@ -35,6 +37,7 @@ export const modules: ContentModule[] = [
 
 export const defaultContent = {
   site: siteModule.defaults,
+  reviews: reviewsModule.defaults,
   serviceCustom: customModule.defaults,
   serviceSeo: seoModule.defaults,
   home: homeModule.defaults,

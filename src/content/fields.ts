@@ -173,3 +173,21 @@ export interface PageMeta {
   description: string;
   image: string;
 }
+
+/** Admin section for a page's frequently asked questions. The same questions feed the FAQ structured data for Google. */
+export const faqSection = () => ({
+  id: "faq",
+  title: "Frequently asked questions",
+  fields: [
+    group("faq", "Frequently asked questions", [
+      text("title", "Section heading", { max: 100 }),
+      list(
+        "items",
+        "Questions",
+        "question",
+        [text("q", "Question", { max: 150 }), longtext("a", "Answer", { max: 800, rows: 4 })],
+        { titleKey: "q", max: 15 },
+      ),
+    ]),
+  ],
+});

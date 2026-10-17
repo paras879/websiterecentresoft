@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
+import { FaqSection } from "@/components/faq-section";
 import Image from "next/image";
 import Link from "next/link";
 import { ApproachExplorer } from "@/components/approach-explorer";
 import { getSiteContent } from "@/lib/content";
 import { pageMetadata } from "@/lib/seo";
 import { Icon, iconPaths, type IconName } from "../icons";
-import { JsonLd } from "@/components/json-ld";
 import styles from "../services.module.css";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -31,51 +31,8 @@ export default async function SoftwareDevelopmentPage() {
     image: item.image,
   }));
 
-  const pageUrl = "https://websiterecentresoft.vercel.app/services/software-development";
-  const jsonLd = [
-    {
-      "@context": "https://schema.org",
-      "@type": "BreadcrumbList",
-      itemListElement: [
-        {
-          "@type": "ListItem",
-          position: 1,
-          name: "Home",
-          item: "https://websiterecentresoft.vercel.app",
-        },
-        {
-          "@type": "ListItem",
-          position: 2,
-          name: "Services",
-          item: "https://websiterecentresoft.vercel.app/services/software-development",
-        },
-        {
-          "@type": "ListItem",
-          position: 3,
-          name: "Software Development",
-          item: pageUrl,
-        },
-      ],
-    },
-    {
-      "@context": "https://schema.org",
-      "@type": "Service",
-      name: "Custom Software Development Services",
-      serviceType: "Software Engineering & Cloud Architecture",
-      description: c.meta.description,
-      provider: {
-        "@type": "Organization",
-        name: "Recenturesoft Infotech",
-        url: "https://websiterecentresoft.vercel.app",
-      },
-      url: pageUrl,
-      areaServed: "Global",
-    },
-  ];
-
   return (
     <div className={styles.page}>
-      <JsonLd data={jsonLd} />
       {/* Hero */}
       <section className={styles.hero} aria-labelledby="software-hero-heading">
         <div className={`container ${styles.heroGrid}`}>
@@ -253,6 +210,8 @@ export default async function SoftwareDevelopmentPage() {
           ) : null}
         </div>
       </section>
+
+      <FaqSection title={c.faq.title} items={c.faq.items} />
 
       {/* CTA */}
       <section className={`${styles.ctaBand} ${styles.ctaSoft}`} aria-labelledby="software-cta-heading">

@@ -838,16 +838,17 @@
     margin: 0mm;
   }
 
-  html,
-  body {
+  :global(html):has(.page),
+  :global(body):has(.page) {
     margin: 0 !important;
     padding: 0 !important;
   }
 
   /* the site header, footer and chat button are not part of the document */
-  :global(.app-shell > header),
-  :global(.app-shell > footer),
-  :global(.skip-link) {
+  :global(.app-shell):has(.page) > :global(header),
+  :global(.app-shell):has(.page) > :global(footer),
+  :global(.app-shell):has(.page) ~ :global(.skip-link),
+  :global(body):has(.page) :global(.skip-link) {
     display: none !important;
   }
 

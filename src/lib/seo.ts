@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import type { PageMeta } from "@/content/fields";
 
-const ORIGIN = "https://websiterecentresoft.vercel.app";
+/** The public address of the website. Set NEXT_PUBLIC_SITE_URL when the final domain is connected. */
+export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || "https://websiterecentresoft.vercel.app").replace(/\/+$/, "");
+const ORIGIN = SITE_URL;
 
 /** Builds the page <head> data from the editable "Search & sharing" fields of a page. */
 export function pageMetadata(meta: PageMeta, path: string): Metadata {

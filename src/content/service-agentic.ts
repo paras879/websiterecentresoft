@@ -154,6 +154,31 @@ const defaults = {
     secondaryHref: "/contact",
     notes: ["Talk directly with our team", "Confidential feasibility review"],
   },
+  faq: {
+    title: "Frequently Asked Questions",
+    items: [
+      {
+        q: "What is an AI agent and how is it different from a chatbot?",
+        a: "A chatbot answers questions. An AI agent takes actions — it uses tools, calls APIs, reads documents, and completes multi-step tasks with minimal human prompting.",
+      },
+      {
+        q: "Is it safe to give an AI agent access to our business systems?",
+        a: "An agent should only have the access it needs. Common safeguards are role-based permissions, audit logs, removing personal data and human approval for high-risk steps. We design these with you.",
+      },
+      {
+        q: "Which LLM or AI models do you use?",
+        a: "We are model-agnostic. We select the model that fits your accuracy, latency, cost, and data residency requirements — including on-premise or private cloud deployments if needed.",
+      },
+      {
+        q: "What is MCP and why does it matter?",
+        a: "Model Context Protocol (MCP) is an open standard that lets AI agents connect to your tools — databases, APIs, files — through secure, auditable interfaces. It avoids proprietary lock-in and makes agent integrations maintainable.",
+      },
+      {
+        q: "How long does it take to build an agentic AI system?",
+        a: "It depends on how many agents, tools and integrations are involved. We begin with a scoped discovery and share an estimate after it.",
+      },
+    ],
+  },
 };
 
 const toneOptions = [
@@ -348,6 +373,22 @@ export const agenticModule = defineModule({
           text("secondaryLabel", "Second button text"),
           url("secondaryHref", "Second button link"),
           strings("notes", "Small notes under the buttons", { addLabel: "Add note", max: 4 }),
+        ]),
+      ],
+    },
+    {
+      id: "faq",
+      title: "Frequently asked questions",
+      fields: [
+        group("faq", "Frequently asked questions", [
+          text("title", "Section heading", { max: 100 }),
+          list(
+            "items",
+            "Questions",
+            "question",
+            [text("q", "Question", { max: 150 }), longtext("a", "Answer", { max: 800, rows: 4 })],
+            { titleKey: "q", max: 15 },
+          ),
         ]),
       ],
     },

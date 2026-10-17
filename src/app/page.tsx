@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { FaqSection } from "@/components/faq-section";
 import Image from "next/image";
 import Link from "next/link";
 import { getSiteContent } from "@/lib/content";
@@ -6,6 +7,7 @@ import { getSiteInfo } from "@/lib/site";
 import { pageMetadata } from "@/lib/seo";
 import { Icon, iconPaths, type IconName } from "@/app/services/icons";
 import { HomeApproachTimeline } from "@/components/home-approach-timeline";
+import { ReviewsSection } from "@/components/reviews-section";
 import styles from "./home.module.css";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -58,7 +60,7 @@ function withMissing<T extends { href: string }>(items: T[]): (T | (typeof REQUI
 }
 
 export default async function HomePage() {
-  const { home } = await getSiteContent();
+  const { home, reviews } = await getSiteContent();
   const info = await getSiteInfo();
   const { hero, services, about, why, approach, cta } = home;
 
@@ -240,6 +242,10 @@ export default async function HomePage() {
 
       {/* Approach */}
       <HomeApproachTimeline approach={approach} />
+
+      <ReviewsSection items={reviews.reviews.items} />
+
+      <FaqSection title={home.faq.title} items={home.faq.items} />
 
       {/* Contact CTA */}
       <section className={styles.contactBand} aria-labelledby="contact-heading">

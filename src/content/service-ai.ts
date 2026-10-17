@@ -1,4 +1,4 @@
-import { defineModule, group, icon, image, list, longtext, seoFields, strings, text, toggle, url } from "./fields";
+import { faqSection, defineModule, group, icon, image, list, longtext, seoFields, strings, text, toggle, url } from "./fields";
 
 const defaults = {
   meta: {
@@ -77,6 +77,27 @@ const defaults = {
     primaryLabel: "Discuss Automation Opportunities",
     primaryHref: "/contact",
     showPhone: true,
+  },
+  faq: {
+    title: "Frequently asked questions",
+    items: [
+      {
+        q: "What is AI automation?",
+        a: "AI automation uses software and AI models to take over repetitive work such as moving data between systems, reading documents and sorting requests, so that your team can focus on work that needs a person.",
+      },
+      {
+        q: "Which tasks are good candidates for automation?",
+        a: "Tasks that are repetitive, follow clear rules and involve a lot of manual copying or checking. Document handling, data entry between systems and routine classification are common examples.",
+      },
+      {
+        q: "Will automation replace my team?",
+        a: "Our approach is to automate the repetitive steps and keep a person in the loop for decisions that need judgement. We agree where that line sits with you.",
+      },
+      {
+        q: "How do I get started?",
+        a: "Contact us and describe the process you want to improve. We will discuss it with you and suggest where automation can help.",
+      },
+    ],
   },
 };
 
@@ -180,5 +201,6 @@ export const aiModule = defineModule({
         ]),
       ],
     },
+    faqSection(),
   ],
 });

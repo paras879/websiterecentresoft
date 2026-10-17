@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { FaqSection } from "@/components/faq-section";
 import Image from "next/image";
 import Link from "next/link";
 import { getSiteContent } from "@/lib/content";
@@ -8,7 +9,6 @@ import { Icon, iconPaths, type IconName } from "../icons";
 import { BuildShowcase } from "@/components/build-showcase";
 import { ProcessJourney } from "@/components/process-journey";
 import { TechWall } from "@/components/tech-wall";
-import { JsonLd } from "@/components/json-ld";
 import styles from "../services.module.css";
 import cd from "./custom.module.css";
 
@@ -59,51 +59,8 @@ export default async function CustomDevelopmentPage() {
     icon: toIcon(item.icon),
   }));
 
-  const pageUrl = "https://websiterecentresoft.vercel.app/services/custom-development";
-  const jsonLd = [
-    {
-      "@context": "https://schema.org",
-      "@type": "BreadcrumbList",
-      itemListElement: [
-        {
-          "@type": "ListItem",
-          position: 1,
-          name: "Home",
-          item: "https://websiterecentresoft.vercel.app",
-        },
-        {
-          "@type": "ListItem",
-          position: 2,
-          name: "Services",
-          item: "https://websiterecentresoft.vercel.app/services/custom-development",
-        },
-        {
-          "@type": "ListItem",
-          position: 3,
-          name: "Custom Development",
-          item: pageUrl,
-        },
-      ],
-    },
-    {
-      "@context": "https://schema.org",
-      "@type": "Service",
-      name: "Custom Development Services",
-      serviceType: "Custom Software Engineering",
-      description: content.serviceCustom.meta.description,
-      provider: {
-        "@type": "Organization",
-        name: info.name,
-        url: "https://websiterecentresoft.vercel.app",
-      },
-      url: pageUrl,
-      areaServed: "Global",
-    },
-  ];
-
   return (
     <div className={styles.page}>
-      <JsonLd data={jsonLd} />
       {/* Hero */}
       <section className={styles.hero} aria-labelledby="cd-hero-heading">
         <div className={`container ${styles.heroGrid}`}>
@@ -277,6 +234,8 @@ export default async function CustomDevelopmentPage() {
           ) : null}
         </div>
       </section>
+
+      <FaqSection title={content.serviceCustom.faq.title} items={content.serviceCustom.faq.items} />
 
       {/* CTA */}
       <section className={cd.fin} aria-labelledby="cd-cta-heading">

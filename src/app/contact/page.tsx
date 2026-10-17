@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
+import { FaqSection } from "@/components/faq-section";
 import Image from "next/image";
 import Link from "next/link";
 import { getSiteContent } from "@/lib/content";
 import { getSiteInfo } from "@/lib/site";
 import { pageMetadata } from "@/lib/seo";
 import { ContactForm } from "@/components/contact-form";
-import { JsonLd } from "@/components/json-ld";
 import { Icon, type IconName } from "../services/icons";
 import styles from "./contact.module.css";
 
@@ -19,49 +19,6 @@ export default async function ContactPage() {
   const info = await getSiteInfo();
   const { contact } = info;
   const { hero, form, channels: copy, office, closing, backLabel } = content.contact;
-
-  const pageUrl = "https://websiterecentresoft.vercel.app/contact";
-  const jsonLd = [
-    {
-      "@context": "https://schema.org",
-      "@type": "BreadcrumbList",
-      itemListElement: [
-        {
-          "@type": "ListItem",
-          position: 1,
-          name: "Home",
-          item: "https://websiterecentresoft.vercel.app",
-        },
-        {
-          "@type": "ListItem",
-          position: 2,
-          name: "Contact Us",
-          item: pageUrl,
-        },
-      ],
-    },
-    {
-      "@context": "https://schema.org",
-      "@type": "ContactPage",
-      name: "Contact Recenturesoft Infotech",
-      description: content.contact.meta.description,
-      url: pageUrl,
-      mainEntity: {
-        "@type": "Organization",
-        name: info.name,
-        telephone: contact.phone,
-        email: contact.email,
-        address: {
-          "@type": "PostalAddress",
-          streetAddress: "A-125, 1st Floor, Sector-63",
-          addressLocality: "Noida",
-          addressRegion: "Uttar Pradesh",
-          postalCode: "201301",
-          addressCountry: "IN",
-        },
-      },
-    },
-  ];
 
   const channels: {
     icon: IconName;
@@ -100,7 +57,6 @@ export default async function ContactPage() {
 
   return (
     <div className={styles.page}>
-      <JsonLd data={jsonLd} />
       {/* Hero */}
       <section className={styles.hero} aria-labelledby="contact-heading">
         {hero.image ? (
@@ -192,6 +148,8 @@ export default async function ContactPage() {
           </aside>
         </div>
       </section>
+
+      <FaqSection title={content.contact.faq.title} items={content.contact.faq.items} />
 
       {/* CTA */}
       <section className={styles.closing} aria-labelledby="contact-cta-heading">

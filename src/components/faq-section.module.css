@@ -1,0 +1,36 @@
+/* faq-section.module.css — universal FAQ section wrapper for all service pages */
+
+.wrap {
+  padding: 4rem 0;
+  background: var(--sv-bg, #ffffff);
+  border-top: 1px solid var(--sv-line, #e2e8f0);
+}
+
+:global([data-theme="dark"]) .wrap {
+  background: var(--sv-bg, #0a1428);
+}
+
+.inner {
+  max-width: 780px;
+  margin: 0 auto;
+}
+
+.head {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.title {
+  margin: 0;
+  font-size: clamp(1.5rem, 2.6vw, 2rem);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.025em;
+  color: var(--sv-heading, #0b1f44);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}

@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
+import { FaqSection } from "@/components/faq-section";
 import Image from "next/image";
 import Link from "next/link";
 import { getSiteContent } from "@/lib/content";
 import { getSiteInfo } from "@/lib/site";
 import { pageMetadata } from "@/lib/seo";
 import { Icon, iconPaths, type IconName } from "../icons";
-import { JsonLd } from "@/components/json-ld";
 import styles from "./ai-automation.module.css";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -24,51 +24,8 @@ export default async function AIAutomationPage() {
   const info = await getSiteInfo();
   const { hero, practical, process, cta } = c;
 
-  const pageUrl = "https://websiterecentresoft.vercel.app/services/ai-automation";
-  const jsonLd = [
-    {
-      "@context": "https://schema.org",
-      "@type": "BreadcrumbList",
-      itemListElement: [
-        {
-          "@type": "ListItem",
-          position: 1,
-          name: "Home",
-          item: "https://websiterecentresoft.vercel.app",
-        },
-        {
-          "@type": "ListItem",
-          position: 2,
-          name: "Services",
-          item: "https://websiterecentresoft.vercel.app/services/ai-automation",
-        },
-        {
-          "@type": "ListItem",
-          position: 3,
-          name: "AI Automation",
-          item: pageUrl,
-        },
-      ],
-    },
-    {
-      "@context": "https://schema.org",
-      "@type": "Service",
-      name: "Enterprise AI Automation Services",
-      serviceType: "AI Workflow Automation",
-      description: c.meta.description,
-      provider: {
-        "@type": "Organization",
-        name: info.name,
-        url: "https://websiterecentresoft.vercel.app",
-      },
-      url: pageUrl,
-      areaServed: "Global",
-    },
-  ];
-
   return (
     <div className={styles.page}>
-      <JsonLd data={jsonLd} />
       {/* Hero */}
       <section className={styles.hero} aria-labelledby="ai-hero-heading">
         <div className={`container ${styles.heroGrid}`}>
@@ -199,6 +156,8 @@ export default async function AIAutomationPage() {
           </div>
         </section>
       ) : null}
+
+      <FaqSection title={c.faq.title} items={c.faq.items} />
 
       {/* CTA */}
       <section className={styles.cta} aria-labelledby="ai-cta-heading">

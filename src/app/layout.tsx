@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { getSiteContent } from "@/lib/content";
 import { buildSiteInfo } from "@/lib/site";
+import { buildPageSchemas, buildSiteGraph } from "@/lib/schema";
+import { PageSchema } from "@/components/page-schema";
 import { SiteShell } from "@/components/site-shell";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
@@ -84,48 +86,8 @@ export default async function RootLayout({
   const { site } = content;
   const info = buildSiteInfo(site);
 
-  const structuredData = {
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "Organization",
-        "@id": "https://websiterecentresoft.vercel.app/#organization",
-        name: info.name,
-        legalName: info.legalName,
-        url: "https://websiterecentresoft.vercel.app",
-        logo: "https://websiterecentresoft.vercel.app/images/recenturesoft-logo.png",
-        description: info.description,
-        address: {
-          "@type": "PostalAddress",
-          streetAddress: "A-125, 1st Floor, Sector-63",
-          addressLocality: "Noida",
-          addressRegion: "Uttar Pradesh",
-          postalCode: "201301",
-          addressCountry: "IN",
-        },
-        contactPoint: [
-          {
-            "@type": "ContactPoint",
-            telephone: info.contact.phone,
-            contactType: "customer service",
-            areaServed: "IN",
-            availableLanguage: ["English", "Hindi"],
-          },
-        ],
-        sameAs: site.socials.map((s) => s.href),
-      },
-      {
-        "@type": "WebSite",
-        "@id": "https://websiterecentresoft.vercel.app/#website",
-        url: "https://websiterecentresoft.vercel.app",
-        name: info.name,
-        description: info.description,
-        publisher: {
-          "@id": "https://websiterecentresoft.vercel.app/#organization",
-        },
-      },
-    ],
-  };
+  const structuredData = buildSiteGraph(content, info);
+  const pageSchemas = buildPageSchemas(content);
 
   return (
     <html lang="en" className={inter.variable} suppressHydrationWarning>
@@ -139,6 +101,7 @@ export default async function RootLayout({
         />
       </head>
       <body>
+        <PageSchema pages={pageSchemas} />
         <SmoothScroll />
         <ThemeProvider>
           <SiteShell

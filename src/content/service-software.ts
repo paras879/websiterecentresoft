@@ -137,6 +137,31 @@ const defaults = {
     primaryLabel: "Discuss Your Project",
     primaryHref: "/contact",
   },
+  faq: {
+    title: "Frequently Asked Questions",
+    items: [
+      {
+        q: "How long does custom software development take?",
+        a: "The timeline depends on the scope of the project. After we understand your requirements we can share an estimate, so please contact us with the details.",
+      },
+      {
+        q: "Do you sign an NDA before we discuss the project?",
+        a: "If you need an NDA, tell us when you get in touch and we will discuss it with you before you share sensitive details.",
+      },
+      {
+        q: "Who owns the source code after the project?",
+        a: "Ownership of the code is agreed in the project contract. Please raise it at the start so that it is written down clearly.",
+      },
+      {
+        q: "Can you take over an existing codebase?",
+        a: "Yes. We start with a code audit to assess quality and risk, then present a refactoring or migration plan before touching anything.",
+      },
+      {
+        q: "What technologies do you use?",
+        a: "We default to React, Next.js, TypeScript, Node.js, and PostgreSQL, but we choose the stack that fits your requirements, not just what we prefer.",
+      },
+    ],
+  },
 };
 
 export const softwareModule = defineModule({
@@ -274,6 +299,22 @@ export const softwareModule = defineModule({
           longtext("text", "Text", { rows: 3 }),
           text("primaryLabel", "Button text", { max: 60 }),
           url("primaryHref", "Button link"),
+        ]),
+      ],
+    },
+    {
+      id: "faq",
+      title: "Frequently asked questions",
+      fields: [
+        group("faq", "Frequently asked questions", [
+          text("title", "Section heading", { max: 100 }),
+          list(
+            "items",
+            "Questions",
+            "question",
+            [text("q", "Question", { max: 150 }), longtext("a", "Answer", { max: 800, rows: 4 })],
+            { titleKey: "q", max: 15 },
+          ),
         ]),
       ],
     },
