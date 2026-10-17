@@ -111,7 +111,7 @@ export function SiteHeader({ site, info }: Props) {
         <Link href="/" className={styles.brand} aria-label={`${info.name} - A Hub of IT Services`}>
           <Image
             src="/images/recenturesoft-logo.png"
-            alt="Recenturesoft - A Hub of IT Services"
+            alt={info.logoAlt}
             width={240}
             height={96}
             priority

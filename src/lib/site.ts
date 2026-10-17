@@ -6,6 +6,7 @@ export interface SiteInfo {
   name: string;
   legalName: string;
   tagline: string;
+  logoAlt: string;
   description: string;
   contact: {
     email: string;
@@ -28,6 +29,7 @@ export function buildSiteInfo(site: Awaited<ReturnType<typeof getSiteContent>>["
     name: brand.name,
     legalName: brand.legalName,
     tagline: brand.tagline,
+    logoAlt: brand.logoAlt || `${brand.name} - A Hub of IT Services`,
     description: brand.description,
     contact: {
       email: contact.email,

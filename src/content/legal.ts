@@ -1,8 +1,8 @@
-import { defineModule, group, icon, list, longtext, seoFields, text } from "./fields";
+import { defineModule, group, icon, image, list, longtext, seoFields, text } from "./fields";
 
 export type LegalDefaults = {
   meta: { title: string; description: string; image: string };
-  hero: { title: string; lead: string; image: string };
+  hero: { title: string; lead: string; image: string; imageAlt: string };
   quick: { title: string; text: string; target: string; icon: string }[];
   sections: { title: string; body: string }[];
   contact: { officer: string; railTitle: string; railText: string };
@@ -35,6 +35,8 @@ export function legalModule(opts: {
           group("hero", "Top banner", [
             text("title", "Heading", { required: true, max: 80 }),
             longtext("lead", "Intro line", { rows: 2 }),
+            image("image", "Background image"),
+            text("imageAlt", "Image description", { max: 125, help: "Describes the picture for screen readers and Google Images." }),
           ]),
         ],
       },

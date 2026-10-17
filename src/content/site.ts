@@ -20,6 +20,7 @@ const defaults = {
     name: "Recenturesoft",
     legalName: "Recenturesoft Infotech Pvt Ltd",
     tagline: "Software Engineering & AI Automation",
+    logoAlt: "Recenturesoft - A Hub of IT Services",
     description:
       "Recenturesoft Infotech delivers custom software development, web application engineering, and enterprise AI automation solutions from Noida, India.",
   },
@@ -152,6 +153,10 @@ export const siteModule = defineModule({
           text("name", "Short name", { required: true, help: "Shown in the header, footer and tab titles." }),
           text("legalName", "Registered company name", { required: true }),
           text("tagline", "Tagline"),
+          text("logoAlt", "Logo description", {
+            max: 120,
+            help: "Text read by screen readers and search engines for the logo in the header, footer and mobile menu.",
+          }),
           longtext("description", "Company description", {
             rows: 4,
             help: "Used in the footer and as the default description on Google.",

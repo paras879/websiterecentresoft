@@ -11,6 +11,7 @@ const defaults = {
     title: "Let's Build Something Great Together",
     text: "Have a custom software development or enterprise AI automation project in mind? Share your requirements with our technical team today.",
     image: "/images/home-hero.jpg",
+    imageAlt: "Recenturesoft Infotech Noida office contact desk",
   },
   form: {
     services: ["General Engineering Inquiry"],
@@ -75,6 +76,7 @@ export const contactModule = defineModule({
           text("title", "Headline", { required: true, max: 120 }),
           longtext("text", "Supporting text", { rows: 3 }),
           image("image", "Background image"),
+          text("imageAlt", "Image description", { max: 125, help: "Describes the picture for screen readers and Google Images." }),
         ]),
       ],
     },

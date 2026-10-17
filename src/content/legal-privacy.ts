@@ -9,7 +9,8 @@ const defaults: LegalDefaults = {
   "hero": {
     "title": "Privacy Policy",
     "lead": "How Recenturesoft Infotech Pvt Ltd collects, uses, protects and shares information on this website.",
-    "image": "/images/hero.jpg"
+    "image": "/images/hero.jpg",
+    "imageAlt": "Recenturesoft Infotech privacy policy banner"
   },
   "quick": [
     {

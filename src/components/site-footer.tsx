@@ -63,7 +63,7 @@ export function SiteFooter({ site, info }: { site: SiteContent["site"]; info: Si
             <Link href="/" className={styles.brand} aria-label={`${info.name} - A Hub of IT Services`}>
               <Image
                 src="/images/recenturesoft-logo.png"
-                alt="Recenturesoft - A Hub of IT Services"
+                alt={info.logoAlt}
                 width={180}
                 height={60}
                 className={styles.brandLogoLight}
