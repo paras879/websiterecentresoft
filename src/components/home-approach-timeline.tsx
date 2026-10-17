@@ -188,7 +188,7 @@ export function HomeApproachTimeline({ approach }: ApproachProps) {
                         <span className={styles.stageBackStep}>
                           {approach.stepWord} {String(index + 1).padStart(2, "0")}
                         </span>
-                        <h4 className={styles.stageBackTitle}>{item.title}</h4>
+                        <p className={styles.stageBackTitle}>{item.title}</p>
                       </div>
                       <p className={styles.stageText}>{item.desc}</p>
                       {item.outcome ? (
