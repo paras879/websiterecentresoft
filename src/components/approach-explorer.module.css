@@ -1,7 +1,7 @@
 /* Interactive approach explorer. Uses the --sv-* tokens from the services page wrapper. */
 
 .explorer {
-  max-width: 62rem;
+  max-width: 82rem;
   margin: 0 auto;
 }
 
@@ -117,13 +117,12 @@
 /* Panel */
 .panel {
   position: relative;
-  display: grid;
-  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.4fr);
   overflow: hidden;
   color: #ffffff;
   background: linear-gradient(150deg, #0b1f44 0%, #123a9c 62%, #1d4ed8 130%);
   border-radius: 26px;
   box-shadow: 0 34px 60px -30px rgba(11, 31, 68, 0.65);
+  min-height: 380px;
 }
 
 .panel::before {
@@ -149,6 +148,96 @@
   pointer-events: none;
 }
 
+/* Slide container and directional transitions */
+.cardSlide {
+  width: 100%;
+  height: 100%;
+  will-change: transform, opacity;
+}
+
+.cardGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.4fr);
+  width: 100%;
+  min-height: 380px;
+}
+
+.slideOutRight {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+  animation: slideOutRight 1.25s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.slideInLeft {
+  position: relative;
+  z-index: 2;
+  animation: slideInLeft 1.25s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.slideOutLeft {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+  animation: slideOutLeft 1.25s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.slideInRight {
+  position: relative;
+  z-index: 2;
+  animation: slideInRight 1.25s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOutRight {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOutLeft {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+}
+
 .panelVisual {
   position: relative;
   z-index: 1;
@@ -160,31 +249,49 @@
   border-right: 1px solid rgba(255, 255, 255, 0.12);
 }
 
+.panelImg {
+  object-fit: cover;
+}
+
+.panelShade {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    rgba(11, 31, 68, 0.35) 0%,
+    rgba(11, 31, 68, 0.15) 55%,
+    rgba(18, 58, 156, 0.85) 100%
+  );
+}
+
 .bigNum {
+  position: relative;
+  z-index: 3;
   font-size: clamp(6rem, 11vw, 9rem);
   font-weight: 800;
   line-height: 1;
   letter-spacing: -0.06em;
   color: transparent;
-  -webkit-text-stroke: 2px rgba(255, 255, 255, 0.28);
-  animation: explorerIn 0.5s ease both;
+  -webkit-text-stroke: 2px rgba(255, 255, 255, 0.7);
 }
 
 .panelIcon {
   position: absolute;
   right: 1.75rem;
   bottom: 1.5rem;
+  z-index: 4;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   width: 60px;
   height: 60px;
-  background: rgba(255, 255, 255, 0.14);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: linear-gradient(135deg, #1d4ed8, #1d4ed8);
+  border: 1px solid rgba(255, 255, 255, 0.5);
   border-radius: 18px;
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
-  animation: explorerIn 0.5s 0.05s ease both;
 }
 
 .panelIconSvg {
@@ -204,7 +311,6 @@
   flex-direction: column;
   align-items: flex-start;
   padding: 2.75rem 3rem;
-  animation: explorerIn 0.45s ease both;
 }
 
 .panelLabel {
@@ -226,7 +332,7 @@
 }
 
 .panelText {
-  max-width: 34rem;
+  max-width: 44rem;
   margin: 0 0 2rem;
   font-size: 1.125rem;
   line-height: 1.7;
@@ -285,24 +391,13 @@
   outline-offset: 3px;
 }
 
-@keyframes explorerIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 @media (max-width: 800px) {
-  .panel {
+  .cardGrid {
     grid-template-columns: 1fr;
   }
 
   .panelVisual {
-    min-height: 150px;
+    min-height: 180px;
     border-right: 0;
     border-bottom: 1px solid rgba(255, 255, 255, 0.12);
   }
@@ -320,6 +415,10 @@
 
   .panelBody {
     padding: 2rem 1.75rem;
+  }
+
+  .panelShade {
+    background: linear-gradient(180deg, rgba(11, 31, 68, 0.3) 0%, rgba(18, 58, 156, 0.85) 100%);
   }
 }
 
@@ -359,50 +458,17 @@
     transition: none;
   }
 
-  .bigNum,
-  .panelIcon,
-  .panelBody {
+  .slideInLeft,
+  .slideOutRight,
+  .slideInRight,
+  .slideOutLeft {
     animation: none;
+    transform: none;
+    opacity: 1;
   }
 
   .tab:hover .dot,
   .ctrl:hover:not(:disabled) {
     transform: none;
-  }
-}
-
-/* Step photo */
-.panelImg {
-  object-fit: cover;
-  animation: explorerIn 0.6s ease both;
-}
-
-.panelShade {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(90deg, rgba(11, 31, 68, 0.35) 0%, rgba(11, 31, 68, 0.15) 55%, rgba(18, 58, 156, 0.85) 100%);
-}
-
-.bigNum {
-  position: relative;
-  z-index: 1;
-  -webkit-text-stroke-color: rgba(255, 255, 255, 0.7);
-}
-
-.panelIcon {
-  z-index: 1;
-  background: linear-gradient(135deg, #1d4ed8, #1d4ed8);
-  border-color: rgba(255, 255, 255, 0.5);
-}
-
-@media (max-width: 800px) {
-  .panelShade {
-    background: linear-gradient(180deg, rgba(11, 31, 68, 0.3) 0%, rgba(18, 58, 156, 0.85) 100%);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .panelImg {
-    animation: none;
   }
 }

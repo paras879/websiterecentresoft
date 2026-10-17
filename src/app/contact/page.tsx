@@ -93,6 +93,8 @@ export default async function ContactPage() {
       icon: "pin",
       label: copy.addressLabel,
       value: contact.address,
+      href: contact.mapUrl,
+      external: true,
     },
   ];
 

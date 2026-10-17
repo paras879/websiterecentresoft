@@ -77,6 +77,14 @@ function withRequiredServices(content: SiteContent): SiteContent {
       const at = col.links.findIndex((l) => l.href === req.after);
       col.links.splice(at >= 0 ? at + 1 : col.links.length, 0, { label: req.footer, href: req.href });
     }
+    if (content.sitemap?.services?.links && !content.sitemap.services.links.some((l) => l.href === req.href)) {
+      const at = content.sitemap.services.links.findIndex((l) => l.href === req.after);
+      content.sitemap.services.links.splice(at >= 0 ? at + 1 : content.sitemap.services.links.length, 0, {
+        label: req.title,
+        desc: req.desc,
+        href: req.href,
+      });
+    }
   }
   return content;
 }
@@ -88,7 +96,7 @@ export const getSiteContent = cache(async (): Promise<SiteContent> => {
   } catch (error) {
     console.error("Could not read saved content, using the built-in copy.", error);
   }
-  return sanitizeContent(defaultContent);
+  return withRequiredCareerAreas(withRequiredServices(sanitizeContent(defaultContent)));
 });
 
 /** Validates and saves the whole document, and keeps a snapshot so it can be restored later. */

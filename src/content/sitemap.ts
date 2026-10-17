@@ -45,6 +45,16 @@ const defaults = {
         desc: "Custom software and web applications",
         href: "/services/software-development",
       },
+      {
+        label: "Agentic AI",
+        desc: "Autonomous enterprise agents, multi-agent swarms & MCP workflows",
+        href: "/services/agentic-ai",
+      },
+      {
+        label: "App Development",
+        desc: "Native Android and iOS apps, from idea to the app stores",
+        href: "/services/app-development",
+      },
       { label: "AI Automation", desc: "AI-powered workflow automation", href: "/services/ai-automation" },
       {
         label: "Custom Development",

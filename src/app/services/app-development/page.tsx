@@ -310,7 +310,7 @@ export default async function AppDevelopmentPage() {
       {/* ---------------------------------------------------------------- verticals */}
       <section className={`${styles.section} ${styles.alt}`} aria-labelledby="app-verticals-title">
         <div className={styles.wrap}>
-          <header className={styles.head}>
+          <header className={`${styles.head} ${styles.verticalsHead}`}>
             <h2 id="app-verticals-title" className={styles.title}>
               {verticals.title}
             </h2>
