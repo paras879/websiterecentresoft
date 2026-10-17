@@ -9,6 +9,10 @@ Record all external or generated visual assets used in the Recenturesoft website
 | public/images/software.jpg | Software Development | Professional multi-monitor software engineering workstation with REST APIs, clean code, and cloud metrics | Proprietary / Generated for Recenturesoft project | Yes | Active |
 | public/images/ai-automation.jpg | AI Automation | Enterprise workflow orchestration, model health, and operational throughput analytics command interface | Proprietary / Generated for Recenturesoft project | Yes | Active |
 
+## Stock photographs (CC0)
+
+These files were added so that no picture repeats anywhere on the site. They are CC0 1.0 (public domain) photographs from StockSnap.io, free for commercial use without attribution: careers-*, contact-office, custom-*, seo-*, software-*, privacy-hero and terms-hero in public/images.
+
 ## Rules
 
 1. Prefer company-owned images, properly licensed stock images or original generated images.

@@ -14,8 +14,8 @@ const defaults = {
     primaryHref: "/contact",
     secondaryLabel: "Explore Our Services",
     secondaryHref: "/services/software-development",
-    image: "/images/home-hero.jpg",
-    imageAlt: "Engineers reviewing system architecture diagrams and code together in an office",
+    image: "/images/hero.jpg",
+    imageAlt: "Software architecture and cloud platform interface shown on a glass display in a modern engineering studio",
   },
   services: {
     title: "Our Services",

@@ -13,7 +13,7 @@ const defaults = {
     primaryLabel: "Discuss Automation Opportunities",
     primaryHref: "/contact",
     secondaryLabel: "Explore Practical Use Cases",
-    image: "/images/services-ai.jpg",
+    image: "/images/ai-automation.jpg",
     imageAlt: "Enterprise AI workflow automation control room",
   },
   practical: {

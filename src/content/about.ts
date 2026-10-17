@@ -15,8 +15,8 @@ const defaults = {
       { label: "Focus", value: "Software & AI Automation" },
       { label: "Collaboration", value: "Direct access to the engineering team" },
     ],
-    image: "/images/home-hero.jpg",
-    imageAlt: "Engineers collaborating around architecture diagrams in a Noida office",
+    image: "/images/about.jpg",
+    imageAlt: "Engineers presenting a cloud architecture diagram to colleagues in a modern office",
   },
   pragmatic: {
     title: "Pragmatic Engineering,",
@@ -75,8 +75,8 @@ const defaults = {
   teams: {
     title: "Our Development Teams in Noida",
     lead: "Our engineering and automation teams work out of Sector 63, Noida. Keeping design, development and quality engineering close together supports quick turnaround and shared understanding of your project.",
-    image: "/images/services-team.jpg",
-    imageAlt: "Engineers discussing microservices architecture at a whiteboard",
+    image: "/images/home-hero.jpg",
+    imageAlt: "Engineers collaborating around monitors and a whiteboard in the Noida team space",
     points: [
       {
         title: "Cross-functional teams:",

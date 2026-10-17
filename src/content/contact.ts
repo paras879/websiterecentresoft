@@ -5,13 +5,13 @@ const defaults = {
     title: "Contact Recenturesoft Infotech | Software Project Inquiries",
     description:
       "Contact Recenturesoft Infotech Pvt Ltd in Noida for custom software development, web engineering, and enterprise AI automation inquiries.",
-    image: "/images/hero.jpg",
+    image: "/images/services-aside-developer.jpg",
   },
   hero: {
     title: "Let's Build Something Great Together",
     text: "Have a custom software development or enterprise AI automation project in mind? Share your requirements with our technical team today.",
-    image: "/images/home-hero.jpg",
-    imageAlt: "Recenturesoft Infotech Noida office contact desk",
+    image: "/images/services-aside-developer.jpg",
+    imageAlt: "Developer at a workstation in the Recenturesoft engineering office",
   },
   form: {
     services: ["General Engineering Inquiry"],
@@ -25,8 +25,8 @@ const defaults = {
     addressLabel: "Registered Office Address",
   },
   office: {
-    image: "/images/services-team.jpg",
-    imageAlt: "Engineering team discussing architecture at the Noida office",
+    image: "/images/contact-office.jpg",
+    imageAlt: "Meeting room inside a brick-walled office",
     title: "Noida Development Center",
     subtitle: "Sector 63, Noida, UP",
     linkLabel: "Get directions",

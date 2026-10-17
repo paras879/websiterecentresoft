@@ -9,7 +9,7 @@ const defaults: LegalDefaults = {
   "hero": {
     "title": "Terms and Conditions",
     "lead": "The terms, conditions and acceptable use rules governing your visit to this website.",
-    "image": "/images/hero.jpg",
+    "image": "/images/terms-hero.jpg",
     "imageAlt": "Recenturesoft Infotech terms and conditions banner"
   },
   "quick": [
