@@ -46,8 +46,8 @@ const defaults = {
         title: "Continuous learning",
         desc: "Our work spans several disciplines, so your skills keep widening.",
         points: ["Cross-discipline", "New tools"],
-        image: "/images/careers-learning.jpg",
-        alt: "Laptop with programming books on a lap, representing continuous learning",
+        image: "/images/continuous-learning.webp",
+        alt: "Developer working on a laptop surrounded by stacks of books",
       },
       {
         icon: "people",

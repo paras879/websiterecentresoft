@@ -5,7 +5,7 @@ const defaults = {
     title: "About Recenturesoft Infotech | Custom Software Engineering",
     description:
       "Learn about Recenturesoft Infotech Pvt Ltd, our engineering capabilities, software development approach, and enterprise technology solutions.",
-    image: "/images/about.jpg",
+    image: "/images/about-us.webp",
   },
   hero: {
     title: "Engineering Dependable Software from Sector 63, Noida",
@@ -15,8 +15,8 @@ const defaults = {
       { label: "Focus", value: "Software & AI Automation" },
       { label: "Collaboration", value: "Direct access to the engineering team" },
     ],
-    image: "/images/about.jpg",
-    imageAlt: "Engineers presenting a cloud architecture diagram to colleagues in a modern office",
+    image: "/images/about-us.webp",
+    imageAlt: "Team at a meeting table with laptops, with a software deployment diagram on the whiteboard",
   },
   pragmatic: {
     title: "Pragmatic Engineering,",

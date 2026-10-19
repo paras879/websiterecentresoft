@@ -1,4 +1,5 @@
 import { cache } from "react";
+import { applyImageUpgrades } from "@/content/image-upgrades";
 import { defaultContent, sanitizeContent, type SiteContent } from "@/content";
 import { getStore } from "./store";
 
@@ -92,7 +93,7 @@ function withRequiredServices(content: SiteContent): SiteContent {
 export const getSiteContent = cache(async (): Promise<SiteContent> => {
   try {
     const raw = await getStore().get(CONTENT_KEY);
-    if (raw) return withRequiredCareerAreas(withRequiredServices(sanitizeContent(JSON.parse(raw))));
+    if (raw) return applyImageUpgrades(withRequiredCareerAreas(withRequiredServices(sanitizeContent(JSON.parse(raw)))));
   } catch (error) {
     console.error("Could not read saved content, using the built-in copy.", error);
   }

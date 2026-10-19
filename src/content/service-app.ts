@@ -9,8 +9,8 @@ const defaults = {
   },
   hero: {
     eyebrow: "Mobile app development",
-    image: "",
-    imageAlt: "",
+    image: "/images/app-development.webp",
+    imageAlt: "Person holding a phone showing code, with monitors of code in the background",
     title: "From Idea to App Store. We Build Mobile Experiences That Matter.",
     text: "We design and develop Android and iOS applications that combine intuitive user experiences, reliable engineering and scalable technology to help businesses turn ideas into digital products.",
     primaryLabel: "Discuss Your App Idea",

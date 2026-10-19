@@ -5,7 +5,7 @@ const defaults = {
     title: "Software Development Services | Recenturesoft Infotech",
     description:
       "Custom software development, web application engineering, and enterprise digital solutions tailored to operational requirements by Recenturesoft Infotech.",
-    image: "/images/software.jpg",
+    image: "/images/software-development.webp",
   },
   hero: {
     title: "Software Built for Your Business",
@@ -13,8 +13,8 @@ const defaults = {
     primaryLabel: "Discuss Your Project",
     primaryHref: "/contact",
     secondaryLabel: "View Development Approach",
-    image: "/images/software.jpg",
-    imageAlt: "Three monitors showing code, a monitoring dashboard and test results at a developer workstation",
+    image: "/images/software-development.webp",
+    imageAlt: "Developer seen from behind at a desk with monitors of code in a colourful night office",
   },
   capabilities: {
     title: "Our Software Development",

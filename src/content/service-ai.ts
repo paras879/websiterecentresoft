@@ -5,7 +5,7 @@ const defaults = {
     title: "Enterprise AI Automation Services | Recenturesoft Infotech",
     description:
       "Explore AI workflow automation, repetitive task minimization, and process engineering solutions by Recenturesoft Infotech Pvt Ltd.",
-    image: "/images/ai-automation.jpg",
+    image: "/images/ai-automation.webp",
   },
   hero: {
     title: "Make Workflows Smarter with AI Automation",
@@ -13,8 +13,8 @@ const defaults = {
     primaryLabel: "Discuss Automation Opportunities",
     primaryHref: "/contact",
     secondaryLabel: "Explore Practical Use Cases",
-    image: "/images/ai-automation.jpg",
-    imageAlt: "Enterprise AI workflow automation control room",
+    image: "/images/ai-automation.webp",
+    imageAlt: "Laptop showing analytics dashboards beside a white robotic hand",
   },
   practical: {
     title: "What We Mean by",

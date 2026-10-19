@@ -9,8 +9,8 @@ const defaults = {
   },
   hero: {
     eyebrow: "Agentic AI",
-    image: "",
-    imageAlt: "",
+    image: "/images/agentic-ai-home.webp",
+    imageAlt: "White humanoid robot head beside the words Agentic AI and glowing digital icons",
     titleStart: "Build AI Agents That Turn",
     titleAccent: "Complex Work Into Action.",
     text: "We design and build AI agents that use your business tools, connect your systems and carry out multi-step work, with people kept in control where it matters.",

@@ -96,8 +96,8 @@ const defaults = {
     lead1:
       "Recenturesoft Infotech Pvt Ltd is a software development company based in Sector 63, Noida, offering custom software development, mobile apps, AI agents, workflow automation and SEO.",
     lead2: "Clean, maintainable code and transparent communication guide how our team works with yours.",
-    image: "/images/services-team.jpg",
-    imageAlt: "Engineering team discussing system architecture at the Noida office",
+    image: "/images/home-img.webp",
+    imageAlt: "Colleagues working at desks with large monitors in a bright open-plan office",
     points: [
       {
         title: "Custom software development",
