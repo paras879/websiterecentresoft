@@ -47,40 +47,42 @@ export function BuildShowcase({
 
   return (
     <div className={styles.wrap}>
-      <div className={styles.visual}>
+      <div className={styles.left}>
         {intro ? <div className={styles.intro}>{intro}</div> : null}
-        <div className={styles.frame}>
-          {items.map((item, index) => (
-            <Image
-              key={item.image + index}
-              src={item.image}
-              alt={item.alt}
-              aria-hidden={index === active ? undefined : true}
-              fill
-              sizes="(max-width: 1000px) 0px, 720px"
-              quality={90}
-              className={`${styles.img} ${index === active ? styles.imgActive : ""}`}
-            />
-          ))}
-          <div className={styles.caption}>
-            <span className={styles.captionCount}>
-              {active + 1} / {items.length}
-            </span>
-            <span className={styles.captionTitle}>{items[active].title}</span>
+        <div className={styles.visual}>
+          <div className={styles.frame}>
+            {items.map((item, index) => (
+              <Image
+                key={item.image + index}
+                src={item.image}
+                alt={item.alt}
+                aria-hidden={index === active ? undefined : true}
+                fill
+                sizes="(max-width: 1000px) 0px, 720px"
+                quality={90}
+                className={`${styles.img} ${index === active ? styles.imgActive : ""}`}
+              />
+            ))}
+            <div className={styles.caption}>
+              <span className={styles.captionCount}>
+                {active + 1} / {items.length}
+              </span>
+              <span className={styles.captionTitle}>{items[active].title}</span>
+            </div>
           </div>
-        </div>
-        <div className={styles.dots} role="tablist" aria-label="Services">
-          {items.map((item, index) => (
-            <button
-              key={item.title}
-              type="button"
-              role="tab"
-              aria-selected={index === active}
-              aria-label={item.title}
-              className={`${styles.dot} ${index === active ? styles.dotActive : ""}`}
-              onClick={() => goTo(index)}
-            />
-          ))}
+          <div className={styles.dots} role="tablist" aria-label="Services">
+            {items.map((item, index) => (
+              <button
+                key={item.title}
+                type="button"
+                role="tab"
+                aria-selected={index === active}
+                aria-label={item.title}
+                className={`${styles.dot} ${index === active ? styles.dotActive : ""}`}
+                onClick={() => goTo(index)}
+              />
+            ))}
+          </div>
         </div>
       </div>
 

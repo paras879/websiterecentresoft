@@ -7,6 +7,11 @@
   align-items: start;
 }
 
+/* Only the picture stays in view while the cards scroll, so it always fits a short window. */
+.left {
+  align-self: stretch;
+}
+
 .visual {
   position: sticky;
   top: 6.5rem;
