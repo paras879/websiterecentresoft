@@ -1883,3 +1883,14 @@
     font-size: 1.9rem;
   }
 }
+
+.heroBgImg {
+  object-fit: cover;
+}
+
+/* Keeps the headline readable on top of the picture, which itself stays at full strength. */
+.heroScrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(6, 15, 38, 0.82) 0%, rgba(6, 15, 38, 0.6) 45%, rgba(6, 15, 38, 0.1) 100%);
+}

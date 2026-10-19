@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { FaqSection } from "@/components/faq-section";
+import Image from "next/image";
 import Link from "next/link";
 import { getSiteContent } from "@/lib/content";
 import { pageMetadata } from "@/lib/seo";
@@ -35,6 +36,12 @@ export default async function AgenticAiPage() {
     <div className={styles.page}>
       {/* ------------------------------------------------------------ hero */}
       <section className={styles.hero} aria-labelledby="ag-hero-title">
+        {hero.image ? (
+          <>
+            <Image src={hero.image} alt={hero.imageAlt || ""} fill priority sizes="100vw" className={styles.heroBgImg} />
+            <span className={styles.heroScrim} aria-hidden="true" />
+          </>
+        ) : null}
         <span className={styles.heroGlow} aria-hidden="true" />
         <span className={styles.heroGrid} aria-hidden="true" />
         <div className={`${styles.wrap} ${styles.heroLayout}`}>

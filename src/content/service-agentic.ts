@@ -1,4 +1,4 @@
-import { defineModule, group, icon, list, longtext, select, seoFields, strings, text, url } from "./fields";
+import { defineModule, group, icon, image, list, longtext, select, seoFields, strings, text, url } from "./fields";
 
 const defaults = {
   meta: {
@@ -9,6 +9,8 @@ const defaults = {
   },
   hero: {
     eyebrow: "Agentic AI",
+    image: "",
+    imageAlt: "",
     titleStart: "Build AI Agents That Turn",
     titleAccent: "Complex Work Into Action.",
     text: "We design and build AI agents that use your business tools, connect your systems and carry out multi-step work, with people kept in control where it matters.",
@@ -218,6 +220,13 @@ export const agenticModule = defineModule({
       fields: [
         group("hero", "Top banner", [
           text("eyebrow", "Small label", { max: 40 }),
+          image("image", "Background picture", {
+            help: "Optional. A picture shown softly behind the top banner. Leave empty to keep the plain design.",
+          }),
+          text("imageAlt", "Picture description", {
+            max: 125,
+            help: "Describes the picture for screen readers. Leave empty if the picture is only decoration.",
+          }),
           text("titleStart", "Headline (first part)", { required: true, max: 80 }),
           text("titleAccent", "Headline (coloured part)", { max: 80 }),
           longtext("text", "Supporting text", { rows: 4 }),

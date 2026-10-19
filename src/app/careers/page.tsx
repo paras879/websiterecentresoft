@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { imageAlt } from "@/content/image-alts";
 import { FaqSection } from "@/components/faq-section";
 import Image from "next/image";
 import Link from "next/link";
@@ -108,7 +109,7 @@ export default async function CareersPage() {
                     {area.image ? (
                       <Image
                         src={area.image}
-                        alt={area.alt || area.title}
+                        alt={imageAlt(area.alt, area.image, area.title)}
                         fill
                         sizes="(max-width: 900px) 100vw, 700px"
                         quality={85}

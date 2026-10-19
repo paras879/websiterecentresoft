@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { imageAlt } from "@/content/image-alts";
 import Image from "next/image";
 import Link from "next/link";
 import { getSiteContent } from "@/lib/content";
@@ -20,7 +21,9 @@ export default async function SeoServicesPage() {
   const { hero, services, phases, why, faq, cta } = content.serviceSeo;
   const { contact } = info;
 
-  const serviceItems = services.items.filter((item) => item.image);
+  const serviceItems = services.items
+    .filter((item) => item.image)
+    .map((item) => ({ ...item, alt: imageAlt(item.alt, item.image, item.title) }));
   const faqItems = faq.items.filter((item) => item.q);
 
   // Chart geometry: the line climbs from bottom-left to top-right and passes through each phase node.

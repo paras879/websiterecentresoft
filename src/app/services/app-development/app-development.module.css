@@ -2843,3 +2843,22 @@
   margin-bottom: 0.75rem;
 }
 
+.heroBgImg {
+  object-fit: cover;
+}
+
+/* Keeps the headline readable on top of the picture, which itself stays at full strength. */
+.heroScrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(246, 249, 255, 0.95) 0%, rgba(246, 249, 255, 0.86) 45%, rgba(246, 249, 255, 0.2) 100%);
+}
+
+:global([data-theme="dark"]) .heroScrim {
+  background: linear-gradient(90deg, rgba(8, 14, 30, 0.9) 0%, rgba(8, 14, 30, 0.7) 45%, rgba(8, 14, 30, 0.15) 100%);
+}
+
+.hero .heroLayout {
+  position: relative;
+  z-index: 1;
+}

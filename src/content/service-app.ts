@@ -1,14 +1,16 @@
-import { faqSection, defineModule, group, icon, list, longtext, select, seoFields, strings, text, url } from "./fields";
+import { faqSection, defineModule, group, icon, image, list, longtext, select, seoFields, strings, text, url } from "./fields";
 
 const defaults = {
   meta: {
     title: "Mobile App Development Services | Recenturesoft Infotech",
     description:
       "We design and build custom iOS and Android apps with intuitive UX, scalable cloud backends, and reliable engineering from idea to App Store launch.",
-    image: "",
+    image: "/images/services-app.jpg",
   },
   hero: {
     eyebrow: "Mobile app development",
+    image: "",
+    imageAlt: "",
     title: "From Idea to App Store. We Build Mobile Experiences That Matter.",
     text: "We design and develop Android and iOS applications that combine intuitive user experiences, reliable engineering and scalable technology to help businesses turn ideas into digital products.",
     primaryLabel: "Discuss Your App Idea",
@@ -245,6 +247,13 @@ export const appModule = defineModule({
       fields: [
         group("hero", "Top banner", [
           text("eyebrow", "Small label", { max: 40 }),
+          image("image", "Background picture", {
+            help: "Optional. A picture shown softly behind the top banner. Leave empty to keep the plain design.",
+          }),
+          text("imageAlt", "Picture description", {
+            max: 125,
+            help: "Describes the picture for screen readers. Leave empty if the picture is only decoration.",
+          }),
           text("title", "Headline", { required: true, max: 120 }),
           longtext("text", "Supporting text", { rows: 4 }),
           text("primaryLabel", "Main button text"),

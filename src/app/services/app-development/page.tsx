@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { FaqSection } from "@/components/faq-section";
+import Image from "next/image";
 import Link from "next/link";
 import { getSiteContent } from "@/lib/content";
 import { pageMetadata } from "@/lib/seo";
@@ -29,6 +30,12 @@ export default async function AppDevelopmentPage() {
     <div className={styles.page}>
       {/* ---------------------------------------------------------------- hero */}
       <section className={styles.hero} aria-labelledby="app-hero-title">
+        {hero.image ? (
+          <>
+            <Image src={hero.image} alt={hero.imageAlt || ""} fill priority sizes="100vw" className={styles.heroBgImg} />
+            <span className={styles.heroScrim} aria-hidden="true" />
+          </>
+        ) : null}
         <div className={`${styles.wrap} ${styles.heroLayout}`}>
           <div className={styles.heroCopy}>
             <h1 id="app-hero-title" className={styles.heroTitle}>

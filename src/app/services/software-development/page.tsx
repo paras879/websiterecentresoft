@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { imageAlt } from "@/content/image-alts";
 import { FaqSection } from "@/components/faq-section";
 import Image from "next/image";
 import Link from "next/link";
@@ -29,7 +30,7 @@ export default async function SoftwareDevelopmentPage() {
     desc: item.desc,
     icon: (isIcon(item.icon) ? item.icon : "check") as IconName,
     image: item.image,
-    alt: item.alt,
+    alt: imageAlt(item.alt, item.image, item.title),
   }));
 
   return (
@@ -154,7 +155,7 @@ export default async function SoftwareDevelopmentPage() {
                     {item.image ? (
                       <Image
                         src={item.image}
-                        alt={item.alt || item.title}
+                        alt={imageAlt(item.alt, item.image, item.title)}
                         fill
                         loading={index === 0 ? "eager" : "lazy"}
                         sizes="(max-width: 900px) 100vw, 420px"
