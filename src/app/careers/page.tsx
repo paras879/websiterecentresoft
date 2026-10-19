@@ -108,7 +108,7 @@ export default async function CareersPage() {
                     {area.image ? (
                       <Image
                         src={area.image}
-                        alt={area.title}
+                        alt={area.alt || area.title}
                         fill
                         sizes="(max-width: 900px) 100vw, 700px"
                         quality={85}

@@ -11,6 +11,7 @@ export interface ApproachStep {
   desc: string;
   icon: IconName;
   image: string;
+  alt?: string;
 }
 
 export function ApproachExplorer({ steps }: { steps: ApproachStep[] }) {
@@ -66,7 +67,7 @@ export function ApproachExplorer({ steps }: { steps: ApproachStep[] }) {
       <div className={styles.panelVisual} aria-hidden="true">
         <Image
           src={item.image}
-          alt={item.title}
+          alt={item.alt || item.title}
           fill
           sizes="(max-width: 800px) 100vw, 400px"
           className={styles.panelImg}

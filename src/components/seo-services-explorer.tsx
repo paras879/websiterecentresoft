@@ -10,6 +10,7 @@ export interface SeoService {
   desc: string;
   includes: string[];
   image: string;
+  alt?: string;
 }
 
 export function SeoServicesExplorer({ services, linkPrefix = "Ask about" }: { services: SeoService[]; linkPrefix?: string }) {
@@ -82,7 +83,7 @@ export function SeoServicesExplorer({ services, linkPrefix = "Ask about" }: { se
         <div className={styles.photo} key={`p-${active}`}>
           <Image
             src={current.image}
-            alt={current.title}
+            alt={current.alt || current.title}
             fill
             sizes="(max-width: 900px) 100vw, 640px"
             className={styles.photoImg}

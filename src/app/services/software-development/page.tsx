@@ -29,6 +29,7 @@ export default async function SoftwareDevelopmentPage() {
     desc: item.desc,
     icon: (isIcon(item.icon) ? item.icon : "check") as IconName,
     image: item.image,
+    alt: item.alt,
   }));
 
   return (
@@ -153,7 +154,7 @@ export default async function SoftwareDevelopmentPage() {
                     {item.image ? (
                       <Image
                         src={item.image}
-                        alt={item.title}
+                        alt={item.alt || item.title}
                         fill
                         loading={index === 0 ? "eager" : "lazy"}
                         sizes="(max-width: 900px) 100vw, 420px"
