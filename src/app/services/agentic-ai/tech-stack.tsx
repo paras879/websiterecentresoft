@@ -752,7 +752,109 @@ function IsometricStackGraphic() {
 // Main TechStackSection Component
 // =====================================================================
 
-export function TechStackSection() {
+const TOOL_ICONS: Record<string, () => React.JSX.Element> = {
+  "LangGraph": LangGraphIcon,
+  "CrewAI": CrewAIIcon,
+  "AutoGen": AutoGenIcon,
+  "LlamaIndex": LlamaIndexIcon,
+  "Semantic Kernel": SemanticKernelIcon,
+  "OpenAI": OpenAIIcon,
+  "Anthropic Claude": ClaudeIcon,
+  "Google Gemini": GeminiIcon,
+  "Meta Llama": MetaLlamaIcon,
+  "Mistral": MistralIcon,
+  "Postgres pgvector": PostgresIcon,
+  "Pinecone": PineconeIcon,
+  "Qdrant": QdrantIcon,
+  "Weaviate": WeaviateIcon,
+  "Redis": RedisIcon,
+  "AWS Bedrock": AWSBedrockIcon,
+  "Azure AI Foundry": AzureFoundryIcon,
+  "LangSmith": LangSmithIcon,
+  "Arize Phoenix": ArizeIcon,
+  "OpenTelemetry": OpenTelemetryIcon,
+  "Slack": SlackIcon,
+  "Notion": NotionIcon,
+  "Google Drive": GoogleDriveIcon,
+  "GitHub": GitHubIcon,
+  "Figma": FigmaIcon,
+  "Jira": JiraIcon,
+  "HubSpot": HubSpotIcon,
+  "Salesforce": SalesforceIcon,
+  "Microsoft Teams": MSTeamsIcon,
+  "Linear": LinearIcon,
+  "Zendesk": ZendeskIcon,
+  "Discord": DiscordIcon,
+  "Stripe": StripeIcon,
+  "Zapier": ZapierIcon,
+  "Supabase": SupabaseIcon,
+  "Snowflake": SnowflakeIcon,
+};
+
+/** Brand mark for a tool, or its first letter when the tool has no bundled logo. */
+function ToolMark({ name }: { name: string }) {
+  const Icon = TOOL_ICONS[name];
+  if (Icon) return <Icon />;
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <circle cx="12" cy="12" r="10" fill="#2563eb" />
+      <text x="12" y="16" textAnchor="middle" fontSize="11" fontWeight="700" fill="#ffffff">
+        {name.trim().charAt(0).toUpperCase()}
+      </text>
+    </svg>
+  );
+}
+
+export interface StackContent {
+  title: string;
+  lead: string;
+  badges: { title: string; desc: string }[];
+  groups: { title: string; desc: string; items: string[] }[];
+  integrationsTitle: string;
+  integrations: string[];
+  moreLabel: string;
+  moreIntegrations: string[];
+}
+
+function tailSplit(title: string) {
+  const words = title.trim().split(/\s+/);
+  const accentCount = words.length > 3 ? 2 : 1;
+  return { plain: words.slice(0, words.length - accentCount).join(" "), accent: words.slice(-accentCount).join(" ") };
+}
+
+function ToolTiles({ items }: { items: string[] }) {
+  return (
+    <div className={styles.toolsGrid}>
+      {items.map((name) => (
+        <div key={name} className={styles.toolTile} title={name}>
+          <div className={styles.toolIconWrap}>
+            <ToolMark name={name} />
+          </div>
+          <span className={styles.toolName}>{name}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function IntegrationTiles({ items }: { items: string[] }) {
+  return (
+    <>
+      {items.map((name) => (
+        <div key={name} className={styles.integrationTile} title={name} aria-label={name}>
+          <ToolMark name={name} />
+          <span className={styles.tooltip}>{name}</span>
+        </div>
+      ))}
+    </>
+  );
+}
+
+export function TechStackSection({ data }: { data: StackContent }) {
+  const groups = data.groups ?? [];
+  const badges = data.badges ?? [];
+  const head = tailSplit(data.title);
+  const intro = tailSplit(data.integrationsTitle);
   const [showMore, setShowMore] = useState(false);
 
   return (
@@ -764,11 +866,9 @@ export function TechStackSection() {
         <div className={styles.headerRow}>
           <div className={styles.headerCopy}>
             <h2 id="tech-stack-title" className={styles.mainTitle}>
-              Tools we <span className={styles.titleBlue}>work with</span>
+              {head.plain} <span className={styles.titleBlue}>{head.accent}</span>
             </h2>
-            <p className={styles.leadText}>
-              We use well-known agent frameworks, models and vector stores, so you are not tied to a proprietary stack. This gives you flexibility, better performance and long-term maintainability.
-            </p>
+            <p className={styles.leadText}>{data.lead}</p>
           </div>
 
           {/* Top-Right 3 Value Badges */}
@@ -783,8 +883,8 @@ export function TechStackSection() {
                 </svg>
               </div>
               <div className={styles.featureText}>
-                <span className={styles.featureTitle}>Flexible</span>
-                <span className={styles.featureDesc}>Choose the best tools for your use case.</span>
+                <span className={styles.featureTitle}>{badges[0]?.title}</span>
+                <span className={styles.featureDesc}>{badges[0]?.desc}</span>
               </div>
             </div>
 
@@ -797,8 +897,8 @@ export function TechStackSection() {
                 </svg>
               </div>
               <div className={styles.featureText}>
-                <span className={styles.featureTitle}>Open &amp; Secure</span>
-                <span className={styles.featureDesc}>Built on trusted, industry-standard tools.</span>
+                <span className={styles.featureTitle}>{badges[1]?.title}</span>
+                <span className={styles.featureDesc}>{badges[1]?.desc}</span>
               </div>
             </div>
 
@@ -810,8 +910,8 @@ export function TechStackSection() {
                 </svg>
               </div>
               <div className={styles.featureText}>
-                <span className={styles.featureTitle}>Future Ready</span>
-                <span className={styles.featureDesc}>Easily adopt new models and integrations.</span>
+                <span className={styles.featureTitle}>{badges[2]?.title}</span>
+                <span className={styles.featureDesc}>{badges[2]?.desc}</span>
               </div>
             </div>
           </div>
@@ -829,36 +929,15 @@ export function TechStackSection() {
                 <div className={styles.cardHeader}>
                   <div className={styles.cardNumBadge}>01</div>
                   <div className={styles.cardHeaderText}>
-                    <h3 className={styles.cardTitle}>Orchestration</h3>
-                    <p className={styles.cardDesc}>Control flow, state and coordination for multi-agent systems.</p>
+                    <h3 className={styles.cardTitle}>{groups[0]?.title}</h3>
+                    <p className={styles.cardDesc}>{groups[0]?.desc}</p>
                   </div>
                   <div className={styles.cardActionBtn} aria-hidden="true">
                     <ArrowRightIcon />
                   </div>
                 </div>
 
-                <div className={styles.toolsGrid}>
-                  <div className={styles.toolTile} title="LangGraph">
-                    <div className={styles.toolIconWrap}><LangGraphIcon /></div>
-                    <span className={styles.toolName}>Lang<wbr />Graph</span>
-                  </div>
-                  <div className={styles.toolTile} title="CrewAI">
-                    <div className={styles.toolIconWrap}><CrewAIIcon /></div>
-                    <span className={styles.toolName}>CrewAI</span>
-                  </div>
-                  <div className={styles.toolTile} title="AutoGen">
-                    <div className={styles.toolIconWrap}><AutoGenIcon /></div>
-                    <span className={styles.toolName}>AutoGen</span>
-                  </div>
-                  <div className={styles.toolTile} title="LlamaIndex">
-                    <div className={styles.toolIconWrap}><LlamaIndexIcon /></div>
-                    <span className={styles.toolName}>Llama<wbr />Index</span>
-                  </div>
-                  <div className={styles.toolTile} title="Semantic Kernel">
-                    <div className={styles.toolIconWrap}><SemanticKernelIcon /></div>
-                    <span className={styles.toolName}>Semantic Kernel</span>
-                  </div>
-                </div>
+                <ToolTiles items={groups[0]?.items ?? []} />
               </div>
 
               {/* Card 03: Memory and vectors */}
@@ -866,36 +945,15 @@ export function TechStackSection() {
                 <div className={styles.cardHeader}>
                   <div className={styles.cardNumBadge}>03</div>
                   <div className={styles.cardHeaderText}>
-                    <h3 className={styles.cardTitle}>Memory and vectors</h3>
-                    <p className={styles.cardDesc}>Retrieval and long-term memory for context-aware agents.</p>
+                    <h3 className={styles.cardTitle}>{groups[2]?.title}</h3>
+                    <p className={styles.cardDesc}>{groups[2]?.desc}</p>
                   </div>
                   <div className={styles.cardActionBtn} aria-hidden="true">
                     <ArrowRightIcon />
                   </div>
                 </div>
 
-                <div className={styles.toolsGrid}>
-                  <div className={styles.toolTile} title="Postgres pgvector">
-                    <div className={styles.toolIconWrap}><PostgresIcon /></div>
-                    <span className={styles.toolName}>Postgres pgvector</span>
-                  </div>
-                  <div className={styles.toolTile} title="Pinecone">
-                    <div className={styles.toolIconWrap}><PineconeIcon /></div>
-                    <span className={styles.toolName}>Pinecone</span>
-                  </div>
-                  <div className={styles.toolTile} title="Qdrant">
-                    <div className={styles.toolIconWrap}><QdrantIcon /></div>
-                    <span className={styles.toolName}>Qdrant</span>
-                  </div>
-                  <div className={styles.toolTile} title="Weaviate">
-                    <div className={styles.toolIconWrap}><WeaviateIcon /></div>
-                    <span className={styles.toolName}>Weaviate</span>
-                  </div>
-                  <div className={styles.toolTile} title="Redis">
-                    <div className={styles.toolIconWrap}><RedisIcon /></div>
-                    <span className={styles.toolName}>Redis</span>
-                  </div>
-                </div>
+                <ToolTiles items={groups[2]?.items ?? []} />
               </div>
             </div>
 
@@ -911,36 +969,15 @@ export function TechStackSection() {
                 <div className={styles.cardHeader}>
                   <div className={styles.cardNumBadge}>02</div>
                   <div className={styles.cardHeaderText}>
-                    <h3 className={styles.cardTitle}>Models</h3>
-                    <p className={styles.cardDesc}>Leading hosted and open models for diverse use cases.</p>
+                    <h3 className={styles.cardTitle}>{groups[1]?.title}</h3>
+                    <p className={styles.cardDesc}>{groups[1]?.desc}</p>
                   </div>
                   <div className={styles.cardActionBtn} aria-hidden="true">
                     <ArrowRightIcon />
                   </div>
                 </div>
 
-                <div className={styles.toolsGrid}>
-                  <div className={styles.toolTile} title="OpenAI">
-                    <div className={styles.toolIconWrap}><OpenAIIcon /></div>
-                    <span className={styles.toolName}>OpenAI</span>
-                  </div>
-                  <div className={styles.toolTile} title="Anthropic Claude">
-                    <div className={styles.toolIconWrap}><ClaudeIcon /></div>
-                    <span className={styles.toolName}>Anthropic Claude</span>
-                  </div>
-                  <div className={styles.toolTile} title="Google Gemini">
-                    <div className={styles.toolIconWrap}><GeminiIcon /></div>
-                    <span className={styles.toolName}>Google Gemini</span>
-                  </div>
-                  <div className={styles.toolTile} title="Meta Llama">
-                    <div className={styles.toolIconWrap}><MetaLlamaIcon /></div>
-                    <span className={styles.toolName}>Meta Llama</span>
-                  </div>
-                  <div className={styles.toolTile} title="Mistral">
-                    <div className={styles.toolIconWrap}><MistralIcon /></div>
-                    <span className={styles.toolName}>Mistral</span>
-                  </div>
-                </div>
+                <ToolTiles items={groups[1]?.items ?? []} />
               </div>
 
               {/* Card 04: Cloud and monitoring */}
@@ -948,36 +985,15 @@ export function TechStackSection() {
                 <div className={styles.cardHeader}>
                   <div className={styles.cardNumBadge}>04</div>
                   <div className={styles.cardHeaderText}>
-                    <h3 className={styles.cardTitle}>Cloud and monitoring</h3>
-                    <p className={styles.cardDesc}>Hosting, observability and evaluation for reliable operations.</p>
+                    <h3 className={styles.cardTitle}>{groups[3]?.title}</h3>
+                    <p className={styles.cardDesc}>{groups[3]?.desc}</p>
                   </div>
                   <div className={styles.cardActionBtn} aria-hidden="true">
                     <ArrowRightIcon />
                   </div>
                 </div>
 
-                <div className={styles.toolsGrid}>
-                  <div className={styles.toolTile} title="AWS Bedrock">
-                    <div className={styles.toolIconWrap}><AWSBedrockIcon /></div>
-                    <span className={styles.toolName}>AWS Bedrock</span>
-                  </div>
-                  <div className={styles.toolTile} title="Azure AI Foundry">
-                    <div className={styles.toolIconWrap}><AzureFoundryIcon /></div>
-                    <span className={styles.toolName}>Azure AI Foundry</span>
-                  </div>
-                  <div className={styles.toolTile} title="LangSmith">
-                    <div className={styles.toolIconWrap}><LangSmithIcon /></div>
-                    <span className={styles.toolName}>Lang<wbr />Smith</span>
-                  </div>
-                  <div className={styles.toolTile} title="Arize Phoenix">
-                    <div className={styles.toolIconWrap}><ArizeIcon /></div>
-                    <span className={styles.toolName}>Arize Phoenix</span>
-                  </div>
-                  <div className={styles.toolTile} title="OpenTelemetry">
-                    <div className={styles.toolIconWrap}><OpenTelemetryIcon /></div>
-                    <span className={styles.toolName}>Open<wbr />Telemetry</span>
-                  </div>
-                </div>
+                <ToolTiles items={groups[3]?.items ?? []} />
               </div>
             </div>
           </div>
@@ -987,43 +1003,12 @@ export function TechStackSection() {
             <div className={styles.integrationsTopRow}>
               <div className={styles.integrationsCopy}>
                 <h3 className={styles.integrationsTitle}>
-                  Connect with your <span className={styles.integrationsHighlight}>existing tools</span>
+                  {intro.plain} <span className={styles.integrationsHighlight}>{intro.accent}</span>
                 </h3>
               </div>
 
               <div className={styles.integrationsRow}>
-                <div className={styles.integrationTile} title="Slack" aria-label="Slack">
-                  <SlackIcon />
-                  <span className={styles.tooltip}>Slack</span>
-                </div>
-                <div className={styles.integrationTile} title="Notion" aria-label="Notion">
-                  <NotionIcon />
-                  <span className={styles.tooltip}>Notion</span>
-                </div>
-                <div className={styles.integrationTile} title="Google Drive" aria-label="Google Drive">
-                  <GoogleDriveIcon />
-                  <span className={styles.tooltip}>Google Drive</span>
-                </div>
-                <div className={styles.integrationTile} title="GitHub" aria-label="GitHub">
-                  <GitHubIcon />
-                  <span className={styles.tooltip}>GitHub</span>
-                </div>
-                <div className={styles.integrationTile} title="Figma" aria-label="Figma">
-                  <FigmaIcon />
-                  <span className={styles.tooltip}>Figma</span>
-                </div>
-                <div className={styles.integrationTile} title="Jira" aria-label="Jira">
-                  <JiraIcon />
-                  <span className={styles.tooltip}>Jira</span>
-                </div>
-                <div className={styles.integrationTile} title="HubSpot" aria-label="HubSpot">
-                  <HubSpotIcon />
-                  <span className={styles.tooltip}>HubSpot</span>
-                </div>
-                <div className={styles.integrationTile} title="Salesforce" aria-label="Salesforce">
-                  <SalesforceIcon />
-                  <span className={styles.tooltip}>Salesforce</span>
-                </div>
+                <IntegrationTiles items={data.integrations ?? []} />
 
                 <button
                   type="button"
@@ -1048,41 +1033,10 @@ export function TechStackSection() {
             {showMore ? (
               <div className={styles.expandedIntegrations}>
                 <div className={styles.expandedLabel}>
-                  <span>More enterprise &amp; workflow connectors</span>
+                  <span>{data.moreLabel}</span>
                 </div>
                 <div className={styles.integrationsRow}>
-                  <div className={styles.integrationTile} title="Microsoft Teams" aria-label="Microsoft Teams">
-                    <MSTeamsIcon />
-                    <span className={styles.tooltip}>Microsoft Teams</span>
-                  </div>
-                  <div className={styles.integrationTile} title="Linear" aria-label="Linear">
-                    <LinearIcon />
-                    <span className={styles.tooltip}>Linear</span>
-                  </div>
-                  <div className={styles.integrationTile} title="Zendesk" aria-label="Zendesk">
-                    <ZendeskIcon />
-                    <span className={styles.tooltip}>Zendesk</span>
-                  </div>
-                  <div className={styles.integrationTile} title="Discord" aria-label="Discord">
-                    <DiscordIcon />
-                    <span className={styles.tooltip}>Discord</span>
-                  </div>
-                  <div className={styles.integrationTile} title="Stripe" aria-label="Stripe">
-                    <StripeIcon />
-                    <span className={styles.tooltip}>Stripe</span>
-                  </div>
-                  <div className={styles.integrationTile} title="Zapier" aria-label="Zapier">
-                    <ZapierIcon />
-                    <span className={styles.tooltip}>Zapier</span>
-                  </div>
-                  <div className={styles.integrationTile} title="Supabase" aria-label="Supabase">
-                    <SupabaseIcon />
-                    <span className={styles.tooltip}>Supabase</span>
-                  </div>
-                  <div className={styles.integrationTile} title="Snowflake" aria-label="Snowflake">
-                    <SnowflakeIcon />
-                    <span className={styles.tooltip}>Snowflake</span>
-                  </div>
+                  <IntegrationTiles items={data.moreIntegrations ?? []} />
                 </div>
               </div>
             ) : null}

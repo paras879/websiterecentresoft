@@ -5,7 +5,7 @@ const defaults = {
     title: "Agentic AI Development Services | Recenturesoft Infotech",
     description:
       "We design and develop intelligent AI agents that connect systems, automate multi-step workflows, and keep humans in control where it matters.",
-    image: "",
+    image: "/images/services-agentic.jpg",
   },
   hero: {
     eyebrow: "Agentic AI",
@@ -115,8 +115,15 @@ const defaults = {
     ],
   },
   safety: {
+    eyebrow: "Security & governance",
     title: "Built with trust, safety and control",
     lead: "Every agent works inside clear limits, with access you control and a record of everything it does.",
+    points: [
+      "Strict guardrails: Action limits and approval checkpoints enforced in real time.",
+      "Data privacy: Personal and confidential details are masked before they reach the model.",
+      "Full traceability: Every tool call and decision is logged so it can be reviewed later.",
+    ],
+    badges: ["Your data stays yours", "Human oversight where it matters", "Responsible by design"],
     items: [
       { title: "Human checkpoints", desc: "Set the limits for money, bulk changes or sensitive actions. Above them, a person signs off first.", icon: "people" },
       { title: "Scoped access", desc: "Agents get time-limited, role-based access, only to the systems a task needs.", icon: "shield" },
@@ -127,12 +134,21 @@ const defaults = {
   stack: {
     title: "Tools we work with",
     lead: "We use well-known agent frameworks, models and vector stores, so you are not tied to a proprietary stack. This gives you flexibility, better performance and long-term maintainability.",
+    badges: [
+      { title: "Flexible", desc: "Choose the best tools for your use case." },
+      { title: "Open & Secure", desc: "Built on trusted, industry-standard tools." },
+      { title: "Future Ready", desc: "Easily adopt new models and integrations." },
+    ],
     groups: [
       { title: "Orchestration", desc: "Control flow, state and coordination for multi-agent systems.", items: ["LangGraph", "CrewAI", "AutoGen", "LlamaIndex", "Semantic Kernel"] },
       { title: "Models", desc: "Leading hosted and open models for diverse use cases.", items: ["OpenAI", "Anthropic Claude", "Google Gemini", "Meta Llama", "Mistral"] },
       { title: "Memory and vectors", desc: "Retrieval and long-term memory for context-aware agents.", items: ["Postgres pgvector", "Pinecone", "Qdrant", "Weaviate", "Redis"] },
       { title: "Cloud and monitoring", desc: "Hosting, observability and evaluation for reliable operations.", items: ["AWS Bedrock", "Azure AI Foundry", "LangSmith", "Arize Phoenix", "OpenTelemetry"] },
     ],
+    integrationsTitle: "Connect with your existing tools",
+    integrations: ["Slack", "Notion", "Google Drive", "GitHub", "Figma", "Jira", "HubSpot", "Salesforce"],
+    moreLabel: "More enterprise & workflow connectors",
+    moreIntegrations: ["Microsoft Teams", "Linear", "Zendesk", "Discord", "Stripe", "Zapier", "Supabase", "Snowflake"],
   },
   delivery: {
     title: "How we deliver",
@@ -311,14 +327,21 @@ export const agenticModule = defineModule({
       title: "Safety and control",
       fields: [
         group("safety", "Safety and control", [
-          text("title", "Heading"),
-          longtext("lead", "Lead-in", { rows: 2 }),
+          text("eyebrow", "Small label", { max: 40 }),
+          text("title", "Heading", { help: "The first two words are plain, the rest is shown in the highlight colour." }),
+          longtext("lead", "Lead-in", { rows: 3 }),
+          strings("points", "Bullet points", {
+            addLabel: "Add point",
+            max: 4,
+            help: "Write each as Label: sentence. The part before the colon is shown in bold.",
+          }),
+          strings("badges", "Small badges", { addLabel: "Add badge", max: 3 }),
           list(
             "items",
             "Points",
             "point",
             [text("title", "Title", { required: true }), longtext("desc", "Description", { rows: 2 }), icon("icon")],
-            { titleKey: "title", max: 6 },
+            { titleKey: "title", max: 4 },
           ),
         ]),
       ],
@@ -328,8 +351,15 @@ export const agenticModule = defineModule({
       title: "Tools we work with",
       fields: [
         group("stack", "Tools we work with", [
-          text("title", "Heading"),
-          longtext("lead", "Lead-in", { rows: 2 }),
+          text("title", "Heading", { help: "The last two words are shown in the highlight colour." }),
+          longtext("lead", "Lead-in", { rows: 3 }),
+          list(
+            "badges",
+            "Value badges",
+            "badge",
+            [text("title", "Title", { required: true }), text("desc", "Short description")],
+            { titleKey: "title", max: 3 },
+          ),
           list(
             "groups",
             "Groups",
@@ -339,8 +369,12 @@ export const agenticModule = defineModule({
               text("desc", "Short description"),
               strings("items", "Tools", { addLabel: "Add tool", max: 12 }),
             ],
-            { titleKey: "title", max: 6 },
+            { titleKey: "title", max: 4 },
           ),
+          text("integrationsTitle", "Integrations heading", { help: "The last two words are shown in the highlight colour." }),
+          strings("integrations", "Integrations (first row)", { addLabel: "Add tool", max: 10 }),
+          text("moreLabel", "'And many more' panel heading"),
+          strings("moreIntegrations", "More integrations (opens on click)", { addLabel: "Add tool", max: 12 }),
         ]),
       ],
     },

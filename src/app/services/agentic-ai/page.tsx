@@ -228,8 +228,8 @@ export default async function AgenticAiPage() {
 
       {/* ------------------------------------------------------------ safety & stack overlap container */}
       <div className={styles.deckWrapper}>
-        <SecuritySection />
-        <TechStackSection />
+        <SecuritySection data={safety} />
+        <TechStackSection data={stack} />
       </div>
 
       {/* ------------------------------------------------------------ delivery */}

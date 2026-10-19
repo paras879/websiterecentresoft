@@ -238,7 +238,27 @@ function SecurityHologramGraphic() {
 // Main SecuritySection Component
 // =====================================================================
 
-export function SecuritySection() {
+export interface SafetyContent {
+  eyebrow: string;
+  title: string;
+  lead: string;
+  points: string[];
+  badges: string[];
+  items: { title: string; desc: string; icon: string }[];
+}
+
+const BADGE_ICONS = [LockIcon, UsersIcon, DatabaseIcon];
+
+function splitHead(title: string, plainWords: number) {
+  const words = title.trim().split(/\s+/);
+  return { plain: words.slice(0, plainWords).join(" "), accent: words.slice(plainWords).join(" ") };
+}
+
+export function SecuritySection({ data }: { data: SafetyContent }) {
+  const head = splitHead(data.title, 2);
+  const items = data.items ?? [];
+  const points = data.points ?? [];
+  const badges = data.badges ?? [];
   return (
     <section className={styles.section} id="safety" aria-labelledby="security-governance-title">
       <div className={styles.wrap}>
@@ -251,57 +271,50 @@ export function SecuritySection() {
               <div className={styles.headerCopy}>
                 <div className={styles.eyebrowBadge}>
                   <ShieldOutlineIcon className={styles.eyebrowIcon} />
-                  <span>SECURITY &amp; GOVERNANCE</span>
+                  <span>{data.eyebrow}</span>
                 </div>
 
                 <h2 id="security-governance-title" className={styles.mainTitle}>
-                  Built with <span className={styles.titleCyan}>trust,</span>
-                  <br />
-                  <span className={styles.titleCyan}>safety and control</span>
+                  {head.plain}
+                  {head.accent ? (
+                    <>
+                      {" "}
+                      <span className={styles.titleCyan}>{head.accent}</span>
+                    </>
+                  ) : null}
                 </h2>
 
-                <p className={styles.leadText}>
-                  Every agent operates inside strict, deterministic boundaries—ensuring autonomous workflows align with enterprise policies, regulatory standards, and budget limits.
-                </p>
+                <p className={styles.leadText}>{data.lead}</p>
 
                 <ul className={styles.govList}>
-                  <li className={styles.govItem}>
-                    <span className={styles.govDot} aria-hidden="true" />
-                    <span><strong>Strict guardrails:</strong> Action limits and approval checkpoints enforced in real time.</span>
-                  </li>
-                  <li className={styles.govItem}>
-                    <span className={styles.govDot} aria-hidden="true" />
-                    <span><strong>Data privacy:</strong> PII and confidential details automatically masked before model inference.</span>
-                  </li>
-                  <li className={styles.govItem}>
-                    <span className={styles.govDot} aria-hidden="true" />
-                    <span><strong>Full traceability:</strong> Cryptographic, tamper-proof logs of every tool call and decision.</span>
-                  </li>
+                  {points.map((point) => {
+                    const cut = point.indexOf(":");
+                    return (
+                      <li key={point} className={styles.govItem}>
+                        <span className={styles.govDot} aria-hidden="true" />
+                        <span>
+                          {cut > 0 ? <strong>{point.slice(0, cut + 1)}</strong> : null}
+                          {cut > 0 ? point.slice(cut + 1) : point}
+                        </span>
+                      </li>
+                    );
+                  })}
                 </ul>
               </div>
 
               {/* 3 Horizontal Trust Badges in a single row */}
               <div className={styles.leftBadges}>
-                <div className={styles.leftBadgeItem}>
-                  <div className={styles.leftBadgeIconBox}>
-                    <LockIcon />
-                  </div>
-                  <span className={styles.leftBadgeText}>Your data stays yours</span>
-                </div>
-
-                <div className={styles.leftBadgeItem}>
-                  <div className={styles.leftBadgeIconBox}>
-                    <UsersIcon />
-                  </div>
-                  <span className={styles.leftBadgeText}>Human oversight where it matters</span>
-                </div>
-
-                <div className={styles.leftBadgeItem}>
-                  <div className={styles.leftBadgeIconBox}>
-                    <DatabaseIcon />
-                  </div>
-                  <span className={styles.leftBadgeText}>Responsible by design</span>
-                </div>
+                {badges.map((label, i) => {
+                  const BadgeIcon = BADGE_ICONS[i % BADGE_ICONS.length];
+                  return (
+                    <div key={label} className={styles.leftBadgeItem}>
+                      <div className={styles.leftBadgeIconBox}>
+                        <BadgeIcon />
+                      </div>
+                      <span className={styles.leftBadgeText}>{label}</span>
+                    </div>
+                  );
+                })}
               </div>
             </div>
 
@@ -319,10 +332,8 @@ export function SecuritySection() {
                     01 <span className={styles.cardNumLine} aria-hidden="true" />
                   </div>
                   <div className={styles.cardTextGroup}>
-                    <h3 className={styles.cardTitle}>Human checkpoints</h3>
-                    <p className={styles.cardDesc}>
-                      Set the limits for money, bulk changes or sensitive actions. Above them, a person signs off first.
-                    </p>
+                    <h3 className={styles.cardTitle}>{items[0]?.title}</h3>
+                    <p className={styles.cardDesc}>{items[0]?.desc}</p>
                   </div>
                   <div className={styles.cardActionBtn} aria-hidden="true">
                     <ArrowRightIcon />
@@ -365,10 +376,8 @@ export function SecuritySection() {
                     02 <span className={styles.cardNumLine} aria-hidden="true" />
                   </div>
                   <div className={styles.cardTextGroup}>
-                    <h3 className={styles.cardTitle}>Scoped access</h3>
-                    <p className={styles.cardDesc}>
-                      Agents get time-limited, role-based access, only to the systems a task needs.
-                    </p>
+                    <h3 className={styles.cardTitle}>{items[1]?.title}</h3>
+                    <p className={styles.cardDesc}>{items[1]?.desc}</p>
                   </div>
                   <div className={styles.cardActionBtn} aria-hidden="true">
                     <ArrowRightIcon />
@@ -401,10 +410,8 @@ export function SecuritySection() {
                     03 <span className={styles.cardNumLine} aria-hidden="true" />
                   </div>
                   <div className={styles.cardTextGroup}>
-                    <h3 className={styles.cardTitle}>Sensitive data protection</h3>
-                    <p className={styles.cardDesc}>
-                      Personal and confidential details are masked before they reach the model.
-                    </p>
+                    <h3 className={styles.cardTitle}>{items[2]?.title}</h3>
+                    <p className={styles.cardDesc}>{items[2]?.desc}</p>
                   </div>
                   <div className={styles.cardActionBtn} aria-hidden="true">
                     <ArrowRightIcon />
@@ -448,10 +455,8 @@ export function SecuritySection() {
                     04 <span className={styles.cardNumLine} aria-hidden="true" />
                   </div>
                   <div className={styles.cardTextGroup}>
-                    <h3 className={styles.cardTitle}>Complete audit trail</h3>
-                    <p className={styles.cardDesc}>
-                      Every plan, tool call and result is logged so it can be reviewed later.
-                    </p>
+                    <h3 className={styles.cardTitle}>{items[3]?.title}</h3>
+                    <p className={styles.cardDesc}>{items[3]?.desc}</p>
                   </div>
                   <div className={styles.cardActionBtn} aria-hidden="true">
                     <ArrowRightIcon />
