@@ -38,7 +38,7 @@ export default async function AgenticAiPage() {
       <section className={styles.hero} aria-labelledby="ag-hero-title">
         {hero.image ? (
           <>
-            <Image src={hero.image} alt={hero.imageAlt || ""} fill priority sizes="100vw" className={styles.heroBgImg} />
+            <Image src={hero.image} alt={hero.imageAlt || ""} fill priority fetchPriority="high" sizes="100vw" className={styles.heroBgImg} />
             <span className={styles.heroScrim} aria-hidden="true" />
           </>
         ) : null}

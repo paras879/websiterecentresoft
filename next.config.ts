@@ -6,6 +6,10 @@ const nextConfig: NextConfig = {
     removeConsole: process.env.NODE_ENV === "production" ? { exclude: ["error"] } : false,
   },
   poweredByHeader: false,
+  experimental: {
+    // Styles ship inside the page, so the browser does not wait for six stylesheet downloads before painting.
+    inlineCss: true,
+  },
   images: {
     formats: ["image/avif", "image/webp"],
     minimumCacheTTL: 60 * 60 * 24 * 30,

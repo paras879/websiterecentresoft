@@ -85,7 +85,7 @@ export function PrivacyPolicyView({ company, email, phone, phoneRaw, address, ma
           src={content.hero.image || "/images/hero.jpg"}
           alt={content.hero.imageAlt || ""}
           fill
-          priority
+          priority fetchPriority="high"
           sizes="100vw"
           quality={85}
           className={styles.topImg}

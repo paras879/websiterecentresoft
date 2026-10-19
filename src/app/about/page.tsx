@@ -51,7 +51,7 @@ export default async function AboutPage() {
                 alt={hero.imageAlt}
                 width={1200}
                 height={896}
-                priority
+                priority fetchPriority="high"
                 sizes="(max-width: 1024px) 100vw, 560px"
                 className={styles.photo}
               />

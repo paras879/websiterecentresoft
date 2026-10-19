@@ -93,7 +93,7 @@ export default async function HomePage() {
                 alt={hero.imageAlt}
                 width={1200}
                 height={896}
-                priority
+                priority fetchPriority="high"
                 sizes="(max-width: 1024px) 100vw, 600px"
                 className={styles.photo}
               />

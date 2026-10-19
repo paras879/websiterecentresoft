@@ -57,7 +57,7 @@ export default async function AIAutomationPage() {
                   src={hero.image}
                   alt={hero.imageAlt}
                   fill
-                  priority
+                  priority fetchPriority="high"
                   sizes="(max-width: 1023px) 100vw, 600px"
                   className={styles.photo}
                 />

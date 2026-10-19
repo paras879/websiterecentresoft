@@ -88,7 +88,7 @@ export default async function CustomDevelopmentPage() {
                 alt={hero.imageAlt}
                 width={1376}
                 height={768}
-                priority
+                priority fetchPriority="high"
                 sizes="(max-width: 1024px) 100vw, 560px"
                 className={styles.photo}
               />

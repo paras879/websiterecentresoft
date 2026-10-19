@@ -69,7 +69,7 @@ export default async function CareersPage() {
                 alt={hero.imageAlt}
                 width={1200}
                 height={800}
-                priority
+                priority fetchPriority="high"
                 sizes="(max-width: 1024px) 100vw, 560px"
                 className={styles.photo}
               />
