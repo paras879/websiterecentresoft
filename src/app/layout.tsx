@@ -14,9 +14,10 @@ import { SmoothScroll } from "@/components/smooth-scroll";
 import "./globals.css";
 import "./theme-hcl.css";
 
+// Inter is a variable font, so one file covers every weight. Listing the weights would add a separate
+// set of font rules to every page for each of them.
 const inter = Inter({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
   display: "swap",
   variable: "--font-inter",
 });
