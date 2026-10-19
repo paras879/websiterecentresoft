@@ -375,3 +375,16 @@ a.contactItem:hover .contactIcon {
     align-items: flex-start;
   }
 }
+
+@media (max-width: 1024px) {
+  .footer {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 1000px;
+  }
+}
+
+@media (max-width: 700px) {
+  .footer {
+    contain-intrinsic-size: auto 1370px;
+  }
+}

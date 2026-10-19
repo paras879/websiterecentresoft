@@ -1882,3 +1882,28 @@
     border-radius: 20px;
   }
 }
+
+/* Phones only: skip the layout work for sections that are far below the first screen until they scroll near. */
+@media (max-width: 1024px) {
+  .services,
+  .about,
+  .tintBand,
+  .approach,
+  .contactBand {
+    content-visibility: auto;
+  }
+
+  /* Close to the real heights, so the page does not jump while sections fill in. */
+  .services { contain-intrinsic-size: auto 2220px; }
+  .about { contain-intrinsic-size: auto 1320px; }
+  .tintBand { contain-intrinsic-size: auto 880px; }
+  .approach { contain-intrinsic-size: auto 880px; }
+  .contactBand { contain-intrinsic-size: auto 320px; }
+}
+
+@media (max-width: 700px) {
+  .services { contain-intrinsic-size: auto 3880px; }
+  .tintBand { contain-intrinsic-size: auto 1540px; }
+  .approach { contain-intrinsic-size: auto 1630px; }
+  .contactBand { contain-intrinsic-size: auto 440px; }
+}

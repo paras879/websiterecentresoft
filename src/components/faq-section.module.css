@@ -34,3 +34,16 @@
   flex-direction: column;
   gap: 0.75rem;
 }
+
+@media (max-width: 1024px) {
+  .wrap {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 610px;
+  }
+}
+
+@media (max-width: 700px) {
+  .wrap {
+    contain-intrinsic-size: auto 700px;
+  }
+}
