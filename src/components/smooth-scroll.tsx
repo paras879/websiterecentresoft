@@ -11,8 +11,13 @@ export function SmoothScroll() {
   const isAdmin = pathname?.startsWith("/admin") ?? false;
 
   useEffect(() => {
-    // Respect user's motion preferences
-    if (isAdmin || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    // Respect user's motion preferences. Phones and tablets keep their own native scrolling, so the
+    // smooth-scroll library (and its animation loop) is not even downloaded there.
+    if (
+      isAdmin ||
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
+      window.matchMedia("(pointer: coarse)").matches
+    ) {
       return;
     }
 
