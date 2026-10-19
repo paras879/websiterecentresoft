@@ -23,7 +23,7 @@ export function pageMetadata(meta: PageMeta, path: string): Metadata {
       description: meta.description,
       url,
       ...(meta.image
-        ? { images: [{ url: meta.image, width: 1200, height: 630, alt: meta.title }] }
+        ? { images: [{ url: meta.image, width: 1200, height: 630, alt: meta.imageAlt || meta.title }] }
         : {}),
     },
     twitter: {
@@ -31,7 +31,7 @@ export function pageMetadata(meta: PageMeta, path: string): Metadata {
       site: "@recenture_soft",
       title: meta.title,
       description: meta.description,
-      images: meta.image ? [meta.image] : [],
+      images: meta.image ? [{ url: meta.image, alt: meta.imageAlt || meta.title }] : [],
     },
     icons: {
       icon: [

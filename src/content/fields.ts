@@ -166,12 +166,17 @@ export const seoFields = (): Field =>
     image("image", "Sharing image", {
       help: "Shown when the page is shared on WhatsApp, LinkedIn or Facebook. Recommended 1200 × 630.",
     }),
+    text("imageAlt", "Sharing image description", {
+      max: 125,
+      help: "Describes the sharing image for people who cannot see it. Leave empty to use the page title.",
+    }),
   ]);
 
 export interface PageMeta {
   title: string;
   description: string;
   image: string;
+  imageAlt?: string;
 }
 
 /** Admin section for a page's frequently asked questions. The same questions feed the FAQ structured data for Google. */
