@@ -1,5 +1,7 @@
+import { after } from "next/server";
 import { clientIp, sameOrigin, withinRateLimit } from "@/lib/admin-auth";
 import { failure, json } from "@/lib/api";
+import { notifyInquiry } from "@/lib/mail";
 import { addInquiry, maxResumeBytes, putBlob } from "@/lib/records";
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -63,7 +65,7 @@ export async function POST(req: Request) {
       resume = { id: blobId, name: file.name.replace(/[^\w.\- ]+/g, "_").slice(0, 80), size: buffer.length };
     }
 
-    await addInquiry({
+    const saved = await addInquiry({
       kind: "career",
       name,
       email,
@@ -74,6 +76,7 @@ export async function POST(req: Request) {
       link: field(form.get("link"), 500),
       resume,
     });
+    after(() => notifyInquiry(saved));
     return json({ success: true });
   } catch (error) {
     return failure(error, "Could not submit your application.");

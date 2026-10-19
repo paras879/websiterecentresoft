@@ -1,5 +1,7 @@
+import { after } from "next/server";
 import { clientIp, sameOrigin, withinRateLimit } from "@/lib/admin-auth";
 import { failure, json } from "@/lib/api";
+import { notifyInquiry } from "@/lib/mail";
 import { addInquiry } from "@/lib/records";
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -27,7 +29,7 @@ export async function POST(req: Request) {
       return json({ success: false, error: "Too many messages. Please try again later." }, 429);
     }
 
-    await addInquiry({
+    const saved = await addInquiry({
       kind: "contact",
       name,
       email,
@@ -38,6 +40,7 @@ export async function POST(req: Request) {
       link: "",
       resume: null,
     });
+    after(() => notifyInquiry(saved));
     return json({ success: true });
   } catch (error) {
     return failure(error, "Could not send your message.");

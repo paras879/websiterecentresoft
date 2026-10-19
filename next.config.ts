@@ -15,7 +15,14 @@ const nextConfig: NextConfig = {
     // Pictures and logos in /public are not fingerprinted, so they are cached for a day and
     // refreshed quietly in the background for a week. Repeat visits then load them instantly.
     const cache = [{ key: "Cache-Control", value: "public, max-age=86400, stale-while-revalidate=604800" }];
+    const security = [
+      { key: "X-Content-Type-Options", value: "nosniff" },
+      { key: "X-Frame-Options", value: "SAMEORIGIN" },
+      { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+      { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=(), payment=()" },
+    ];
     return [
+      { source: "/:path*", headers: security },
       { source: "/images/:path*", headers: cache },
       { source: "/tech/:path*", headers: cache },
     ];

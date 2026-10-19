@@ -57,7 +57,7 @@ export function BuildShowcase({
               alt={item.alt}
               aria-hidden={index === active ? undefined : true}
               fill
-              sizes="(max-width: 1000px) 0px, 1100px"
+              sizes="(max-width: 1000px) 0px, 720px"
               quality={90}
               className={`${styles.img} ${index === active ? styles.imgActive : ""}`}
             />
