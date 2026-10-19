@@ -12,7 +12,8 @@ import path from "node:path";
 export interface Store {
   readonly kind: "redis" | "file" | "none";
   readonly writable: boolean;
-  get(key: string): Promise<string | null>;
+  /** `cached` lets the public pages reuse the value for a minute (and be built ahead of time) instead of asking the database on every visit. */
+  get(key: string, opts?: { cached?: boolean }): Promise<string | null>;
   set(key: string, value: string): Promise<void>;
   del(key: string): Promise<void>;
   hget(key: string, field: string): Promise<string | null>;
@@ -38,17 +39,19 @@ export class StoreUnavailableError extends Error {
 function redisStore(url: string, token: string): Store {
   const base = url.replace(/\/$/, "");
 
-  async function cmd<T = unknown>(...args: (string | number)[]): Promise<T> {
+  async function request<T>(args: (string | number)[], init: { cache: "no-store" } | { next: { revalidate: number; tags: string[] } }): Promise<T> {
     const res = await fetch(base, {
       method: "POST",
       headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
       body: JSON.stringify(args),
-      cache: "no-store",
+      ...init,
     });
     const json = (await res.json().catch(() => ({}))) as { result?: T; error?: string };
     if (!res.ok || json.error) throw new Error(json.error || `Redis request failed (${res.status})`);
     return json.result as T;
   }
+
+  const cmd = <T = unknown>(...args: (string | number)[]): Promise<T> => request<T>(args, { cache: "no-store" });
 
   async function pipeline(commands: (string | number)[][]): Promise<unknown[]> {
     const res = await fetch(`${base}/pipeline`, {
@@ -67,7 +70,10 @@ function redisStore(url: string, token: string): Store {
   return {
     kind: "redis",
     writable: true,
-    get: (key) => cmd<string | null>("GET", key),
+    get: (key, opts) =>
+      opts?.cached
+        ? request<string | null>(["GET", key], { next: { revalidate: 60, tags: ["site-content"] } })
+        : cmd<string | null>("GET", key),
     set: async (key, value) => {
       await cmd("SET", key, value);
     },

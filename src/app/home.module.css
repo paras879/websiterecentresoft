@@ -194,11 +194,8 @@
 }
 
 .photoFrame {
-  padding: 8px;
-  background: var(--hp-card);
-  border: 1px solid var(--hp-line);
-  border-radius: 12px;
-  box-shadow: var(--hp-shadow);
+  border-radius: 14px;
+  box-shadow: 0 30px 60px -24px rgba(11, 31, 68, 0.45), 0 10px 24px -12px rgba(11, 31, 68, 0.25);
   max-width: 520px;
   margin-left: auto;
   width: 100%;
@@ -211,7 +208,7 @@
   aspect-ratio: 16 / 11;
   max-height: 370px;
   object-fit: cover;
-  border-radius: 8px;
+  border-radius: 14px;
 }
 
 /* Sections */

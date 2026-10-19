@@ -1,4 +1,5 @@
 import { cache } from "react";
+import { revalidateTag } from "next/cache";
 import { applyImageUpgrades } from "@/content/image-upgrades";
 import { defaultContent, sanitizeContent, type SiteContent } from "@/content";
 import { getStore } from "./store";
@@ -92,7 +93,7 @@ function withRequiredServices(content: SiteContent): SiteContent {
 
 export const getSiteContent = cache(async (): Promise<SiteContent> => {
   try {
-    const raw = await getStore().get(CONTENT_KEY);
+    const raw = await getStore().get(CONTENT_KEY, { cached: true });
     if (raw) return applyImageUpgrades(withRequiredCareerAreas(withRequiredServices(sanitizeContent(JSON.parse(raw)))));
   } catch (error) {
     console.error("Could not read saved content, using the built-in copy.", error);
@@ -108,6 +109,10 @@ export async function saveSiteContent(raw: unknown, note = ""): Promise<SiteCont
   const entry = { id: `v-${Date.now().toString(36)}`, at, note: note.slice(0, 120), doc: clean };
   await store.set(CONTENT_KEY, JSON.stringify(clean));
   await store.lpush(HISTORY_KEY, JSON.stringify(entry), HISTORY_KEEP);
+  try {
+    // Public pages keep the saved content for a minute; this makes a new save show up right away.
+    revalidateTag("site-content", { expire: 0 });
+  } catch {}
   return clean;
 }
 
