@@ -12,7 +12,7 @@ export async function GET(_req: Request, { params }: { params: Promise<{ id: str
     headers: {
       "Content-Type": media.type,
       // File names are unique per upload, so the image can be cached for a long time.
-      "Cache-Control": "public, max-age=31536000, immutable",
+      "Cache-Control": "public, max-age=31536000, s-maxage=31536000, immutable",
       "X-Content-Type-Options": "nosniff",
       "Content-Security-Policy": "default-src 'none'; style-src 'unsafe-inline'",
     },
