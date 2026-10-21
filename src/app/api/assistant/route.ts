@@ -4,7 +4,7 @@ import { json } from "@/lib/api";
 import { getSiteContent } from "@/lib/content";
 import { buildSiteInfo } from "@/lib/site";
 import { getStore } from "@/lib/store";
-import { aiConfig, askModel, UpstreamBusyError, type ChatMessage } from "@/lib/assistant-ai";
+import { aiConfig, askModel, UpstreamBusyError, UpstreamError, type ChatMessage } from "@/lib/assistant-ai";
 import { buildKnowledge, type Knowledge } from "@/lib/assistant-kb";
 import { basicAnswer, quickAnswer } from "@/lib/assistant-fallback";
 
@@ -88,7 +88,7 @@ export async function POST(req: Request) {
   }
 
   const cfg = aiConfig();
-  if (!cfg) return json({ success: true, reply: basicAnswer(question, kb), source: "basic" });
+  if (!cfg) return json({ success: true, reply: basicAnswer(question, kb), source: "basic", why: "no_key" });
 
   // The same first question is answered once for everyone, then forgotten after three minutes.
   const standalone = messages.length === 1;
@@ -110,11 +110,11 @@ export async function POST(req: Request) {
   } catch {
     /* if counting fails, carry on */
   }
-  if (!withinBudget) return json({ success: true, reply: basicAnswer(question, kb), source: "basic" });
+  if (!withinBudget) return json({ success: true, reply: basicAnswer(question, kb), source: "basic", why: "minute_limit" });
 
   try {
     const reply = await askModel(cfg, SYSTEM(kb.text), messages);
-    if (!reply) return json({ success: true, reply: basicAnswer(question, kb), source: "basic" });
+    if (!reply) return json({ success: true, reply: basicAnswer(question, kb), source: "basic", why: "empty_reply" });
     if (standalone) {
       try {
         await getStore().setex(cacheKey, reply, WINDOW_SECONDS);
@@ -125,6 +125,7 @@ export async function POST(req: Request) {
     return json({ success: true, reply, source: "ai" });
   } catch (error) {
     if (!(error instanceof UpstreamBusyError)) console.error("Assistant request failed.", error);
-    return json({ success: true, reply: basicAnswer(question, kb), source: "basic" });
+    const why = error instanceof UpstreamBusyError ? "ai_busy" : error instanceof UpstreamError ? `ai_error_${error.status}` : "ai_unreachable";
+    return json({ success: true, reply: basicAnswer(question, kb), source: "basic", why });
   }
 }

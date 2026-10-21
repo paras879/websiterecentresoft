@@ -16,7 +16,7 @@ interface AiConfig {
 const DEFAULT_MODEL: Record<Provider, string> = {
   anthropic: "claude-haiku-5-5",
   openai: "gpt-4o-mini",
-  gemini: "gemini-2.0-flash",
+  gemini: "gemini-2.5-flash",
   groq: "llama-3.1-8b-instant",
   openrouter: "openai/gpt-4o-mini",
 };
@@ -28,6 +28,16 @@ const DEFAULT_BASE: Record<Provider, string> = {
   groq: "https://api.groq.com/openai/v1",
   openrouter: "https://openrouter.ai/api/v1",
 };
+
+export class UpstreamError extends Error {
+  constructor(
+    public status: number,
+    detail: string,
+  ) {
+    super(`AI request failed (${status}): ${detail}`);
+    this.name = "UpstreamError";
+  }
+}
 
 export class UpstreamBusyError extends Error {
   constructor(message = "The AI service is busy.") {
@@ -83,13 +93,36 @@ async function post(url: string, headers: Record<string, string>, body: unknown)
       throw new UpstreamBusyError();
     }
     const detail = await res.text().catch(() => "");
-    throw new Error(`AI request failed (${res.status}): ${detail.slice(0, 200)}`);
+    throw new UpstreamError(res.status, detail.slice(0, 200));
   }
   throw new UpstreamBusyError();
 }
 
+/** Other models of the same service to try when the chosen name is not found. */
+const ALTERNATES: Partial<Record<Provider, string[]>> = {
+  gemini: ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-flash-latest"],
+};
+
 /** Sends the conversation and returns the assistant's reply text. */
 export async function askModel(cfg: AiConfig, system: string, messages: ChatMessage[]): Promise<string> {
+  const tried = new Set<string>();
+  const names = [cfg.model, ...(ALTERNATES[cfg.provider] ?? [])];
+  let lastError: unknown;
+  for (const model of names) {
+    if (tried.has(model)) continue;
+    tried.add(model);
+    try {
+      return await askOnce({ ...cfg, model }, system, messages);
+    } catch (error) {
+      lastError = error;
+      // Only a missing or unsupported model name is worth trying again with another model.
+      if (!(error instanceof UpstreamError) || (error.status !== 404 && error.status !== 400)) throw error;
+    }
+  }
+  throw lastError;
+}
+
+async function askOnce(cfg: AiConfig, system: string, messages: ChatMessage[]): Promise<string> {
   if (cfg.provider === "anthropic") {
     const data = (await post(
       `${cfg.baseUrl}/v1/messages`,

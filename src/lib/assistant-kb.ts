@@ -8,6 +8,9 @@ export interface Knowledge {
   text: string;
   facts: {
     name: string;
+    legalName: string;
+    tagline: string;
+    about: string;
     email: string;
     hrEmail: string;
     phone: string;
@@ -71,6 +74,9 @@ export function buildKnowledge(content: SiteContent, info: SiteInfo): Knowledge 
   const socials = site.socials.map((s) => ({ label: s.name, href: s.href }));
   const facts = {
     name: info.name,
+    legalName: info.legalName,
+    tagline: info.tagline,
+    about: info.description,
     email: info.contact.email,
     hrEmail: info.contact.hrEmail,
     phone: info.contact.phone,
