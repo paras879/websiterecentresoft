@@ -1,0 +1,283 @@
+import crypto from "node:crypto";
+import { promisify } from "node:util";
+import { BUILTIN_ROLES, cleanPermissions, type Permissions, type Role, SUPER_ROLE_ID } from "./cms-access";
+import { getStore } from "./store";
+
+const scrypt = promisify(crypto.scrypt) as (pw: string, salt: Buffer, len: number) => Promise<Buffer>;
+
+const USERS = "cms:users";
+const ROLES = "cms:roles";
+
+export const MIN_PASSWORD = 10;
+
+/* ------------------------------------------------------------------ users */
+
+interface StoredUser {
+  id: string;
+  email: string;
+  name: string;
+  roleId: string;
+  salt: string;
+  hash: string;
+  disabled: boolean;
+  createdAt: string;
+  updatedAt: string;
+  lastLogin?: string;
+}
+
+export interface PublicUser {
+  id: string;
+  email: string;
+  name: string;
+  roleId: string;
+  disabled: boolean;
+  createdAt: string;
+  updatedAt: string;
+  lastLogin?: string;
+}
+
+export const publicUser = (u: StoredUser): PublicUser => ({
+  id: u.id,
+  email: u.email,
+  name: u.name,
+  roleId: u.roleId,
+  disabled: u.disabled,
+  createdAt: u.createdAt,
+  updatedAt: u.updatedAt,
+  lastLogin: u.lastLogin,
+});
+
+const newId = (prefix: string) => `${prefix}-${Date.now().toString(36)}${crypto.randomBytes(3).toString("hex")}`;
+
+async function hashPassword(password: string): Promise<{ salt: string; hash: string }> {
+  const salt = crypto.randomBytes(16);
+  const hash = await scrypt(password, salt, 64);
+  return { salt: salt.toString("hex"), hash: hash.toString("hex") };
+}
+
+export async function checkPassword(user: StoredUser, password: string): Promise<boolean> {
+  const derived = await scrypt(password, Buffer.from(user.salt, "hex"), 64);
+  const expected = Buffer.from(user.hash, "hex");
+  return derived.length === expected.length && crypto.timingSafeEqual(derived, expected);
+}
+
+/** First characters of the password hash. A session carries it, so changing the password signs the person out. */
+export const fingerprint = (u: StoredUser) => u.hash.slice(0, 16);
+
+async function readAll(): Promise<StoredUser[]> {
+  const all = await getStore().hgetall(USERS);
+  return Object.values(all)
+    .map((raw) => {
+      try {
+        return JSON.parse(raw) as StoredUser;
+      } catch {
+        return null;
+      }
+    })
+    .filter((u): u is StoredUser => u !== null)
+    .sort((a, b) => (a.createdAt < b.createdAt ? -1 : 1));
+}
+
+export async function listUsers(): Promise<PublicUser[]> {
+  return (await readAll()).map(publicUser);
+}
+
+export async function getStoredUser(id: string): Promise<StoredUser | null> {
+  const raw = await getStore().hget(USERS, id);
+  if (!raw) return null;
+  try {
+    return JSON.parse(raw) as StoredUser;
+  } catch {
+    return null;
+  }
+}
+
+export async function findUserByEmail(email: string): Promise<StoredUser | null> {
+  const wanted = email.trim().toLowerCase();
+  return (await readAll()).find((u) => u.email.toLowerCase() === wanted) ?? null;
+}
+
+const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+export class CmsError extends Error {
+  constructor(
+    message: string,
+    public status = 400,
+  ) {
+    super(message);
+    this.name = "CmsError";
+  }
+}
+
+function checkFields(email: string, name: string) {
+  if (!EMAIL.test(email) || email.length > 200) throw new CmsError("Enter a valid email address.");
+  if (!name.trim() || name.trim().length > 80) throw new CmsError("Enter a name up to 80 characters.");
+}
+
+function checkPasswordRules(password: string) {
+  if (password.length < MIN_PASSWORD) throw new CmsError(`Use at least ${MIN_PASSWORD} characters for the password.`);
+  if (password.length > 200) throw new CmsError("That password is too long.");
+}
+
+export async function createUser(input: {
+  email: string;
+  name: string;
+  roleId: string;
+  password: string;
+  disabled?: boolean;
+}): Promise<PublicUser> {
+  const email = input.email.trim();
+  checkFields(email, input.name);
+  checkPasswordRules(input.password);
+  if (!(await getRole(input.roleId))) throw new CmsError("Choose a role for this user.");
+  if (await findUserByEmail(email)) throw new CmsError("A user with this email already exists.", 409);
+
+  const now = new Date().toISOString();
+  const user: StoredUser = {
+    id: newId("u"),
+    email,
+    name: input.name.trim(),
+    roleId: input.roleId,
+    ...(await hashPassword(input.password)),
+    disabled: Boolean(input.disabled),
+    createdAt: now,
+    updatedAt: now,
+  };
+  await getStore().hset(USERS, user.id, JSON.stringify(user));
+  return publicUser(user);
+}
+
+export async function updateUser(
+  id: string,
+  patch: { email?: string; name?: string; roleId?: string; disabled?: boolean; password?: string },
+): Promise<PublicUser> {
+  const user = await getStoredUser(id);
+  if (!user) throw new CmsError("That user no longer exists.", 404);
+
+  if (patch.email !== undefined || patch.name !== undefined) {
+    const email = (patch.email ?? user.email).trim();
+    const name = patch.name ?? user.name;
+    checkFields(email, name);
+    const other = await findUserByEmail(email);
+    if (other && other.id !== id) throw new CmsError("A user with this email already exists.", 409);
+    user.email = email;
+    user.name = name.trim();
+  }
+  if (patch.roleId !== undefined) {
+    if (!(await getRole(patch.roleId))) throw new CmsError("Choose a role for this user.");
+    user.roleId = patch.roleId;
+  }
+  if (patch.disabled !== undefined) user.disabled = patch.disabled;
+  if (patch.password) {
+    checkPasswordRules(patch.password);
+    Object.assign(user, await hashPassword(patch.password));
+  }
+  user.updatedAt = new Date().toISOString();
+  await getStore().hset(USERS, id, JSON.stringify(user));
+  return publicUser(user);
+}
+
+export async function touchLogin(id: string): Promise<void> {
+  const user = await getStoredUser(id);
+  if (!user) return;
+  user.lastLogin = new Date().toISOString();
+  await getStore().hset(USERS, id, JSON.stringify(user));
+}
+
+export async function deleteUser(id: string): Promise<boolean> {
+  const user = await getStoredUser(id);
+  if (!user) return false;
+  await getStore().hdel(USERS, id);
+  return true;
+}
+
+/* ------------------------------------------------------------------ roles */
+
+async function storedRoles(): Promise<Role[]> {
+  const all = await getStore().hgetall(ROLES);
+  return Object.values(all)
+    .map((raw): Role | null => {
+      try {
+        const r = JSON.parse(raw) as Role;
+        return { ...r, permissions: cleanPermissions(r.permissions), builtin: false };
+      } catch {
+        return null;
+      }
+    })
+    .filter((r): r is Role => r !== null)
+    .sort((a, b) => a.name.localeCompare(b.name));
+}
+
+export async function listRoles(): Promise<Role[]> {
+  return [...BUILTIN_ROLES, ...(await storedRoles())];
+}
+
+export async function getRole(id: string): Promise<Role | null> {
+  const builtin = BUILTIN_ROLES.find((r) => r.id === id);
+  if (builtin) return builtin;
+  const raw = await getStore().hget(ROLES, id);
+  if (!raw) return null;
+  try {
+    const r = JSON.parse(raw) as Role;
+    return { ...r, permissions: cleanPermissions(r.permissions), builtin: false };
+  } catch {
+    return null;
+  }
+}
+
+function checkRoleFields(name: string, description: string) {
+  if (!name.trim() || name.trim().length > 60) throw new CmsError("Enter a role name up to 60 characters.");
+  if (description.length > 240) throw new CmsError("Keep the description to 240 characters or fewer.");
+}
+
+export async function createRole(input: { name: string; description: string; permissions: unknown }): Promise<Role> {
+  checkRoleFields(input.name, input.description);
+  const taken = (await listRoles()).some((r) => r.name.toLowerCase() === input.name.trim().toLowerCase());
+  if (taken) throw new CmsError("A role with this name already exists.", 409);
+  const role: Role = {
+    id: newId("r"),
+    name: input.name.trim(),
+    description: input.description.trim(),
+    permissions: cleanPermissions(input.permissions),
+  };
+  await getStore().hset(ROLES, role.id, JSON.stringify(role));
+  return role;
+}
+
+export async function updateRole(
+  id: string,
+  patch: { name?: string; description?: string; permissions?: unknown },
+): Promise<Role> {
+  if (BUILTIN_ROLES.some((r) => r.id === id)) throw new CmsError("Built-in roles cannot be changed. Create a new role instead.", 403);
+  const role = await getRole(id);
+  if (!role) throw new CmsError("That role no longer exists.", 404);
+  const name = patch.name ?? role.name;
+  const description = patch.description ?? role.description;
+  checkRoleFields(name, description);
+  const taken = (await listRoles()).some((r) => r.id !== id && r.name.toLowerCase() === name.trim().toLowerCase());
+  if (taken) throw new CmsError("A role with this name already exists.", 409);
+  const next: Role = {
+    id,
+    name: name.trim(),
+    description: description.trim(),
+    permissions: patch.permissions !== undefined ? cleanPermissions(patch.permissions) : role.permissions,
+  };
+  await getStore().hset(ROLES, id, JSON.stringify(next));
+  return next;
+}
+
+export async function deleteRole(id: string): Promise<void> {
+  if (BUILTIN_ROLES.some((r) => r.id === id)) throw new CmsError("Built-in roles cannot be deleted.", 403);
+  const using = (await readAll()).filter((u) => u.roleId === id).length;
+  if (using > 0) throw new CmsError(`${using} user${using === 1 ? " uses" : "s use"} this role. Move them to another role first.`, 409);
+  await getStore().hdel(ROLES, id);
+}
+
+export async function usersPerRole(): Promise<Record<string, number>> {
+  const counts: Record<string, number> = {};
+  for (const u of await readAll()) counts[u.roleId] = (counts[u.roleId] ?? 0) + 1;
+  return counts;
+}
+
+export type { Permissions, Role };
+export { SUPER_ROLE_ID };

@@ -13,7 +13,7 @@ const CREDENTIALS_KEY = "admin:credentials";
 
 const globalForAuth = globalThis as unknown as { __rsDevSecret?: string };
 
-function sessionSecret(): string | null {
+export function sessionSecret(): string | null {
   const fromEnv = process.env.ADMIN_SESSION_SECRET;
   if (fromEnv && fromEnv.length >= 32) return fromEnv;
   if (process.env.NODE_ENV === "production") return null;

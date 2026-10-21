@@ -1,0 +1,223 @@
+/**
+ * Pages built in the admin panel. Shared by the server (to check and store them), the editor and the public page.
+ * A page is a list of blocks; the order of the blocks is the order on the page, so moving a block moves its picture.
+ */
+
+export type BlockType = "hero" | "text" | "image" | "imageText" | "features" | "gallery" | "faq" | "cta";
+
+export interface HeroBlock {
+  id: string;
+  type: "hero";
+  eyebrow: string;
+  title: string;
+  text: string;
+  buttonLabel: string;
+  buttonHref: string;
+  image: string;
+  imageAlt: string;
+  /** Where the picture goes: beside the text on the right or left, behind it, or not at all. */
+  imageSide: "right" | "left" | "background" | "none";
+}
+
+export interface TextBlock {
+  id: string;
+  type: "text";
+  heading: string;
+  body: string;
+  align: "left" | "center";
+}
+
+export interface ImageBlock {
+  id: string;
+  type: "image";
+  image: string;
+  alt: string;
+  caption: string;
+  size: "small" | "medium" | "full";
+}
+
+export interface ImageTextBlock {
+  id: string;
+  type: "imageText";
+  image: string;
+  alt: string;
+  heading: string;
+  body: string;
+  buttonLabel: string;
+  buttonHref: string;
+  side: "left" | "right";
+}
+
+export interface FeatureItem {
+  id: string;
+  title: string;
+  desc: string;
+  image: string;
+  imageAlt: string;
+}
+
+export interface FeaturesBlock {
+  id: string;
+  type: "features";
+  heading: string;
+  lead: string;
+  columns: 2 | 3 | 4;
+  items: FeatureItem[];
+}
+
+export interface GalleryImage {
+  id: string;
+  image: string;
+  alt: string;
+}
+
+export interface GalleryBlock {
+  id: string;
+  type: "gallery";
+  heading: string;
+  columns: 2 | 3 | 4;
+  images: GalleryImage[];
+}
+
+export interface FaqItem {
+  id: string;
+  q: string;
+  a: string;
+}
+
+export interface FaqBlock {
+  id: string;
+  type: "faq";
+  heading: string;
+  items: FaqItem[];
+}
+
+export interface CtaBlock {
+  id: string;
+  type: "cta";
+  heading: string;
+  text: string;
+  buttonLabel: string;
+  buttonHref: string;
+}
+
+export type Block = HeroBlock | TextBlock | ImageBlock | ImageTextBlock | FeaturesBlock | GalleryBlock | FaqBlock | CtaBlock;
+
+export type PageStatus = "published" | "draft";
+/** Where a link to the page also appears. */
+export type PageMenu = "none" | "services" | "footer";
+
+export interface CustomPage {
+  id: string;
+  /** Last part of the address, for example "web-design". */
+  slug: string;
+  /** "" puts the page at /slug, "services" puts it at /services/slug. */
+  prefix: "" | "services";
+  title: string;
+  status: PageStatus;
+  menu: PageMenu;
+  seo: { title: string; description: string; image: string; imageAlt: string };
+  blocks: Block[];
+  createdAt: string;
+  updatedAt: string;
+  updatedBy: string;
+}
+
+export const pagePath = (p: Pick<CustomPage, "slug" | "prefix">) => (p.prefix ? `/${p.prefix}/${p.slug}` : `/${p.slug}`);
+
+export const BLOCK_INFO: Record<BlockType, { label: string; hint: string }> = {
+  hero: { label: "Hero banner", hint: "Big heading, text, a button and a picture." },
+  text: { label: "Text", hint: "A heading and paragraphs or a bullet list." },
+  image: { label: "Picture", hint: "One picture with a caption." },
+  imageText: { label: "Picture and text", hint: "A picture beside text. The picture can sit on either side." },
+  features: { label: "Cards", hint: "A grid of cards, each with a title, text and an optional picture." },
+  gallery: { label: "Gallery", hint: "A set of pictures in a grid." },
+  faq: { label: "Questions and answers", hint: "Open-and-close questions. Google can show them in search results." },
+  cta: { label: "Call to action", hint: "A closing banner with a button." },
+};
+
+export const BLOCK_ORDER: BlockType[] = ["hero", "text", "imageText", "image", "features", "gallery", "faq", "cta"];
+
+let counter = 0;
+export const newBlockId = () => `b-${Date.now().toString(36)}${(counter++).toString(36)}${Math.random().toString(36).slice(2, 5)}`;
+
+/** A new, empty block of the given type. */
+export function blankBlock(type: BlockType, fixedId?: string): Block {
+  const id = fixedId ?? newBlockId();
+  switch (type) {
+    case "hero":
+      return { id, type, eyebrow: "", title: "Page heading", text: "A short line that explains this page.", buttonLabel: "Contact us", buttonHref: "/contact", image: "", imageAlt: "", imageSide: "right" };
+    case "text":
+      return { id, type, heading: "Heading", body: "Write your text here.\n\nStart a line with - to make a list.", align: "left" };
+    case "image":
+      return { id, type, image: "", alt: "", caption: "", size: "medium" };
+    case "imageText":
+      return { id, type, image: "", alt: "", heading: "Heading", body: "Write your text here.", buttonLabel: "", buttonHref: "", side: "left" };
+    case "features":
+      return {
+        id,
+        type,
+        heading: "What we offer",
+        lead: "",
+        columns: 3,
+        items: [
+          { id: newBlockId(), title: "First point", desc: "Describe it in a sentence or two.", image: "", imageAlt: "" },
+          { id: newBlockId(), title: "Second point", desc: "Describe it in a sentence or two.", image: "", imageAlt: "" },
+          { id: newBlockId(), title: "Third point", desc: "Describe it in a sentence or two.", image: "", imageAlt: "" },
+        ],
+      };
+    case "gallery":
+      return { id, type, heading: "", columns: 3, images: [] };
+    case "faq":
+      return { id, type, heading: "Frequently asked questions", items: [{ id: newBlockId(), q: "A question?", a: "Its answer." }] };
+    case "cta":
+      return { id, type, heading: "Ready to start?", text: "Tell us about your project.", buttonLabel: "Contact us", buttonHref: "/contact" };
+  }
+}
+
+export function blankPage(): CustomPage {
+  // Nothing here changes from one call to the next, so the first screen matches on the server and in the browser.
+  return {
+    id: "",
+    slug: "",
+    prefix: "",
+    title: "",
+    status: "draft",
+    menu: "none",
+    seo: { title: "", description: "", image: "", imageAlt: "" },
+    blocks: [blankBlock("hero", "b-start")],
+    createdAt: "",
+    updatedAt: "",
+    updatedBy: "",
+  };
+}
+
+/* ------------------------------------------------------------------ addresses that must stay free */
+
+const RESERVED_ROOT = new Set([
+  "admin", "admin1", "api", "about", "contact", "careers", "services", "privacy-policy", "terms-and-conditions",
+  "sitemap", "robots", "robots-txt", "sitemap-xml", "favicon", "icon", "apple-icon", "images", "tech", "icons",
+  "_next", "new", "login", "logout",
+]);
+
+const RESERVED_SERVICES = new Set([
+  "software-development", "ai-automation", "agentic-ai", "app-development", "custom-development", "seo",
+]);
+
+export function slugProblem(prefix: string, slug: string): string | null {
+  if (!slug) return "Enter the last part of the address, for example web-design.";
+  if (slug.length > 60) return "Keep the address to 60 characters or fewer.";
+  if (!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(slug)) return "Use only small letters, numbers and single hyphens, for example web-design.";
+  if (prefix === "" && RESERVED_ROOT.has(slug)) return `/${slug} is already used by the website. Choose another address.`;
+  if (prefix === "services" && RESERVED_SERVICES.has(slug)) return `/services/${slug} is already a service page. Choose another address.`;
+  return null;
+}
+
+export const slugify = (text: string) =>
+  text
+    .toLowerCase()
+    .replace(/&/g, " and ")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 60);
+

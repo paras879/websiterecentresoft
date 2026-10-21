@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import { getSiteContent } from "@/lib/content";
 import { buildSiteInfo } from "@/lib/site";
 import { buildPageSchemas, buildSiteGraph } from "@/lib/schema";
+import { publishedPages, withCustomPageLinks } from "@/lib/custom-pages";
 import { PageSchema } from "@/components/page-schema";
 import { SiteShell } from "@/components/site-shell";
 import { SiteHeader } from "@/components/site-header";
@@ -84,8 +85,9 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const content = await getSiteContent();
-  const { site } = content;
-  const info = buildSiteInfo(site);
+  const info = buildSiteInfo(content.site);
+  // Pages made in the admin panel can ask to be in the menu; the links are added here and never saved with the content.
+  const site = withCustomPageLinks(content.site, await publishedPages());
 
   const structuredData = buildSiteGraph(content, info);
   const pageSchemas = buildPageSchemas(content);

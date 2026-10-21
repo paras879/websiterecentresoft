@@ -45,3 +45,28 @@ A missing field is caught by `sanitizeModule`: keys that no section describes ke
 ## Adding pictures that ship with the site
 
 Put files in `public/images` (or `public/tech` for logos), then run `node scripts/list-images.mjs` so they show in the picker. Pictures uploaded from the admin panel are stored in the database and need no deploy.
+
+## The /admin1 panel (users and access control)
+
+`/admin1` is a second panel with a Payload CMS style look. It edits the same website content as `/admin`, and adds:
+
+- **Users**: create people with their own email and password, switch an account off, delete it.
+- **Roles and access control**: a role is a set of permissions. Every page, plus Messages, Media, Versions, Users and Roles, has actions (Read, Create, Update, Delete, Restore) that a role can allow or not. Built-in roles: Super admin, Editor, Viewer. You can make your own.
+- Pages a person may not read are not even sent to their browser. The server checks every save, so hiding a button is never the only protection.
+- Nobody can hand out more access than they hold, and nobody can edit a user whose role has more access than their own.
+
+Signing in: the administrator from the environment (`ADMIN_USERNAME` and `ADMIN_PASSWORD`, the same as `/admin`) is a built-in Super admin with the username as the "email". Use it to create the first users. Users are stored in the same database as the content (Upstash Redis on Vercel).
+
+Each page saves on its own and is merged into the newest saved copy, so two people editing different pages do not overwrite each other. Saves are listed under Versions with the name of the person who made them.
+
+
+## Custom pages (new pages made from the admin)
+
+Both `/admin` (Pages > Custom pages) and `/admin1` (Pages collection) can create new pages without code.
+
+- A page is a stack of blocks: Hero, Text, Picture, Picture and text, Cards, Gallery, Questions and answers, Banner with button.
+- Pictures come from the media library or the website pictures. Blocks can be moved by drag handle, up/down arrows, or the "Position" box.
+- Address: `/something`, or `/services/something`. Names already used by the site (and the built-in services) are reserved.
+- Status: Draft pages are only visible in the preview (`/admin1/preview/<id>`). Published pages go live at once and are added to the sitemap.
+- Menu: a page can be added to the Services menu or the footer. These links are added when the page is drawn and are not saved into the site content.
+- Pages are stored in the `cms:pages` key. Who may create, edit or delete them is set per role (Roles > Pages).

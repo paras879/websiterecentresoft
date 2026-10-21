@@ -9,7 +9,7 @@ const TYPES: Record<string, string> = {
 
 /** Downloads the resume attached to an application. Only signed-in admins can reach it. */
 export async function GET(req: Request) {
-  const denied = await guardAdmin(req);
+  const denied = await guardAdmin(req, { perm: ["inbox", "read"] });
   if (denied) return denied;
 
   try {

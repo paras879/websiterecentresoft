@@ -1,8 +1,18 @@
 import type { MetadataRoute } from "next";
+import { publishedPages } from "@/lib/custom-pages";
+import { pagePath } from "@/lib/custom-pages-types";
+import { SITE_URL } from "@/lib/seo";
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = "https://websiterecentresoft.vercel.app";
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const baseUrl = SITE_URL;
   const lastModified = new Date();
+
+  const custom = (await publishedPages()).map((p) => ({
+    url: `${baseUrl}${pagePath(p)}`,
+    lastModified: new Date(p.updatedAt),
+    changeFrequency: "monthly" as const,
+    priority: 0.7,
+  }));
 
   return [
     {
@@ -83,5 +93,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.5,
     },
+    ...custom,
   ];
 }

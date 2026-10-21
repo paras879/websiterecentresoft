@@ -12,6 +12,12 @@ import { HistoryView } from "./history-view";
 import { InboxView, type Inquiry } from "./inbox-view";
 import { api, pathKey, setIn, validateAll, type Path } from "./lib";
 import { MediaView } from "./media-view";
+import { AccessContext } from "../../admin1/_components/access-context";
+import { NavContext, type NavRoute, type NavValue } from "../../admin1/_components/nav-context";
+import { PageEdit, PagesList } from "../../admin1/_components/pages-view";
+import { RoleEdit, RolesList } from "../../admin1/_components/roles-view";
+import { UserEdit, UsersList } from "../../admin1/_components/users-view";
+import { BUILTIN_ROLES } from "@/lib/cms-access";
 import { OverviewView } from "./overview-view";
 import { Button, ConfirmDialog, cx, ToastProvider, UiIcon, useToast, type UiIconName } from "./ui";
 
@@ -23,12 +29,24 @@ type View =
   | { name: "inbox"; id?: string }
   | { name: "images" }
   | { name: "history" }
-  | { name: "account" };
+  | { name: "account" }
+  | { name: "users" }
+  | { name: "user"; id: string }
+  | { name: "roles" }
+  | { name: "role"; id: string }
+  | { name: "pages" }
+  | { name: "page"; id: string };
 
 function parseHash(hash: string): View {
   const [, name, a, b] = hash.replace(/^#/, "").split("/");
   if (name === "edit" && modules.some((m) => m.id === a)) return { name: "edit", module: a, section: b };
   if (name === "inbox") return { name: "inbox", id: a };
+  if (name === "users") return { name: "users" };
+  if (name === "user" && a) return { name: "user", id: a };
+  if (name === "roles") return { name: "roles" };
+  if (name === "role" && a) return { name: "role", id: a };
+  if (name === "pages") return { name: "pages" };
+  if (name === "page" && a) return { name: "page", id: a };
   if (name === "images" || name === "history" || name === "account") return { name };
   return { name: "overview" };
 }
@@ -209,6 +227,37 @@ function Shell({ initialContent, initialInquiries, system }: AdminProps) {
     window.location.href = "/admin/login";
   };
 
+  /* ---- who is signed in (the environment administrator) and how the shared screens are reached ---- */
+  const superRole = BUILTIN_ROLES[0];
+  const accessValue = useMemo(
+    () => ({
+      user: { id: "root", name: "Administrator", email: system.username, roleId: superRole.id, roleName: superRole.name, root: true },
+      permissions: superRole.permissions,
+      superUser: true,
+      can: () => true,
+    }),
+    [system.username, superRole],
+  );
+  const navValue: NavValue = useMemo(() => {
+    const href = (r: NavRoute): string => {
+      switch (r.name) {
+        case "users":
+          return "#/users";
+        case "user":
+          return `#/user/${r.id}`;
+        case "roles":
+          return "#/roles";
+        case "role":
+          return `#/role/${r.id}`;
+        case "pages":
+          return "#/pages";
+        case "page":
+          return `#/page/${r.id}`;
+      }
+    };
+    return { kind: "hash", href, go: (r) => go(href(r)), preview: (id) => `/admin1/preview/${id}` };
+  }, [go]);
+
   /* ---- navigation list ---- */
   const newCount = inquiries.filter((i) => i.status === "new").length;
   const editItem = (id: string, icon: UiIconName = "file"): NavItem => {
@@ -231,12 +280,20 @@ function Shell({ initialContent, initialInquiries, system }: AdminProps) {
         { label: "Job openings", icon: "briefcase", hash: "#/edit/careers/openings", active: (v) => v.name === "edit" && v.module === "careers" && v.section === "openings" },
         editItem("contact", "mailIcon"),
         editItem("sitemap", "layers"),
+        { label: "Custom pages", icon: "layers", hash: "#/pages", active: (v) => v.name === "pages" || v.name === "page" },
         editItem("privacy", "shield"),
         editItem("terms", "document"),
       ],
     },
     { title: "Services", items: ["serviceSoftware", "serviceAi", "serviceAgentic", "serviceApp", "serviceCustom", "serviceSeo"].map((id) => editItem(id, "code")) },
     { title: "Site-wide", items: [{ ...editItem("site", "sliders"), label: "Header, footer & contact" }, { ...editItem("reviews", "people"), label: "Customer reviews" }] },
+    {
+      title: "Access",
+      items: [
+        { label: "Users", icon: "people", hash: "#/users", active: (v) => v.name === "users" || v.name === "user" },
+        { label: "Roles", icon: "shield", hash: "#/roles", active: (v) => v.name === "roles" || v.name === "role" },
+      ],
+    },
     {
       title: "Library",
       items: [
@@ -254,11 +311,19 @@ function Shell({ initialContent, initialInquiries, system }: AdminProps) {
     images: "Images",
     history: "History",
     account: "Account",
+    users: "Users",
+    user: "User",
+    roles: "Roles",
+    role: "Role",
+    pages: "Custom pages",
+    page: "Custom page",
   };
   const pageTitle = currentModule ? (currentModule.id === "site" ? "Header, footer & contact" : currentModule.title) : titles[view.name];
 
   return (
     <FormProvider value={formCtx}>
+      <AccessContext.Provider value={accessValue}>
+      <NavContext.Provider value={navValue}>
       <div className={styles.shell}>
         <div className={cx(styles.scrim, navOpen && styles.scrimOn)} onClick={() => setNavOpen(false)} aria-hidden="true" />
 
@@ -410,6 +475,12 @@ function Shell({ initialContent, initialInquiries, system }: AdminProps) {
               />
             ) : null}
             {view.name === "account" ? <AccountView system={system} onSignOut={() => void signOut()} /> : null}
+            {view.name === "users" ? <UsersList /> : null}
+            {view.name === "user" ? <UserEdit key={view.id} id={view.id} /> : null}
+            {view.name === "roles" ? <RolesList /> : null}
+            {view.name === "role" ? <RoleEdit key={view.id} id={view.id} /> : null}
+            {view.name === "pages" ? <PagesList /> : null}
+            {view.name === "page" ? <PageEdit key={view.id} id={view.id} /> : null}
           </div>
         </div>
       </div>
@@ -422,6 +493,8 @@ function Shell({ initialContent, initialInquiries, system }: AdminProps) {
         onCancel={() => setDiscarding(false)}
         onConfirm={discard}
       />
+      </NavContext.Provider>
+      </AccessContext.Provider>
     </FormProvider>
   );
 }

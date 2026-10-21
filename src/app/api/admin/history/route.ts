@@ -3,7 +3,7 @@ import { getDefaultContent, getHistoryDoc, listHistory, saveSiteContent } from "
 import { failure, guardAdmin, json } from "@/lib/api";
 
 export async function GET(req: Request) {
-  const denied = await guardAdmin(req);
+  const denied = await guardAdmin(req, { perm: ["history", "read"] });
   if (denied) return denied;
   try {
     return json({ success: true, history: await listHistory() });
@@ -14,7 +14,7 @@ export async function GET(req: Request) {
 
 /** Restores an earlier saved version, or the original built-in content when id is "original". */
 export async function POST(req: Request) {
-  const denied = await guardAdmin(req, { write: true });
+  const denied = await guardAdmin(req, { write: true, perm: ["history", "restore"] });
   if (denied) return denied;
 
   try {

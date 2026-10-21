@@ -1,6 +1,7 @@
 "use client";
 
 import { Fragment, useCallback, useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 import styles from "./ai-assistant.module.css";
 
@@ -257,7 +258,7 @@ export function AiAssistant({ whatsappUrl }: { whatsappUrl?: string }) {
           </form>
 
           <p className={styles.foot}>
-            AI can make mistakes. For anything else, use our <a href="/contact">Contact form</a>
+            AI can make mistakes. For anything else, use our <Link href="/contact">Contact form</Link>
             {whatsappUrl ? (
               <>
                 {" "}

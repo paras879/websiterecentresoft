@@ -2,7 +2,7 @@ import { addMedia, deleteMedia, IMAGE_TYPES, listMedia, maxImageBytes, sniffImag
 import { failure, guardAdmin, json } from "@/lib/api";
 
 export async function GET(req: Request) {
-  const denied = await guardAdmin(req);
+  const denied = await guardAdmin(req, { perm: ["media", "read"] });
   if (denied) return denied;
   try {
     return json({ success: true, media: await listMedia(), maxBytes: maxImageBytes() });
@@ -12,7 +12,7 @@ export async function GET(req: Request) {
 }
 
 export async function POST(req: Request) {
-  const denied = await guardAdmin(req, { write: true });
+  const denied = await guardAdmin(req, { write: true, perm: ["media", "create"] });
   if (denied) return denied;
 
   try {
@@ -43,7 +43,7 @@ export async function POST(req: Request) {
 }
 
 export async function DELETE(req: Request) {
-  const denied = await guardAdmin(req, { write: true });
+  const denied = await guardAdmin(req, { write: true, perm: ["media", "delete"] });
   if (denied) return denied;
   try {
     const id = new URL(req.url).searchParams.get("id");

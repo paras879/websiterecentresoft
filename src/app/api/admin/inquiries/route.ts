@@ -4,7 +4,7 @@ import { failure, guardAdmin, json } from "@/lib/api";
 const STATUSES: InquiryStatus[] = ["new", "contacted", "archived"];
 
 export async function GET(req: Request) {
-  const denied = await guardAdmin(req);
+  const denied = await guardAdmin(req, { perm: ["inbox", "read"] });
   if (denied) return denied;
   try {
     return json({ success: true, inquiries: await listInquiries() });
@@ -14,7 +14,7 @@ export async function GET(req: Request) {
 }
 
 export async function PATCH(req: Request) {
-  const denied = await guardAdmin(req, { write: true });
+  const denied = await guardAdmin(req, { write: true, perm: ["inbox", "update"] });
   if (denied) return denied;
   try {
     const { id, status } = (await req.json()) as { id?: unknown; status?: unknown };
@@ -29,7 +29,7 @@ export async function PATCH(req: Request) {
 }
 
 export async function DELETE(req: Request) {
-  const denied = await guardAdmin(req, { write: true });
+  const denied = await guardAdmin(req, { write: true, perm: ["inbox", "delete"] });
   if (denied) return denied;
   try {
     const id = new URL(req.url).searchParams.get("id");
