@@ -76,6 +76,12 @@ export const Recaptcha = forwardRef<RecaptchaHandle, { onChange: (token: string)
         host.current.innerHTML = "";
         const box = document.createElement("div");
         host.current.appendChild(box);
+        if (currentTheme() === "dark") {
+          // Google draws a light edge around its dark box. Trim it so the box sits cleanly on the dark form.
+          box.style.width = "304px";
+          box.style.height = "78px";
+          box.style.clipPath = "inset(2px round 6px)";
+        }
         onChangeRef.current("");
         widget.current = window.grecaptcha.render(box, {
           sitekey: SITE_KEY,

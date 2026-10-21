@@ -18,7 +18,7 @@ export default async function ContactPage() {
   const content = await getSiteContent();
   const info = await getSiteInfo();
   const { contact } = info;
-  const { hero, form, channels: copy, office, closing, backLabel } = content.contact;
+  const { hero, form, channels: copy, office, backLabel } = content.contact;
 
   const channels: {
     icon: IconName;
@@ -150,31 +150,6 @@ export default async function ContactPage() {
       </section>
 
       <FaqSection title={content.contact.faq.title} items={content.contact.faq.items} />
-
-      {/* CTA */}
-      <section className={styles.closing} aria-labelledby="contact-cta-heading">
-        <div className="container">
-          <div className={styles.closingInner}>
-            <h2 id="contact-cta-heading" className={styles.closingTitle}>
-              {closing.title}
-            </h2>
-            {closing.text ? <p className={styles.closingText}>{closing.text}</p> : null}
-            <div className={styles.closingActions}>
-              {closing.callLabel ? (
-                <a href={`tel:${contact.phoneRaw}`} className={styles.btnPrimary}>
-                  <Icon name="phone" className={styles.icon} />
-                  {closing.callLabel}
-                </a>
-              ) : null}
-              {closing.emailLabel ? (
-                <a href={`mailto:${contact.email}`} className={styles.btnGhost}>
-                  {closing.emailLabel}
-                </a>
-              ) : null}
-            </div>
-          </div>
-        </div>
-      </section>
 
       {backLabel ? (
         <div className={styles.backRow}>

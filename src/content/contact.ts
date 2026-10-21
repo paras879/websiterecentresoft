@@ -19,7 +19,7 @@ const defaults = {
   channels: {
     title: "Direct Channels",
     emailLabel: "Official Email",
-    phoneLabel: "Phone Number",
+    phoneLabel: "Mobile Number",
     whatsappLabel: "WhatsApp",
     whatsappText: "Message us on WhatsApp",
     addressLabel: "Registered Office Address",
@@ -30,12 +30,6 @@ const defaults = {
     title: "Noida Development Center",
     subtitle: "Sector 63, Noida, UP",
     linkLabel: "Get directions",
-  },
-  closing: {
-    title: "Tell Us What You're Looking to Build",
-    text: "Have a custom software development or enterprise AI automation project in mind? Share your requirements with our technical team today.",
-    callLabel: "Call Noida Labs Now",
-    emailLabel: "Email Technical Team",
   },
   backLabel: "Back to Recenturesoft Home",
   faq: {
@@ -102,7 +96,7 @@ export const contactModule = defineModule({
         group("channels", "Direct channels", [
           text("title", "Heading"),
           text("emailLabel", "Email label"),
-          text("phoneLabel", "Phone label"),
+          text("phoneLabel", "Mobile number label"),
           text("whatsappLabel", "WhatsApp label"),
           text("whatsappText", "WhatsApp text"),
           text("addressLabel", "Address label"),
@@ -119,18 +113,6 @@ export const contactModule = defineModule({
           text("title", "Title"),
           text("subtitle", "Location line"),
           text("linkLabel", "Directions link text", { help: "Opens the office address in Google Maps." }),
-        ]),
-      ],
-    },
-    {
-      id: "closing",
-      title: "Closing banner",
-      fields: [
-        group("closing", "Closing banner", [
-          text("title", "Heading"),
-          longtext("text", "Text", { rows: 3 }),
-          text("callLabel", "Call button text"),
-          text("emailLabel", "Email button text"),
         ]),
       ],
     },

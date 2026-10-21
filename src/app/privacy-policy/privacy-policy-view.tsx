@@ -200,7 +200,7 @@ export function PrivacyPolicyView({ company, email, phone, phoneRaw, address, ma
                       <Icon name="phone" className={styles.contactSvg} />
                     </span>
                     <span>
-                      <span className={styles.contactLabel}>Phone</span>
+                      <span className={styles.contactLabel}>Mobile</span>
                       <span className={styles.contactValue}>{phone}</span>
                     </span>
                   </a>

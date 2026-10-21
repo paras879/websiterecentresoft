@@ -22,7 +22,7 @@ export function composePhone(value: PhoneValue): string {
 /** Returns an error message, or null when the number is fine (or empty and not required). */
 export function validatePhone(value: PhoneValue, required: boolean): string | null {
   const digits = value.number.replace(/\D/g, "");
-  if (!digits) return required ? "Please enter your phone number." : null;
+  if (!digits) return required ? "Please enter your mobile number." : null;
   const country = byIso(value.iso);
   const { min, max } = nationalNumberRange(country);
   if (digits.length < min || digits.length > max) {
@@ -149,7 +149,7 @@ export function PhoneField({ id, value, onChange, inputClass, invalid, described
         inputMode="tel"
         autoComplete="tel-national"
         className={`${inputClass} ${styles.number}`}
-        placeholder={country.iso === "IN" ? "98765 43210" : "Phone number"}
+        placeholder={country.iso === "IN" ? "98765 43210" : "Mobile number"}
         value={value.number}
         required={required}
         aria-invalid={invalid || undefined}

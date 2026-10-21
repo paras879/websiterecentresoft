@@ -207,7 +207,7 @@ export function TermsView({ company, email, phone, phoneRaw, address, mapUrl, wh
                       <Icon name="phone" className={styles.contactSvg} />
                     </span>
                     <span>
-                      <span className={styles.contactLabel}>Phone</span>
+                      <span className={styles.contactLabel}>Mobile</span>
                       <span className={styles.contactValue}>{phone}</span>
                     </span>
                   </a>

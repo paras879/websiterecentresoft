@@ -248,7 +248,40 @@
   display: inline-flex;
 }
 
+/* Call button: phones and small tablets only, next to the theme and menu buttons. */
+.callBtn {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  height: 38px;
+  padding: 0 0.85rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #ffffff;
+  text-decoration: none;
+  background: #1d4ed8;
+  border-radius: var(--radius-md);
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.callBtn:hover,
+.callBtn:focus-visible {
+  background: #1e40af;
+  transform: translateY(-1px);
+}
+
+.callIcon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
 @media (max-width: 900px) {
+  .callBtn {
+    display: inline-flex;
+  }
+
   .desktopNav {
     display: none;
   }
@@ -784,5 +817,17 @@ a.asideRow:focus-visible {
   .actions {
     flex-shrink: 0;
     gap: 0.5rem;
+  }
+}
+
+/* Very narrow phones: keep only the icon so the logo, call, theme and menu buttons all fit. */
+@media (max-width: 359px) {
+  .callBtn {
+    width: 38px;
+    padding: 0;
+  }
+
+  .callText {
+    display: none;
   }
 }

@@ -208,7 +208,7 @@ export function CareerForm({
       <div className={styles.row}>
         <div className={styles.field}>
           <label htmlFor="cr-phone" className={styles.label}>
-            Phone number <span aria-hidden="true">*</span>
+            Mobile number <span aria-hidden="true">*</span>
           </label>
           <PhoneField
             id="cr-phone"

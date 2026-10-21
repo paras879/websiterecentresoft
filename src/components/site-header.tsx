@@ -288,6 +288,12 @@ export function SiteHeader({ site, info }: Props) {
 
         {/* Action / CTA + Mobile Menu */}
         <div className={styles.actions}>
+          {info.contact.phoneRaw ? (
+            <a href={`tel:${info.contact.phoneRaw}`} className={styles.callBtn} aria-label={`Call us on ${info.contact.phone}`}>
+              <Icon name="phone" className={styles.callIcon} />
+              <span className={styles.callText}>Call</span>
+            </a>
+          ) : null}
           <ThemeToggle />
           <Link href={header.ctaHref || "/contact"} className={`btn btn-primary ${styles.ctaBtn}`}>
             {header.ctaLabel}

@@ -32,7 +32,7 @@ export async function POST(req: Request) {
     const email = field(form.get("email"), 200);
     const phone = field(form.get("phone"), 40);
     if (!name || !EMAIL.test(email) || !PHONE.test(phone)) {
-      return json({ success: false, error: "Please check your name, email and phone number." }, 400);
+      return json({ success: false, error: "Please check your name, email and mobile number." }, 400);
     }
     if (form.get("agreed") !== "true") {
       return json({ success: false, error: "Please agree to be contacted about this application." }, 400);

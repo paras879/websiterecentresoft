@@ -147,7 +147,7 @@ export function ContactForm({ services, recipientEmail }: ContactFormProps) {
   return (
     <div className={styles.formContainer} id="contact-form">
       <div className={styles.formHeader}>
-        <h2 className={styles.formTitle}>Project Enquiry Form</h2>
+        <h2 className={styles.formTitle}>Contact Us</h2>
         <p className={styles.formSubtitle}>
           Fill out the details below and our team will get back to you.
         </p>
@@ -245,10 +245,10 @@ export function ContactForm({ services, recipientEmail }: ContactFormProps) {
             />
           </div>
 
-          {/* Phone Number (Optional) */}
+          {/* Mobile number (optional) */}
           <div className={styles.formGroup}>
             <label htmlFor="phone" className={styles.label}>
-              Phone Number <span className={styles.optionalTag}>(Optional)</span>
+              Mobile Number <span className={styles.optionalTag}>(Optional)</span>
             </label>
             <PhoneField
               id="phone"
@@ -343,7 +343,7 @@ export function ContactForm({ services, recipientEmail }: ContactFormProps) {
             aria-describedby={errors.privacyAgreed ? "privacy-error" : undefined}
           />
           <label htmlFor="privacyAgreed" className={styles.checkboxLabel}>
-            I confirm this enquiry is for business purposes and agree to be contacted about it at the email address and phone number I gave.
+            I confirm this enquiry is for business purposes and agree to be contacted about it at the email address and mobile number I gave.
           </label>
         </div>
         {errors.privacyAgreed && (

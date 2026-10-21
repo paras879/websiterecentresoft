@@ -239,6 +239,12 @@ const UPGRADES: Upgrade[] = [
   }
 ];
 
+/** Wording that changed: kept only when the saved text is still the old default. */
+const TEXT_UPGRADES: { at: string; key: string; from: string; to: string }[] = [
+  { at: "contact.channels", key: "phoneLabel", from: "Phone Number", to: "Mobile Number" },
+  { at: "serviceCustom.cta", key: "phoneLabel", from: "Phone", to: "Mobile" },
+];
+
 type Node = Record<string, unknown> | unknown[] | undefined;
 
 function walk(root: unknown, path: string): Record<string, unknown> | null {
@@ -257,6 +263,10 @@ export function applyImageUpgrades<T>(content: T): T {
     target.image = u.to;
     // The old description belongs to the old picture, so it is replaced together with it.
     if (u.altKey) target[u.altKey] = u.altTo;
+  }
+  for (const t of TEXT_UPGRADES) {
+    const target = walk(content, t.at);
+    if (target && target[t.key] === t.from) target[t.key] = t.to;
   }
   return content;
 }
