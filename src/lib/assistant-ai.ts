@@ -70,7 +70,8 @@ export function aiConfig(): AiConfig | null {
   };
 }
 
-const MAX_TOKENS = 380;
+// Room for a full answer. Gemini 2.5 models also count their hidden "thinking" against this, so thinking is switched off below.
+const MAX_TOKENS = 700;
 
 async function post(url: string, headers: Record<string, string>, body: unknown): Promise<unknown> {
   for (let attempt = 0; attempt < 2; attempt++) {
@@ -146,7 +147,12 @@ async function askOnce(cfg: AiConfig, system: string, messages: ChatMessage[]): 
       {
         systemInstruction: { parts: [{ text: system }] },
         contents: messages.map((m) => ({ role: m.role === "assistant" ? "model" : "user", parts: [{ text: m.content }] })),
-        generationConfig: { maxOutputTokens: MAX_TOKENS, temperature: 0.2 },
+        generationConfig: {
+          maxOutputTokens: MAX_TOKENS,
+          temperature: 0.2,
+          // Short factual answers do not need thinking, and thinking is what used up the budget and cut answers off.
+          ...(/gemini-2\.5-flash/.test(cfg.model) ? { thinkingConfig: { thinkingBudget: 0 } } : {}),
+        },
       },
     )) as { candidates?: { content?: { parts?: { text?: string }[] } }[] };
     return (data.candidates?.[0]?.content?.parts ?? []).map((p) => p.text ?? "").join("").trim();
