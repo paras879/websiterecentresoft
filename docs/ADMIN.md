@@ -30,6 +30,8 @@ See `.env.example`.
 
 - `NEXT_PUBLIC_RECAPTCHA_SITE_KEY`, `RECAPTCHA_SECRET_KEY` (optional): turns on Google reCAPTCHA ("I'm not a robot") on the Contact and Careers forms. Create a reCAPTCHA v2 checkbox key in the Google reCAPTCHA admin, add your domain, then set both values in Vercel and redeploy. Without them the forms work with no check.
 
+- `AI_API_KEY` (optional): turns on the AI assistant chat. It answers only from the website's own content (so it follows what you edit in the admin), in English or Hinglish, and sends other questions to the Contact form. The service is picked from the key (Anthropic, OpenAI, Gemini, Groq, OpenRouter). `AI_MODEL`, `AI_PROVIDER`, `AI_BASE_URL` and `AI_MAX_PER_MINUTE` are optional. Answers are remembered for 3 minutes and each visitor is limited to 12 questions per 3 minutes, so the AI service does not return 429. Without a key the chat still gives contact details and basic answers.
+
 Forgot the password? Set `ADMIN_PASSWORD` in Vercel and delete the key `admin:credentials` in the Upstash data browser. Then the environment password works again.
 
 ## Adding a new editable field

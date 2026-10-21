@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { WhatsAppFloatingButton } from "./whatsapp-button";
+import { AiAssistant } from "./ai-assistant";
 
 /**
  * Wraps public pages with the header and footer. The admin area gets neither, so it can use the
@@ -36,7 +36,7 @@ export function SiteShell({
         </main>
         {footer}
       </div>
-      {whatsappUrl ? <WhatsAppFloatingButton url={whatsappUrl} /> : null}
+      <AiAssistant whatsappUrl={whatsappUrl} />
     </>
   );
 }

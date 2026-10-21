@@ -25,6 +25,10 @@ export interface Store {
   lrange(key: string, start: number, stop: number): Promise<string[]>;
   /** Increments a counter that expires after `ttlSeconds` (set on first increment). */
   incr(key: string, ttlSeconds: number): Promise<number>;
+  /** Saves a value that deletes itself after `ttlSeconds` (used for short-lived answer caches). */
+  setex(key: string, value: string, ttlSeconds: number): Promise<void>;
+  /** Reads a value saved with `setex`; null once it has expired. */
+  getTemp(key: string): Promise<string | null>;
 }
 
 export class StoreUnavailableError extends Error {
@@ -107,6 +111,10 @@ function redisStore(url: string, token: string): Store {
       ])) as number[];
       return Number(count);
     },
+    setex: async (key, value, ttlSeconds) => {
+      await cmd("SET", key, value, "EX", ttlSeconds);
+    },
+    getTemp: (key) => cmd<string | null>("GET", key),
   };
 }
 
@@ -117,6 +125,7 @@ interface FileData {
   hashes: Record<string, Record<string, string>>;
   lists: Record<string, string[]>;
   counters: Record<string, { n: number; exp: number }>;
+  temp?: Record<string, { v: string; exp: number }>;
 }
 
 function fileStore(): Store {
@@ -136,6 +145,7 @@ function fileStore(): Store {
     cache.hashes ??= {};
     cache.lists ??= {};
     cache.counters ??= {};
+    cache.temp ??= {};
     return cache;
   }
 
@@ -200,6 +210,18 @@ function fileStore(): Store {
         c.n += 1;
         return c.n;
       }, true),
+
+    setex: (key, value, ttlSeconds) =>
+      run((d) => {
+        d.temp ??= {};
+        d.temp[key] = { v: value, exp: Date.now() + ttlSeconds * 1000 };
+      }, true),
+
+    getTemp: (key) =>
+      run((d) => {
+        const hit = d.temp?.[key];
+        return hit && hit.exp > Date.now() ? hit.v : null;
+      }, false),
   };
 }
 
@@ -220,6 +242,8 @@ function unavailableStore(): Store {
     lpush: fail,
     lrange: async () => [],
     incr: async () => 1,
+    setex: async () => undefined,
+    getTemp: async () => null,
   };
 }
 

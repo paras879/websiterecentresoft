@@ -214,6 +214,8 @@ html {
   font-size: 16px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* The closed mobile menu waits just outside the right edge. Without this, phones make the whole page wider than the screen. */
+  overflow-x: hidden;
 }
 
 body {
