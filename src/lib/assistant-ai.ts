@@ -47,13 +47,13 @@ export class UpstreamBusyError extends Error {
 }
 
 export function aiConfig(): AiConfig | null {
-  const key = (process.env.AI_API_KEY || "").trim();
+  const key = (process.env.AI_API_KEY || "").trim().replace(/^["']|["']$/g, "").trim();
   if (!key) return null;
 
   const named = (process.env.AI_PROVIDER || "").trim().toLowerCase() as Provider;
   const detected: Provider = key.startsWith("sk-ant-")
     ? "anthropic"
-    : key.startsWith("AIza")
+    : key.startsWith("AIza") || key.startsWith("AQ.")
       ? "gemini"
       : key.startsWith("gsk_")
         ? "groq"
