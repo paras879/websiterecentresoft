@@ -238,7 +238,7 @@ export function AiAssistant({ whatsappUrl }: { whatsappUrl?: string }) {
               className={styles.input}
               rows={1}
               maxLength={500}
-              placeholder="Type your question..."
+              placeholder="Ask a question..."
               aria-label="Your question"
               value={input}
               onChange={(e) => setInput(e.target.value)}

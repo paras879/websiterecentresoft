@@ -407,11 +407,27 @@
   }
 
   .panel {
-    inset: auto 12px 12px 12px;
-    width: auto;
-    max-width: none;
+    inset: auto 12px 12px auto;
+    /* About half the screen, but never so narrow that the text cannot be read. */
+    width: max(236px, 52vw);
+    max-width: calc(100vw - 24px);
     height: min(66vh, 500px);
     border-radius: 18px;
+  }
+
+  .bubble {
+    max-width: 94%;
+    padding: 0.55rem 0.7rem;
+    font-size: 0.8438rem;
+  }
+
+  .chip {
+    padding: 0.4rem 0.65rem;
+    font-size: 0.75rem;
+  }
+
+  .foot {
+    font-size: 0.6563rem;
   }
 
   /* The chat covers the page, so the round launcher steps aside while it is open. */
