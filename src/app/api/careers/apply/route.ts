@@ -2,6 +2,7 @@ import { after } from "next/server";
 import { clientIp, sameOrigin, withinRateLimit } from "@/lib/admin-auth";
 import { failure, json } from "@/lib/api";
 import { notifyInquiry } from "@/lib/mail";
+import { verifyRecaptcha } from "@/lib/recaptcha";
 import { addInquiry, maxResumeBytes, putBlob } from "@/lib/records";
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -40,6 +41,10 @@ export async function POST(req: Request) {
     const ip = await clientIp();
     if (!(await withinRateLimit(`apply:${ip}`, 5, 60 * 60))) {
       return json({ success: false, error: "Too many applications. Please try again later." }, 429);
+    }
+
+    if (!(await verifyRecaptcha(field(form.get("recaptcha"), 4000), ip))) {
+      return json({ success: false, error: "Please tick \"I'm not a robot\" and send again." }, 400);
     }
 
     let resume: { id: string; name: string; size: number } | null = null;

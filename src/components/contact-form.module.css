@@ -242,6 +242,50 @@
   color: var(--ct-blue, #1d4ed8);
 }
 
+/* Message after sending: green when it worked, red when it did not. */
+.statusOk {
+  background: #dcfce7;
+  border-color: #86efac;
+}
+
+.statusOk .statusTitle {
+  color: #14532d;
+}
+
+.statusBad {
+  background: #fee2e2;
+  border-color: #fca5a5;
+}
+
+.statusBad .statusDesc {
+  color: #7f1d1d;
+}
+
+:global([data-theme="dark"]) .statusOk {
+  background: rgba(22, 163, 74, 0.16);
+  border-color: rgba(74, 222, 128, 0.45);
+}
+
+:global([data-theme="dark"]) .statusOk .statusTitle {
+  color: #bbf7d0;
+}
+
+:global([data-theme="dark"]) .statusBad {
+  background: rgba(220, 38, 38, 0.16);
+  border-color: rgba(248, 113, 113, 0.45);
+}
+
+:global([data-theme="dark"]) .statusBad .statusDesc {
+  color: #fecaca;
+}
+
+.captchaRow {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin: 0.25rem 0 1rem;
+}
+
 .statusDesc {
   margin: 0;
   font-size: 0.875rem;

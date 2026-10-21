@@ -844,11 +844,13 @@
   background: var(--sv-bg);
 }
 
+/* The next panel slides over this section. If the section is taller than the window, StickyFit lifts the
+   stick point so the whole section stays readable until it is covered. */
 @media (min-width: 1025px) {
   .pragSection {
     position: sticky;
     top: 76px;
-    height: calc(100vh - 76px);
+    min-height: calc(100vh - 76px);
     display: flex;
     align-items: center;
     padding: 2.5rem 0;

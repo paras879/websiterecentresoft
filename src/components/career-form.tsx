@@ -1,15 +1,11 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { PhoneField, composePhone, emptyPhone, validatePhone, type PhoneValue } from "./phone-field";
+import { Recaptcha, recaptchaEnabled, type RecaptchaHandle } from "./recaptcha";
 import styles from "./career-form.module.css";
 
-const PHONE_FORMAT = /^\+?[0-9\s\-()]+$/;
 const MAX_BROWSER_BYTES = 10 * 1024 * 1024;
-
-function sanitizePhone(value: string): string {
-  const cleaned = value.replace(/[^0-9+\s\-()]/g, "");
-  return cleaned.replace(/(?!^)\+/g, "");
-}
 
 function formatSize(bytes: number): string {
   return bytes < 1024 * 1024
@@ -20,7 +16,7 @@ function formatSize(bytes: number): string {
 interface FormState {
   name: string;
   email: string;
-  phone: string;
+  phone: PhoneValue;
   area: string;
   experience: string;
   link: string;
@@ -62,7 +58,7 @@ export function CareerForm({
   const initial = (): FormState => ({
     name: "",
     email: "",
-    phone: "",
+    phone: emptyPhone(),
     area: areaChoices[0] ?? "",
     experience: experience[1] ?? experience[0] ?? "",
     link: "",
@@ -77,6 +73,9 @@ export function CareerForm({
   const [resume, setResume] = useState<File | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
   const trapRef = useRef<HTMLInputElement>(null);
+  const [captchaToken, setCaptchaToken] = useState("");
+  const [captchaError, setCaptchaError] = useState(false);
+  const captchaRef = useRef<RecaptchaHandle>(null);
 
   const set = <K extends keyof FormState>(key: K, value: FormState[K]) => {
     setData((prev) => ({ ...prev, [key]: value }));
@@ -89,16 +88,13 @@ export function CareerForm({
     if (!data.email.trim()) next.email = "Please enter your email address.";
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email.trim()))
       next.email = "Please enter a valid email address.";
-    const phone = data.phone.trim();
-    if (!phone) next.phone = "Please enter your phone number.";
-    else {
-      const digits = phone.replace(/\D/g, "").length;
-      if (!PHONE_FORMAT.test(phone) || digits < 7 || digits > 15)
-        next.phone = "Please enter a valid phone number (7–15 digits).";
-    }
+    const phoneProblem = validatePhone(data.phone, true);
+    if (phoneProblem) next.phone = phoneProblem;
     if (!data.agreed) next.agreed = "Please confirm so we can contact you about this application.";
+    const needsCaptcha = recaptchaEnabled && !captchaToken;
+    setCaptchaError(needsCaptcha);
     setErrors(next);
-    return Object.keys(next).length === 0;
+    return Object.keys(next).length === 0 && !needsCaptcha;
   };
 
   const onFile = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -122,13 +118,14 @@ export function CareerForm({
     const body = new FormData();
     body.set("name", data.name.trim());
     body.set("email", data.email.trim());
-    body.set("phone", data.phone.trim());
+    body.set("phone", composePhone(data.phone));
     body.set("area", data.area);
     body.set("experience", data.experience);
     body.set("link", data.link.trim());
     body.set("note", data.note.trim());
     body.set("agreed", "true");
     body.set("website", trapRef.current?.value ?? "");
+    body.set("recaptcha", captchaToken);
     if (resume) body.set("resume", resume);
 
     try {
@@ -143,9 +140,11 @@ export function CareerForm({
         setData(initial());
         setResume(null);
         if (fileRef.current) fileRef.current.value = "";
+        captchaRef.current?.reset();
         return;
       }
       setStatus("idle");
+      captchaRef.current?.reset();
       if (res.status === 503 || json.code === "storage_unavailable") {
         setApiError(errorText.replace("{email}", hrEmail));
         return;
@@ -211,16 +210,13 @@ export function CareerForm({
           <label htmlFor="cr-phone" className={styles.label}>
             Phone number <span aria-hidden="true">*</span>
           </label>
-          <input
+          <PhoneField
             id="cr-phone"
-            type="tel"
-            inputMode="tel"
-            placeholder="+91 98765 43210"
-            className={`${styles.input} ${errors.phone ? styles.bad : ""}`}
             value={data.phone}
-            onChange={(e) => set("phone", sanitizePhone(e.target.value))}
-            autoComplete="tel"
-            aria-invalid={!!errors.phone}
+            inputClass={`${styles.input} ${errors.phone ? styles.bad : ""}`}
+            invalid={!!errors.phone}
+            required
+            onChange={(next) => set("phone", next)}
           />
           {errors.phone ? <p className={styles.err}>{errors.phone}</p> : null}
         </div>
@@ -313,6 +309,18 @@ export function CareerForm({
         <span>I agree to be contacted by Recenturesoft about this application.</span>
       </label>
       {errors.agreed ? <p className={styles.err}>{errors.agreed}</p> : null}
+
+      <div className={styles.captcha}>
+        <Recaptcha
+          ref={captchaRef}
+          invalid={captchaError}
+          onChange={(token) => {
+            setCaptchaToken(token);
+            if (token) setCaptchaError(false);
+          }}
+        />
+        {captchaError ? <p className={styles.err}>Please tick &quot;I&apos;m not a robot&quot; before sending.</p> : null}
+      </div>
 
       <div className={styles.actions}>
         <button type="submit" className={styles.submit} disabled={status === "sending"}>

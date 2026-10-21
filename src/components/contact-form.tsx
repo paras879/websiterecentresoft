@@ -1,13 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { PhoneField, composePhone, emptyPhone, validatePhone, type PhoneValue } from "./phone-field";
+import { Recaptcha, recaptchaEnabled, type RecaptchaHandle } from "./recaptcha";
 import styles from "./contact-form.module.css";
 
 interface FormState {
   fullName: string;
   email: string;
   company: string;
-  phone: string;
+  phone: PhoneValue;
   service: string;
   message: string;
   privacyAgreed: boolean;
@@ -20,15 +22,6 @@ interface FormErrors {
   service?: string;
   message?: string;
   privacyAgreed?: string;
-}
-
-// Phone numbers may only contain digits, spaces, hyphens, parentheses and a leading "+".
-const PHONE_FORMAT = /^\+?[0-9\s\-()]+$/;
-
-function sanitizePhone(value: string): string {
-  const cleaned = value.replace(/[^0-9+\s\-()]/g, "");
-  // Keep "+" only as the very first character.
-  return cleaned.replace(/(?!^)\+/g, "");
 }
 
 interface ContactFormProps {
@@ -44,7 +37,7 @@ export function ContactForm({ services, recipientEmail }: ContactFormProps) {
     fullName: "",
     email: "",
     company: "",
-    phone: "",
+    phone: emptyPhone(),
     service: serviceOptions[0],
     message: "",
     privacyAgreed: false,
@@ -55,6 +48,9 @@ export function ContactForm({ services, recipientEmail }: ContactFormProps) {
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
+  const [captchaToken, setCaptchaToken] = useState("");
+  const [captchaError, setCaptchaError] = useState(false);
+  const captchaRef = useRef<RecaptchaHandle>(null);
 
   const validate = (): boolean => {
     const nextErrors: FormErrors = {};
@@ -70,13 +66,8 @@ export function ContactForm({ services, recipientEmail }: ContactFormProps) {
       nextErrors.email = "Please enter a valid email address (e.g., name@company.com).";
     }
 
-    const phone = formData.phone.trim();
-    if (phone) {
-      const digitCount = phone.replace(/\D/g, "").length;
-      if (!PHONE_FORMAT.test(phone) || digitCount < 7 || digitCount > 15) {
-        nextErrors.phone = "Please enter a valid phone number (7–15 digits, e.g. +91 98765 43210).";
-      }
-    }
+    const phoneProblem = validatePhone(formData.phone, false);
+    if (phoneProblem) nextErrors.phone = phoneProblem;
 
     if (!formData.service) {
       nextErrors.service = "Please select a service of interest.";
@@ -92,8 +83,11 @@ export function ContactForm({ services, recipientEmail }: ContactFormProps) {
       nextErrors.privacyAgreed = "Please acknowledge that you agree to be contacted regarding this enquiry.";
     }
 
+    const needsCaptcha = recaptchaEnabled && !captchaToken;
+    setCaptchaError(needsCaptcha);
+
     setErrors(nextErrors);
-    return Object.keys(nextErrors).length === 0;
+    return Object.keys(nextErrors).length === 0 && !needsCaptcha;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -114,11 +108,12 @@ export function ContactForm({ services, recipientEmail }: ContactFormProps) {
         body: JSON.stringify({
           name: formData.fullName.trim(),
           email: formData.email.trim(),
-          phone: formData.phone.trim(),
+          phone: composePhone(formData.phone),
           company: formData.company.trim(),
           service: formData.service,
           message: formData.message.trim(),
           website,
+          recaptcha: captchaToken,
         }),
       });
       const data = (await res.json().catch(() => null)) as { success?: boolean; error?: string; code?: string } | null;
@@ -129,16 +124,18 @@ export function ContactForm({ services, recipientEmail }: ContactFormProps) {
           fullName: "",
           email: "",
           company: "",
-          phone: "",
+          phone: emptyPhone(),
           service: serviceOptions[0],
           message: "",
           privacyAgreed: false,
         });
         setErrors({});
+        captchaRef.current?.reset();
       } else if (res.status === 503 || data?.code === "storage_unavailable") {
         setApiError(failed);
       } else {
         setApiError(data?.error || failed);
+        captchaRef.current?.reset();
       }
     } catch {
       setApiError(failed);
@@ -253,23 +250,16 @@ export function ContactForm({ services, recipientEmail }: ContactFormProps) {
             <label htmlFor="phone" className={styles.label}>
               Phone Number <span className={styles.optionalTag}>(Optional)</span>
             </label>
-            <input
-              type="tel"
+            <PhoneField
               id="phone"
-              name="phone"
-              autoComplete="tel"
-              inputMode="tel"
-              maxLength={20}
-              pattern="\+?[0-9\s\-()]{7,20}"
-              className={`${styles.input} ${errors.phone ? styles.inputError : ""}`}
-              placeholder="e.g. +91 98765 43210"
               value={formData.phone}
-              onChange={(e) => {
-                setFormData((prev) => ({ ...prev, phone: sanitizePhone(e.target.value) }));
+              inputClass={`${styles.input} ${errors.phone ? styles.inputError : ""}`}
+              invalid={!!errors.phone}
+              describedBy={errors.phone ? "phone-error" : undefined}
+              onChange={(next) => {
+                setFormData((prev) => ({ ...prev, phone: next }));
                 if (errors.phone) setErrors((prev) => ({ ...prev, phone: undefined }));
               }}
-              aria-invalid={!!errors.phone}
-              aria-describedby={errors.phone ? "phone-error" : undefined}
             />
             {errors.phone && (
               <span id="phone-error" className={styles.errorMessage} role="alert">
@@ -353,7 +343,7 @@ export function ContactForm({ services, recipientEmail }: ContactFormProps) {
             aria-describedby={errors.privacyAgreed ? "privacy-error" : undefined}
           />
           <label htmlFor="privacyAgreed" className={styles.checkboxLabel}>
-            I confirm this enquiry is for business purposes and understand that sending the message will be completed via my email client.
+            I confirm this enquiry is for business purposes and agree to be contacted about it at the email address and phone number I gave.
           </label>
         </div>
         {errors.privacyAgreed && (
@@ -361,6 +351,22 @@ export function ContactForm({ services, recipientEmail }: ContactFormProps) {
             {errors.privacyAgreed}
           </span>
         )}
+
+        <div className={styles.captchaRow}>
+          <Recaptcha
+            ref={captchaRef}
+            invalid={captchaError}
+            onChange={(token) => {
+              setCaptchaToken(token);
+              if (token) setCaptchaError(false);
+            }}
+          />
+          {captchaError && (
+            <span className={styles.errorMessage} role="alert">
+              Please tick &quot;I&apos;m not a robot&quot; before sending.
+            </span>
+          )}
+        </div>
 
         {/* Actions */}
         <div className={styles.actionsRow}>
@@ -371,7 +377,7 @@ export function ContactForm({ services, recipientEmail }: ContactFormProps) {
       </form>
 
       {sent && (
-        <div className={styles.statusBox} role="status">
+        <div className={`${styles.statusBox} ${styles.statusOk}`} role="status">
           <div className={styles.statusTitle}>
             <span>Thank you, your message has been sent. We will get back to you soon.</span>
           </div>
@@ -379,7 +385,7 @@ export function ContactForm({ services, recipientEmail }: ContactFormProps) {
       )}
 
       {apiError && (
-        <div className={styles.statusBox} role="alert">
+        <div className={`${styles.statusBox} ${styles.statusBad}`} role="alert">
           <p className={styles.statusDesc}>{apiError}</p>
         </div>
       )}

@@ -29,6 +29,11 @@
   color: var(--sv-heading, #0b1f44);
 }
 
+/* Some pages do not define the dark heading colour, so say it here. */
+:global([data-theme="dark"]) .title {
+  color: #f1f5f9;
+}
+
 .list {
   display: flex;
   flex-direction: column;

@@ -207,15 +207,32 @@ textarea.input {
 }
 
 .success {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.7rem;
   margin: 0;
   padding: 1rem 1.15rem;
   font-size: 1rem;
   line-height: 1.55;
-  color: var(--sv-heading, #0b1f44);
-  background: var(--sv-tint, #eff6ff);
-  border: 1px solid var(--sv-tint-border, #bfdbfe);
-  border-left: 4px solid #1d4ed8;
+  color: #14532d;
+  background: #dcfce7;
+  border: 1px solid #86efac;
+  border-left: 4px solid #16a34a;
   border-radius: 12px;
+}
+
+:global([data-theme="dark"]) .success {
+  color: #bbf7d0;
+  background: rgba(22, 163, 74, 0.16);
+  border-color: rgba(74, 222, 128, 0.45);
+  border-left-color: #22c55e;
+}
+
+.captcha {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin: 0.25rem 0 0.75rem;
 }
 
 @media (max-width: 640px) {

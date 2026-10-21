@@ -28,6 +28,8 @@ See `.env.example`.
 - `ADMIN_SESSION_SECRET`: at least 32 random characters. Signs the login cookie. Changing it signs everyone out.
 - `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS` (optional): turns on email notifications. Job applications are emailed to the HR email and contact messages to the main email set under Site-wide > Contact details, with the resume attached. Every message is also saved in the Inbox, so nothing is lost if email is not set up or fails. `MAIL_FROM` (sender) and `MAIL_TO` (send everything to one address) are optional.
 
+- `NEXT_PUBLIC_RECAPTCHA_SITE_KEY`, `RECAPTCHA_SECRET_KEY` (optional): turns on Google reCAPTCHA ("I'm not a robot") on the Contact and Careers forms. Create a reCAPTCHA v2 checkbox key in the Google reCAPTCHA admin, add your domain, then set both values in Vercel and redeploy. Without them the forms work with no check.
+
 Forgot the password? Set `ADMIN_PASSWORD` in Vercel and delete the key `admin:credentials` in the Upstash data browser. Then the environment password works again.
 
 ## Adding a new editable field

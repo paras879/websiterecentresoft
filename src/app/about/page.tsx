@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { StickyFit } from "@/components/sticky-fit";
 import { FaqSection } from "@/components/faq-section";
 import Image from "next/image";
 import Link from "next/link";
@@ -64,6 +65,7 @@ export default async function AboutPage() {
       <div className={styles.overlapWrapper}>
         {/* Pragmatic engineering */}
         <section className={styles.pragSection} aria-labelledby="pragmatic-heading">
+          <StickyFit />
           <div className={`container ${styles.pragLayout}`}>
             <header className={styles.pragIntro}>
               <span className={styles.pragBar} aria-hidden="true" />

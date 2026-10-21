@@ -2,6 +2,7 @@ import { after } from "next/server";
 import { clientIp, sameOrigin, withinRateLimit } from "@/lib/admin-auth";
 import { failure, json } from "@/lib/api";
 import { notifyInquiry } from "@/lib/mail";
+import { verifyRecaptcha } from "@/lib/recaptcha";
 import { addInquiry } from "@/lib/records";
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -27,6 +28,10 @@ export async function POST(req: Request) {
     const ip = await clientIp();
     if (!(await withinRateLimit(`contact:${ip}`, 6, 60 * 60))) {
       return json({ success: false, error: "Too many messages. Please try again later." }, 429);
+    }
+
+    if (!(await verifyRecaptcha(field(body.recaptcha, 4000), ip))) {
+      return json({ success: false, error: "Please tick \"I'm not a robot\" and send again." }, 400);
     }
 
     const saved = await addInquiry({
