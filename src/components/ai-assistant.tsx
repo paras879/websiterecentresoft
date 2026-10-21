@@ -20,7 +20,7 @@ const SUGGESTIONS = [
 ];
 
 const WELCOME =
-  "Hi! I'm the Recenturesoft assistant. Ask me about our services, careers, contact details or location. Hinglish me poochna ho to wo bhi chalega.";
+  "Hello! I'm the Recenturesoft assistant. I can help with our services, careers, contact details and location. Feel free to ask in English or Hinglish.";
 
 /** Turns links, emails, phone numbers and page paths in a reply into clickable text. */
 const LINKS =
