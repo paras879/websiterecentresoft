@@ -30,7 +30,7 @@ const SKIP = new Set([
   "stepWord", "ofWord", "phaseWord", "flowLabel", "linkPrefix", "forYouLabel", "getsLabel", "deliverableLabel",
 ]);
 
-const PER_PAGE = 2400;
+const PER_PAGE = 1300;
 
 function collect(value: unknown, out: string[]): void {
   if (typeof value === "string") {

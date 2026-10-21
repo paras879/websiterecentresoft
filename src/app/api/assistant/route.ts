@@ -1,4 +1,5 @@
 import crypto from "node:crypto";
+import { after } from "next/server";
 import { clientIp, sameOrigin, withinRateLimit } from "@/lib/admin-auth";
 import { json } from "@/lib/api";
 import { getSiteContent } from "@/lib/content";
@@ -22,7 +23,7 @@ const SYSTEM = (facts: string) => `You are the website assistant for Recentureso
 
 Answer ONLY from the company information below. It is the same information shown on the website.
 - Reply in the language the visitor uses: English, or Hinglish (Hindi written in English letters). Keep a friendly, professional tone.
-- Keep answers short: 2 to 5 sentences, and always finish the last sentence. For lists use lines that start with "- ". Plain text only, no markdown symbols like ** or #.
+- Keep answers short: 2 to 4 sentences, and always finish the last sentence. For lists use lines that start with "- ". Plain text only, no markdown symbols like ** or #.
 - Give email, phone, WhatsApp, address, office hours and page links exactly as written below. Page links may be written as paths like /contact.
 - If the answer is not in the information (prices, quotes, timelines, discounts, legal advice, other companies, general knowledge, coding help, anything unrelated), do not guess. Say you do not have that information and ask the visitor to fill in the Contact form at /contact, or to email or call.
 - Never promise delivery dates, prices, discounts, guarantees or hiring decisions.
@@ -77,7 +78,17 @@ export async function POST(req: Request) {
   if (quick) return json({ success: true, reply: quick, source: "basic" });
 
   const ip = await clientIp();
-  if (!(await withinRateLimit(`assistant:${ip}`, PER_VISITOR, WINDOW_SECONDS))) {
+  const cfg = aiConfig();
+  const standalone = messages.length === 1;
+  const cacheKey = `ai:ans:${crypto.createHash("sha256").update(question.toLowerCase()).digest("hex").slice(0, 32)}`;
+  const store = getStore();
+
+  // The visitor limit and the saved-answer lookup are independent, so they run together (one wait, not two).
+  const [allowed, hit] = await Promise.all([
+    withinRateLimit(`assistant:${ip}`, PER_VISITOR, WINDOW_SECONDS),
+    cfg && standalone ? store.getTemp(cacheKey).catch(() => null) : Promise.resolve(null),
+  ]);
+  if (!allowed) {
     return json(
       {
         success: false,
@@ -86,27 +97,16 @@ export async function POST(req: Request) {
       429,
     );
   }
-
-  const cfg = aiConfig();
   if (!cfg) return json({ success: true, reply: basicAnswer(question, kb), source: "basic", why: "no_key" });
 
   // The same first question is answered once for everyone, then forgotten after three minutes.
-  const standalone = messages.length === 1;
-  const cacheKey = `ai:ans:${crypto.createHash("sha256").update(question.toLowerCase()).digest("hex").slice(0, 32)}`;
-  if (standalone) {
-    try {
-      const hit = await getStore().getTemp(cacheKey);
-      if (hit) return json({ success: true, reply: hit, source: "ai" });
-    } catch {
-      /* the cache is optional */
-    }
-  }
+  if (hit) return json({ success: true, reply: hit, source: "ai" });
 
   // Stay under the AI service's own limit: past the budget for this minute, answer from the facts.
   let withinBudget = true;
   try {
     const bucket = Math.floor(Date.now() / 60_000);
-    withinBudget = (await getStore().incr(`ai:minute:${bucket}`, 120)) <= PER_MINUTE;
+    withinBudget = (await store.incr(`ai:minute:${bucket}`, 120)) <= PER_MINUTE;
   } catch {
     /* if counting fails, carry on */
   }
@@ -116,11 +116,8 @@ export async function POST(req: Request) {
     const reply = await askModel(cfg, SYSTEM(kb.text), messages);
     if (!reply) return json({ success: true, reply: basicAnswer(question, kb), source: "basic", why: "empty_reply" });
     if (standalone) {
-      try {
-        await getStore().setex(cacheKey, reply, WINDOW_SECONDS);
-      } catch {
-        /* the cache is optional */
-      }
+      // Saved after the answer is on its way, so the visitor does not wait for it.
+      after(() => store.setex(cacheKey, reply, WINDOW_SECONDS).catch(() => undefined));
     }
     return json({ success: true, reply, source: "ai" });
   } catch (error) {
