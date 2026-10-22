@@ -1,6 +1,7 @@
 import { modules } from "@/content";
 import type { SiteContent } from "@/content";
 import type { SiteInfo } from "./site";
+import { pagePath, type CustomPage } from "./custom-pages-types";
 import { SITE_URL } from "./seo";
 
 /** Facts the assistant may state, plus a short plain-text summary of the pages. Rebuilt from the admin content. */
@@ -31,6 +32,9 @@ const SKIP = new Set([
 ]);
 
 const PER_PAGE = 1300;
+/** Pages made in the admin panel: how many are described, and how much of each. Keeps the question small. */
+const CUSTOM_PAGES = 12;
+const PER_CUSTOM = 900;
 
 function collect(value: unknown, out: string[]): void {
   if (typeof value === "string") {
@@ -68,9 +72,15 @@ function summarise(data: unknown, limit: number): string {
   return kept.map((l) => `- ${l}`).join("\n");
 }
 
-export function buildKnowledge(content: SiteContent, info: SiteInfo): Knowledge {
+export function buildKnowledge(content: SiteContent, info: SiteInfo, customPages: CustomPage[] = []): Knowledge {
   const { site } = content;
   const services = site.header.menu.map((m) => ({ title: m.title, desc: m.desc, href: m.href }));
+  // A page made in the admin panel and put in the Services menu is a service too.
+  for (const p of customPages) {
+    if (p.menu === "services" && !services.some((s) => s.href === pagePath(p))) {
+      services.push({ title: p.title, desc: p.seo.description, href: pagePath(p) });
+    }
+  }
   const socials = site.socials.map((s) => ({ label: s.name, href: s.href }));
   const facts = {
     name: info.name,
@@ -116,6 +126,16 @@ export function buildKnowledge(content: SiteContent, info: SiteInfo): Knowledge 
     const data = (content as unknown as Record<string, unknown>)[mod.id];
     const body = summarise(data, PER_PAGE);
     if (body) parts.push(`${mod.title} page (${SITE_URL}${mod.route}):\n${body}`);
+  }
+
+  // Pages made in the admin panel, newest first, so what the website says is what the assistant knows.
+  const extra = [...customPages].sort((a, b) => (a.updatedAt < b.updatedAt ? 1 : -1)).slice(0, CUSTOM_PAGES);
+  if (extra.length) {
+    parts.push("More pages: " + extra.map((p) => `${p.title} (${SITE_URL}${pagePath(p)})`).join("; "));
+    for (const p of extra) {
+      const body = summarise({ description: p.seo.description, blocks: p.blocks }, PER_CUSTOM);
+      if (body) parts.push(`${p.title} page (${SITE_URL}${pagePath(p)}):\n${body}`);
+    }
   }
 
   return { text: parts.join("\n\n"), facts };

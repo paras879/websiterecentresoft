@@ -108,3 +108,5 @@ The live preview in the page editor now includes the site header and footer, so 
 - Page editor: Save / Create page stays at the top of the screen next to Hide live preview.
 
 Customer reviews can have a photo (Customer photo, chosen from the media library or the website pictures). It shows as a round picture beside the name on the home page, and its description is Photo of <name>. Reviews without a photo look as before.
+
+The AI chat assistant also knows the published custom pages (their text, questions and answers; the newest 12, about 900 characters each). A custom page put in the Services menu is listed as a service. Drafts are not included. Changes reach the assistant within about a minute.

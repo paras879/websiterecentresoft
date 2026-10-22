@@ -241,3 +241,11 @@ textarea.input {
     align-items: stretch;
   }
 }
+
+.requiredStar {
+  color: #dc2626;
+}
+
+:global([data-theme="dark"]) .requiredStar {
+  color: #f87171;
+}

@@ -83,6 +83,10 @@
   color: #dc2626;
 }
 
+:global([data-theme="dark"]) .requiredStar {
+  color: #f87171;
+}
+
 .optionalTag {
   font-weight: 400;
   color: var(--ct-muted, #64748b);

@@ -176,7 +176,7 @@ export function CareerForm({
       <div className={styles.row}>
         <div className={styles.field}>
           <label htmlFor="cr-name" className={styles.label}>
-            Full name <span aria-hidden="true">*</span>
+            Full name <span className={styles.requiredStar} aria-hidden="true">*</span>
           </label>
           <input
             id="cr-name"
@@ -190,7 +190,7 @@ export function CareerForm({
         </div>
         <div className={styles.field}>
           <label htmlFor="cr-email" className={styles.label}>
-            Email address <span aria-hidden="true">*</span>
+            Email address <span className={styles.requiredStar} aria-hidden="true">*</span>
           </label>
           <input
             id="cr-email"
@@ -208,7 +208,7 @@ export function CareerForm({
       <div className={styles.row}>
         <div className={styles.field}>
           <label htmlFor="cr-phone" className={styles.label}>
-            Mobile number <span aria-hidden="true">*</span>
+            Mobile number <span className={styles.requiredStar} aria-hidden="true">*</span>
           </label>
           <PhoneField
             id="cr-phone"

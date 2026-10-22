@@ -6,6 +6,7 @@ import { getSiteContent } from "@/lib/content";
 import { buildSiteInfo } from "@/lib/site";
 import { getStore } from "@/lib/store";
 import { aiConfig, askModel, UpstreamBusyError, UpstreamError, type ChatMessage } from "@/lib/assistant-ai";
+import { publishedPages } from "@/lib/custom-pages";
 import { buildKnowledge, type Knowledge } from "@/lib/assistant-kb";
 import { basicAnswer, quickAnswer } from "@/lib/assistant-fallback";
 
@@ -37,7 +38,7 @@ let cachedKb: { at: number; kb: Knowledge } | null = null;
 async function knowledge(): Promise<Knowledge> {
   if (cachedKb && Date.now() - cachedKb.at < 60_000) return cachedKb.kb;
   const content = await getSiteContent();
-  const kb = buildKnowledge(content, buildSiteInfo(content.site));
+  const kb = buildKnowledge(content, buildSiteInfo(content.site), await publishedPages());
   cachedKb = { at: Date.now(), kb };
   return kb;
 }
