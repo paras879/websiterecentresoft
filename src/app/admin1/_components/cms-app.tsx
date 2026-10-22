@@ -113,6 +113,8 @@ export interface CmsAppProps {
   initialContent: SiteContent;
   initialInquiries: Inquiry[];
   storage: "redis" | "file" | "none";
+  /** Shown in the footer of the panel. */
+  company: { legalName: string; email: string; year: number };
   children?: React.ReactNode;
 }
 
@@ -126,7 +128,7 @@ export function CmsApp(props: CmsAppProps) {
 
 const GROUP_ORDER = ["Pages", "Services", "Site"] as const;
 
-function Shell({ user, permissions, superUser, initialContent, initialInquiries, storage }: CmsAppProps) {
+function Shell({ user, permissions, superUser, initialContent, initialInquiries, storage, company }: CmsAppProps) {
   const notify = useToast();
   const pathname = usePathname() || BASE;
   const router = useRouter();
@@ -593,6 +595,28 @@ function Shell({ user, permissions, superUser, initialContent, initialInquiries,
                 </div>
               ) : null}
             </div>
+            <footer className={cms.footer}>
+              <div className={cms.footerRow}>
+                <span>
+                  &copy; {company.year} {company.legalName}. All rights reserved.
+                </span>
+                <span className={cms.footerLinks}>
+                  <a href="/privacy-policy" target="_blank" rel="noopener noreferrer">
+                    Privacy Policy
+                  </a>
+                  <a href="/terms-and-conditions" target="_blank" rel="noopener noreferrer">
+                    Terms &amp; Conditions
+                  </a>
+                  <a href="/" target="_blank" rel="noopener noreferrer">
+                    View website
+                  </a>
+                </span>
+              </div>
+              <p className={cms.footerNote}>
+                Website admin panel for authorised staff only. Changes made here are recorded in the activity log. For access or password help, contact{" "}
+                <a href={`mailto:${company.email}`}>{company.email}</a>.
+              </p>
+            </footer>
           </div>
         </div>
       </FormProvider>

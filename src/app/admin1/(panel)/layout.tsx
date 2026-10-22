@@ -4,6 +4,7 @@ import { pageResource } from "@/lib/cms-access";
 import { allowed, getCmsUser } from "@/lib/cms-auth";
 import { getSiteContent } from "@/lib/content";
 import { listInquiries } from "@/lib/records";
+import { buildSiteInfo } from "@/lib/site";
 import { getStore } from "@/lib/store";
 import { CmsApp } from "../_components/cms-app";
 
@@ -24,6 +25,8 @@ export default async function PanelLayout({ children }: { children: React.ReactN
     modules.filter((m) => allowed(user, pageResource(m.id), "read")).map((m) => [m.id, (content as unknown as Record<string, unknown>)[m.id]]),
   ) as unknown as SiteContent;
 
+  const info = buildSiteInfo(content.site);
+
   return (
     <CmsApp
       user={{ id: user.id, name: user.name, email: user.email, username: user.username, roleId: user.roleId, roleName: user.role.name, root: user.root }}
@@ -32,6 +35,7 @@ export default async function PanelLayout({ children }: { children: React.ReactN
       initialContent={readable}
       initialInquiries={inquiries}
       storage={getStore().kind}
+      company={{ legalName: info.legalName, email: info.contact.email, year: new Date().getFullYear() }}
     >
       {children}
     </CmsApp>
