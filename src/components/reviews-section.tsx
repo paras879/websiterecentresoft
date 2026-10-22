@@ -34,7 +34,6 @@ export function ReviewsSection({ items }: { items: PublicReview[] }) {
 
   // Up to four fit in the row; more than that slide.
   const slides = reviews.length > 4;
-  const average = reviews.reduce((sum, r) => sum + Number(r.rating || 0), 0) / reviews.length;
 
   const cards = reviews.map((r, i) => {
     const rating = Math.min(5, Math.max(0, Number(r.rating) || 0));
@@ -64,16 +63,9 @@ export function ReviewsSection({ items }: { items: PublicReview[] }) {
     <div className={styles.wrap} role="region" aria-labelledby="reviews-heading">
       <div className="container">
         <header className={styles.head}>
-          <p className={styles.eyebrow}>Reviews</p>
           <h2 id="reviews-heading" className={styles.title}>
             What our customers say
           </h2>
-          <p className={styles.summary}>
-            <Stars value={Math.round(average)} label={`Average ${average.toFixed(1)} out of 5`} />
-            <span>
-              <span className={styles.score}>{average.toFixed(1)}</span> out of 5, from {reviews.length} {reviews.length === 1 ? "review" : "reviews"}
-            </span>
-          </p>
         </header>
 
         {slides ? <ReviewsSlider>{cards}</ReviewsSlider> : <ul className={styles.list}>{cards}</ul>}
