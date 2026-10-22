@@ -37,14 +37,14 @@ export async function PUT(req: Request) {
   }
 }
 
-/** Puts one page back to the content it shipped with. Needs the Delete permission on that page. */
+/** Puts one page back to the content it shipped with. Needs the Restore permission on that page. */
 export async function DELETE(req: Request) {
   try {
     const id = new URL(req.url).searchParams.get("module");
     const mod = modules.find((m) => m.id === id);
     if (!mod) return json({ success: false, error: "That page does not exist." }, 404);
 
-    const guard = await guardCms(req, { resource: pageResource(mod.id), action: "delete" }, { write: true });
+    const guard = await guardCms(req, { resource: pageResource(mod.id), action: "restore" }, { write: true });
     if ("denied" in guard) return guard.denied;
 
     const original = (getDefaultContent() as unknown as Record<string, unknown>)[mod.id];

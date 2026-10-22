@@ -93,5 +93,5 @@ In the page editor, "Show a link in" has these choices: inside the Services drop
 ## Security check on sign-in, and per-page reset and restore
 
 - Both /admin and /admin1 sign-in show the Google I'm not a robot box when the reCAPTCHA keys are set (the same keys as the contact form). The server checks it too. Without the keys, sign-in works as before.
-- On a built-in page in /admin1: the Delete permission allows Reset whole page to original, and the Restore permission allows Restore an earlier version of that page only. Other pages are never touched. Both are written to the Activity log.
+- On a built-in page in /admin1: the Restore permission allows both Reset whole page to original and Restore an earlier version of that page only (built-in pages have no Create or Delete). Other pages are never touched. Both are written to the Activity log.
 

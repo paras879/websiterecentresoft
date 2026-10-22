@@ -59,7 +59,7 @@ export function PageDocView({ moduleId }: { moduleId: string }) {
   }, [canEdit, dirty, savePage, moduleId]);
 
   const resource = pageResource(moduleId);
-  const canReset = can(resource, "delete") && storage !== "none";
+  const canReset = can(resource, "restore") && storage !== "none";
   const canRestore = can(resource, "restore") && storage !== "none";
 
   const resetPage = async () => {
