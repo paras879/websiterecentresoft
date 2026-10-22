@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import styles from "./reviews-section.module.css";
 
-const EVERY = 4500;
+const EVERY = 2000;
 const SLIDE_MS = 650;
 
 const ease = (t: number) => (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2);
