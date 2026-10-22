@@ -240,6 +240,8 @@ export function PageEdit({ id }: { id: string }) {
     });
 
   const slugError = page.slug ? slugProblem(page.prefix, page.slug) : null;
+  const knownGroup = page.menu === "group" ? groups.find((g) => g.toLowerCase() === page.menuGroup.trim().toLowerCase()) : undefined;
+  const folderValue = knownGroup && !newGroup ? `group:${knownGroup}` : page.prefix;
 
   const save = async (nextStatus?: "published" | "draft") => {
     setError("");
@@ -443,9 +445,28 @@ export function PageEdit({ id }: { id: string }) {
                 <div className={cms.formRow} style={{ gridTemplateColumns: "minmax(0,220px) minmax(0,1fr)" }}>
                   <Field label="Folder">
                     {(fid) => (
-                      <select id={fid} className={adminStyles.input} value={page.prefix} onChange={(e) => patch({ prefix: e.target.value as "" | "services" })}>
+                      <select
+                        id={fid}
+                        className={adminStyles.input}
+                        value={folderValue}
+                        onChange={(e) => {
+                          const v = e.target.value;
+                          if (v.startsWith("group:")) {
+                            // Under a dropdown that already exists: the page sits on the main site and is listed in that dropdown.
+                            patch({ prefix: "", menu: "group", menuGroup: v.slice(6) });
+                            setNewGroup(false);
+                          } else {
+                            patch({ prefix: v as "" | "services", ...(page.menu === "group" ? { menu: "none", menuGroup: "" } : {}) });
+                          }
+                        }}
+                      >
                         <option value="">/ (main site)</option>
                         <option value="services">/services/</option>
+                        {groups.map((g) => (
+                          <option key={g} value={`group:${g}`}>
+                            In the menu dropdown: {g}
+                          </option>
+                        ))}
                       </select>
                     )}
                   </Field>
