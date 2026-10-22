@@ -3,7 +3,7 @@ import { modules } from "@/content";
 import { logAudit } from "@/lib/audit";
 import { pageResource } from "@/lib/cms-access";
 import { cmsFailure, guardCms } from "@/lib/cms-guard";
-import { getSiteContent, moduleVersions, saveSiteContent } from "@/lib/content";
+import { getSavedContent, moduleVersions, saveSiteContent } from "@/lib/content";
 import { json } from "@/lib/api";
 
 /** Brings back one earlier copy of one page. Everything else on the site stays as it is. */
@@ -19,7 +19,7 @@ export async function POST(req: Request) {
     const version = (await moduleVersions(mod.id)).find((v) => v.id === body.versionId);
     if (!version) return json({ success: false, error: "That version is no longer available." }, 404);
 
-    const current = await getSiteContent();
+    const current = await getSavedContent();
     const saved = await saveSiteContent({ ...current, [mod.id]: version.data }, `${mod.title} restored by ${guard.user.name}`);
     await logAudit("version", `Restored an earlier version of ${mod.title}`, guard.user);
     try {

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { adminStatus, adminUsername, isAuthenticatedAdmin } from "@/lib/admin-auth";
-import { getSiteContent } from "@/lib/content";
+import { getSavedContent } from "@/lib/content";
 import { listInquiries } from "@/lib/records";
 import { getStore } from "@/lib/store";
 import { AdminApp } from "./_components/admin-app";
@@ -19,7 +19,7 @@ export default async function AdminPage() {
   if (!(await isAuthenticatedAdmin())) redirect("/admin/login");
 
   const [content, status, username, inquiries] = await Promise.all([
-    getSiteContent(),
+    getSavedContent(),
     adminStatus(),
     adminUsername(),
     listInquiries().catch(() => []),

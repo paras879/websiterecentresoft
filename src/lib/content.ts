@@ -151,15 +151,31 @@ function withSiteAddress(content: SiteContent): SiteContent {
   return content;
 }
 
+/** Saved JSON (or nothing) turned into the content the website uses. */
+function shapeContent(raw: string | null): SiteContent {
+  const base = raw ? sanitizeContent(JSON.parse(raw)) : sanitizeContent(defaultContent);
+  const shaped = withRequiredHomeCards(withRequiredCareerAreas(withRequiredServices(base)));
+  return withSiteAddress(raw ? applyImageUpgrades(shaped) : shaped);
+}
+
+/** What visitors see. If the database cannot be reached for a moment, the built-in copy is used instead of an error page. */
 export const getSiteContent = cache(async (): Promise<SiteContent> => {
   try {
-    const raw = await getStore().get(CONTENT_KEY, { cached: true });
-    if (raw) return withSiteAddress(applyImageUpgrades(withRequiredHomeCards(withRequiredCareerAreas(withRequiredServices(sanitizeContent(JSON.parse(raw)))))));
+    return shapeContent(await getStore().get(CONTENT_KEY, { cached: true }));
   } catch (error) {
     console.error("Could not read saved content, using the built-in copy.", error);
   }
-  return withSiteAddress(withRequiredHomeCards(withRequiredCareerAreas(withRequiredServices(sanitizeContent(defaultContent)))));
+  return shapeContent(null);
 });
+
+/**
+ * What is saved right now, read straight from the database. Unlike the line above it never falls back to the built-in
+ * copy: if the database cannot be read this throws, so the admin panel can never show the built-in text as if it were
+ * the live text, or save it over the real content.
+ */
+export async function getSavedContent(): Promise<SiteContent> {
+  return shapeContent(await getStore().get(CONTENT_KEY));
+}
 
 /** Validates and saves the whole document, and keeps a snapshot so it can be restored later. */
 export async function saveSiteContent(raw: unknown, note = ""): Promise<SiteContent> {

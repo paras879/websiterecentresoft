@@ -40,14 +40,36 @@ export class StoreUnavailableError extends Error {
 
 /* ------------------------------------------------------------------ Upstash Redis (REST) */
 
+/**
+ * A server that sat idle can find the connection to the database already closed ("fetch failed", "write EPIPE" or
+ * "ECONNRESET"). That is not a real failure, so the same request is simply sent once more on a fresh connection.
+ */
+async function retried<T>(run: () => Promise<T>): Promise<T> {
+  for (let attempt = 1; ; attempt++) {
+    try {
+      return await run();
+    } catch (error) {
+      // "fetch failed" is a TypeError; a connection that hangs is cut by the time limit on each request.
+      const hung = error instanceof DOMException && (error.name === "TimeoutError" || error.name === "AbortError");
+      if ((!(error instanceof TypeError) && !hung) || attempt >= 3) throw error;
+      await new Promise((r) => setTimeout(r, 120 * attempt));
+    }
+  }
+}
+
 function redisStore(url: string, token: string): Store {
   const base = url.replace(/\/$/, "");
 
-  async function request<T>(args: (string | number)[], init: { cache: "no-store" } | { next: { revalidate: number; tags: string[] } }): Promise<T> {
+  function request<T>(args: (string | number)[], init: { cache: "no-store" } | { next: { revalidate: number; tags: string[] } }): Promise<T> {
+    return retried(() => send<T>(args, init));
+  }
+
+  async function send<T>(args: (string | number)[], init: { cache: "no-store" } | { next: { revalidate: number; tags: string[] } }): Promise<T> {
     const res = await fetch(base, {
       method: "POST",
       headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
       body: JSON.stringify(args),
+      signal: AbortSignal.timeout(5000),
       ...init,
     });
     const json = (await res.json().catch(() => ({}))) as { result?: T; error?: string };
@@ -57,12 +79,17 @@ function redisStore(url: string, token: string): Store {
 
   const cmd = <T = unknown>(...args: (string | number)[]): Promise<T> => request<T>(args, { cache: "no-store" });
 
-  async function pipeline(commands: (string | number)[][]): Promise<unknown[]> {
+  function pipeline(commands: (string | number)[][]): Promise<unknown[]> {
+    return retried(() => sendPipeline(commands));
+  }
+
+  async function sendPipeline(commands: (string | number)[][]): Promise<unknown[]> {
     const res = await fetch(`${base}/pipeline`, {
       method: "POST",
       headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
       body: JSON.stringify(commands),
       cache: "no-store",
+      signal: AbortSignal.timeout(5000),
     });
     const json = (await res.json().catch(() => [])) as { result?: unknown; error?: string }[];
     if (!res.ok || !Array.isArray(json)) throw new Error(`Redis request failed (${res.status})`);

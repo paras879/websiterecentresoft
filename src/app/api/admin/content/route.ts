@@ -1,5 +1,5 @@
 import { revalidatePath } from "next/cache";
-import { getDefaultContent, getSiteContent, saveSiteContent } from "@/lib/content";
+import { getDefaultContent, getSavedContent, saveSiteContent } from "@/lib/content";
 import { changedParts, logAudit, moduleTitle } from "@/lib/audit";
 import { failure, guardAdmin, json } from "@/lib/api";
 import { getStore } from "@/lib/store";
@@ -10,7 +10,7 @@ export async function GET(req: Request) {
   const store = getStore();
   return json({
     success: true,
-    content: await getSiteContent(),
+    content: await getSavedContent(),
     defaults: getDefaultContent(),
     storage: { kind: store.kind, writable: store.writable },
   });
@@ -26,7 +26,7 @@ export async function PUT(req: Request) {
       return json({ success: false, error: "Nothing to save." }, 400);
     }
     const note = typeof body.note === "string" ? body.note : "";
-    const before = await getSiteContent();
+    const before = await getSavedContent();
     const content = await saveSiteContent(body.content, note);
     const parts = changedParts(before, content, moduleTitle);
     if (parts.length) await logAudit("content", `Edited ${parts.join(", ")}`);

@@ -3,7 +3,7 @@ import { modules } from "@/content";
 import { pageResource } from "@/lib/cms-access";
 import { changedParts, logAudit } from "@/lib/audit";
 import { cmsFailure, guardCms } from "@/lib/cms-guard";
-import { getDefaultContent, getSiteContent, saveSiteContent } from "@/lib/content";
+import { getDefaultContent, getSavedContent, saveSiteContent } from "@/lib/content";
 import { json } from "@/lib/api";
 
 /**
@@ -21,7 +21,7 @@ export async function PUT(req: Request) {
     const guard = await guardCms(req, { resource: pageResource(mod.id), action: "update" }, { write: true });
     if ("denied" in guard) return guard.denied;
 
-    const current = await getSiteContent();
+    const current = await getSavedContent();
     const saved = await saveSiteContent({ ...current, [mod.id]: body.data }, `${mod.title} edited by ${guard.user.name}`);
     const fields = changedParts((current as unknown as Record<string, unknown>)[mod.id], (saved as unknown as Record<string, unknown>)[mod.id]);
     if (fields.length) {
@@ -48,7 +48,7 @@ export async function DELETE(req: Request) {
     if ("denied" in guard) return guard.denied;
 
     const original = (getDefaultContent() as unknown as Record<string, unknown>)[mod.id];
-    const current = await getSiteContent();
+    const current = await getSavedContent();
     const saved = await saveSiteContent({ ...current, [mod.id]: original }, `${mod.title} reset to the original by ${guard.user.name}`);
     await logAudit("content", `Reset ${mod.title} to its original content`, guard.user);
     try {

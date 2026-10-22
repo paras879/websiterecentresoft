@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { modules, type SiteContent } from "@/content";
 import { pageResource } from "@/lib/cms-access";
 import { allowed, getCmsUser } from "@/lib/cms-auth";
-import { getSiteContent } from "@/lib/content";
+import { getSavedContent } from "@/lib/content";
 import { listInquiries } from "@/lib/records";
 import { buildSiteInfo } from "@/lib/site";
 import { getStore } from "@/lib/store";
@@ -16,7 +16,7 @@ export default async function PanelLayout({ children }: { children: React.ReactN
   if (!user) redirect("/admin1/login");
 
   const [content, inquiries] = await Promise.all([
-    getSiteContent(),
+    getSavedContent(),
     allowed(user, "inbox", "read") ? listInquiries().catch(() => []) : Promise.resolve([]),
   ]);
 
