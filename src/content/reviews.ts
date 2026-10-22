@@ -1,8 +1,9 @@
-import { defineModule, group, list, longtext, select, text } from "./fields";
+import { date, defineModule, group, image, list, longtext, select, text } from "./fields";
 
 export interface ReviewItem {
   author: string;
   role: string;
+  photo: string;
   rating: string;
   text: string;
   date: string;
@@ -34,6 +35,7 @@ export const reviewsModule = defineModule({
             [
               text("author", "Customer name", { required: true, max: 80 }),
               text("role", "Role and company", { max: 120, help: "For example: Operations Head, ABC Logistics." }),
+              image("photo", "Customer photo", { help: "Optional. A square photo of the customer works best. It is shown beside their name on the website." }),
               select("rating", "Rating", [
                 { value: "5", label: "5 out of 5" },
                 { value: "4", label: "4 out of 5" },
@@ -42,7 +44,7 @@ export const reviewsModule = defineModule({
                 { value: "1", label: "1 out of 5" },
               ]),
               longtext("text", "What they said", { required: true, rows: 4, max: 800 }),
-              text("date", "Date of the review", { max: 10, help: "Format: 2026-03-28." }),
+              date("date", "Date of the review", { help: "Pick the day from the calendar." }),
               text("source", "Where it was given", { max: 80, help: "For example: Google, Clutch, email." }),
             ],
             { titleKey: "author", max: 30 },

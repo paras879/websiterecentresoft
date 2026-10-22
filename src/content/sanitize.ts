@@ -65,6 +65,12 @@ function sanitizeField(field: Field, value: unknown, fallback: unknown): unknown
       return cleanString(keep(value), field.max ?? 400, false);
     case "longtext":
       return cleanString(keep(value), field.max ?? 6000, true);
+    case "date": {
+      // Only a real calendar date (2026-03-28) is kept; anything else is left empty.
+      const s = cleanString(keep(value), 10, false);
+      const d = /^\d{4}-\d{2}-\d{2}$/.test(s) ? new Date(`${s}T00:00:00Z`) : null;
+      return d && !Number.isNaN(d.getTime()) && d.toISOString().slice(0, 10) === s ? s : "";
+    }
     case "url":
       return safeUrl(keep(value));
     case "image":

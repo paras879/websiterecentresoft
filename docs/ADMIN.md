@@ -99,3 +99,12 @@ In the page editor, "Show a link in" has these choices: inside the Services drop
 Versions list: each saved version now says what changed and who saved it (for older saves it is worked out by comparing with the save before). A save that changes nothing is not added.
 
 The live preview in the page editor now includes the site header and footer, so a page's menu choice (top link, dropdown, Services, footer) shows up there as you set it, before saving. Links inside the preview do not navigate.
+
+## Small admin changes
+
+- /admin1 sidebar: all groups are closed on login and only one opens at a time (the page you are on opens its own group).
+- /admin1 uses lighter, slightly smaller type.
+- Customer reviews: the date is picked from a calendar (no future dates); anything that is not a real date is dropped. With more than four reviews the home page shows them in a sliding row with arrows (it also moves by itself, and stops on hover, touch or reduced motion).
+- Page editor: Save / Create page stays at the top of the screen next to Hide live preview.
+
+Customer reviews can have a photo (Customer photo, chosen from the media library or the website pictures). It shows as a round picture beside the name on the home page, and its description is Photo of <name>. Reviews without a photo look as before.

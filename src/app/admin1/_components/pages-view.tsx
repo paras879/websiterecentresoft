@@ -287,7 +287,7 @@ export function PageEdit({ id }: { id: string }) {
   }
 
   const actions = (
-    <aside className={`${cms.docAside} ${showPreview ? cms.docAsideInline : ""}`} aria-label="Document actions">
+    <aside className={`${cms.docAside} ${cms.docAsideLow} ${showPreview ? cms.docAsideInline : ""}`} aria-label="Document actions">
       <p className={cms.asideTitle}>Actions</p>
       <span className={`${cms.state} ${dirty ? cms.stateDirty : ""}`} role="status" aria-live="polite">
         <span className={cms.stateDot} aria-hidden="true" />
@@ -379,9 +379,6 @@ export function PageEdit({ id }: { id: string }) {
       ) : null}
 
       <div className={cms.asideActions}>
-        <Button variant="primary" icon="save" busy={saving} disabled={!canSave || !loaded} onClick={() => void save()}>
-          {creating ? "Create page" : "Save"}
-        </Button>
         {!creating && page.status === "draft" && can("pages", "update") ? (
           <Button disabled={saving} onClick={() => void save("published")}>
             Save and publish
@@ -417,10 +414,15 @@ export function PageEdit({ id }: { id: string }) {
 
   return (
     <>
-      <PageHead title={creating ? "Create new page" : page.title || "Page"}>
-        <Button onClick={togglePreview} aria-pressed={showPreview}>
-          {showPreview ? "Hide live preview" : "Show live preview"}
-        </Button>
+      <PageHead title={creating ? "Create new page" : page.title || "Page"} sticky>
+        <div className={cms.headActions}>
+          <Button variant="primary" icon="save" busy={saving} disabled={!canSave || !loaded} onClick={() => void save()}>
+            {creating ? "Create page" : "Save"}
+          </Button>
+          <Button onClick={togglePreview} aria-pressed={showPreview}>
+            {showPreview ? "Hide live preview" : "Show live preview"}
+          </Button>
+        </div>
       </PageHead>
 
       <div className={`${cms.doc} ${showPreview ? cms.docSplit : ""}`}>

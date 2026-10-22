@@ -17,6 +17,7 @@ export interface FieldBase {
 export type Field =
   | (FieldBase & { type: "text"; max?: number; placeholder?: string })
   | (FieldBase & { type: "longtext"; max?: number; rows?: number })
+  | (FieldBase & { type: "date" })
   | (FieldBase & { type: "url"; placeholder?: string })
   | (FieldBase & { type: "email" })
   | (FieldBase & { type: "phone" })
@@ -76,6 +77,13 @@ export const longtext = (
   label: string,
   o: Opts<Extract<Field, { type: "longtext" }>> = {},
 ): Field => ({ type: "longtext", key, label, ...o });
+
+export const date = (key: string, label: string, o: Opts<Extract<Field, { type: "date" }>> = {}): Field => ({
+  type: "date",
+  key,
+  label,
+  ...o,
+});
 
 export const url = (key: string, label: string, o: Opts<Extract<Field, { type: "url" }>> = {}): Field => ({
   type: "url",

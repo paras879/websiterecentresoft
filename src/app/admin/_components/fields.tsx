@@ -37,6 +37,7 @@ export const FieldRenderer = memo(function FieldRenderer({ field, path, value }:
     case "url":
     case "email":
     case "phone":
+    case "date":
       return <TextLike field={field} path={path} value={value as string} />;
     case "image":
       return <ImageField field={field} path={path} value={value as string} />;
@@ -110,7 +111,7 @@ function Labelled({
 
 /* ------------------------------------------------------------------ text-like inputs */
 
-function TextLike({ field, path, value }: { field: Extract<Field, { type: "text" | "longtext" | "url" | "email" | "phone" }>; path: Path; value: string }) {
+function TextLike({ field, path, value }: { field: Extract<Field, { type: "text" | "longtext" | "url" | "email" | "phone" | "date" }>; path: Path; value: string }) {
   const { update, attempt } = useContext(FormContext);
   const id = useId();
   const [touched, setTouched] = useState(false);
@@ -144,7 +145,8 @@ function TextLike({ field, path, value }: { field: Extract<Field, { type: "text"
       ) : (
         <input
           {...common}
-          type={field.type === "email" ? "email" : field.type === "phone" ? "tel" : "text"}
+          type={field.type === "email" ? "email" : field.type === "phone" ? "tel" : field.type === "date" ? "date" : "text"}
+          max={field.type === "date" ? new Date().toISOString().slice(0, 10) : undefined}
           inputMode={field.type === "phone" ? "tel" : field.type === "email" ? "email" : undefined}
           autoComplete="off"
           list={listId}

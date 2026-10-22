@@ -142,7 +142,13 @@ function Shell({ user, permissions, superUser, initialContent, initialInquiries,
   const [savingModule, setSavingModule] = useState<string | null>(null);
   const [savedTick, setSavedTick] = useState(0);
   const [navOpen, setNavOpen] = useState(false);
-  const [closed, setClosed] = useState<Record<string, boolean>>({});
+  // One sidebar group is open at a time. Undefined means "follow the page being shown"; the dashboard shows none.
+  const [openGroup, setOpenGroup] = useState<string | null | undefined>(undefined);
+  const [groupPath, setGroupPath] = useState(pathname);
+  if (groupPath !== pathname) {
+    setGroupPath(pathname);
+    setOpenGroup(undefined);
+  }
   const mainRef = useRef<HTMLDivElement>(null);
 
   const can = useCallback(
@@ -446,14 +452,15 @@ function Shell({ user, permissions, superUser, initialContent, initialInquiries,
                 </li>
               </ul>
               {navGroups.map((g) => {
-                const isClosed = Boolean(closed[g.title]);
+                const shown = openGroup === undefined ? (navGroups.find((x) => x.items.some((i) => i.on))?.title ?? null) : openGroup;
+                const isClosed = shown !== g.title;
                 return (
                   <div key={g.title} className={cms.navGroup}>
                     <button
                       type="button"
                       className={cms.navGroupBtn}
                       aria-expanded={!isClosed}
-                      onClick={() => setClosed((c) => ({ ...c, [g.title]: !c[g.title] }))}
+                      onClick={() => setOpenGroup(isClosed ? g.title : null)}
                     >
                       {g.title}
                       <svg viewBox="0 0 24 24" className={`${cms.navCaret} ${isClosed ? cms.navCaretClosed : ""}`} aria-hidden="true">

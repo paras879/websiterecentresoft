@@ -67,7 +67,7 @@ const PHONE = /^\+?[0-9\s\-()]{5,25}$/;
 
 export function validateField(field: Field, value: unknown): string | null {
   const text = typeof value === "string" ? value.trim() : "";
-  const isText = ["text", "longtext", "url", "email", "phone", "image"].includes(field.type);
+  const isText = ["text", "longtext", "url", "email", "phone", "image", "date"].includes(field.type);
 
   if (field.required && isText && !text) return `Enter ${field.label.toLowerCase()}.`;
   if (!isText || !text) return null;
@@ -75,6 +75,8 @@ export function validateField(field: Field, value: unknown): string | null {
   switch (field.type) {
     case "url":
       return safeUrl(text) ? null : "Start with / for a page on this site, or use https:// for another site.";
+    case "date":
+      return /^\d{4}-\d{2}-\d{2}$/.test(text) && !Number.isNaN(new Date(`${text}T00:00:00Z`).getTime()) ? null : "Pick a date from the calendar.";
     case "email":
       return EMAIL.test(text) ? null : "Enter an email like name@company.com.";
     case "phone":
