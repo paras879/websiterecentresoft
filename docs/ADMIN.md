@@ -111,4 +111,4 @@ Customer reviews can have a photo (Customer photo, chosen from the media library
 
 The AI chat assistant also knows the published custom pages (their text, questions and answers; the newest 12, about 900 characters each). A custom page put in the Services menu is listed as a service. Drafts are not included. Changes reach the assistant within about a minute.
 
-The /admin1 panel has a footer on every screen: copyright with the company legal name and the current year, links to Privacy Policy, Terms & Conditions and the website, a note that the panel is for authorised staff and that changes are recorded in the activity log, and the company email for access or password help. The name and email come from Header, footer & contact.
+The /admin1 panel has a footer on every screen: copyright with the company legal name and the current year, links to Privacy Policy, Terms & Conditions and the website, a short note that the panel is for authorised staff and every change is recorded, and a Need help? link to the company email. The name and email come from Header, footer & contact.

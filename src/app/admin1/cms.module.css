@@ -1463,43 +1463,57 @@
 /* ------------------------------------------------------------------ footer of the panel */
 .footer {
   margin-top: auto;
-  padding: 18px 32px 22px;
-  font-size: 12.5px;
-  color: var(--ad-muted);
+  padding: 20px 32px;
+  background: var(--ad-surface-2);
   border-top: 1px solid var(--ad-line);
 }
 
-.footerRow {
+.footerInner {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 6px 24px;
+  gap: 12px 32px;
+  max-width: 1440px;
+}
+
+.footerLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.footerCopy {
+  font-size: 13px;
+  color: var(--ad-text);
+}
+
+.footerNote {
+  font-size: 12px;
+  color: var(--ad-muted);
 }
 
 .footerLinks {
-  display: inline-flex;
+  display: flex;
   flex-wrap: wrap;
-  gap: 6px 18px;
+  align-items: center;
+  gap: 6px 20px;
 }
 
-.footer a {
-  color: inherit;
+.footerLinks a {
+  font-size: 13px;
+  color: var(--ad-muted);
   text-decoration: none;
+  transition: color 0.15s ease;
 }
 
-.footer a:hover {
+.footerLinks a:hover {
   color: var(--ad-text);
   text-decoration: underline;
 }
 
-.footerNote {
-  margin: 8px 0 0;
-  line-height: 1.5;
-}
-
 @media (max-width: 640px) {
   .footer {
-    padding: 16px 16px 20px;
+    padding: 16px;
   }
 }

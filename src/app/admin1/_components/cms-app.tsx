@@ -596,11 +596,14 @@ function Shell({ user, permissions, superUser, initialContent, initialInquiries,
               ) : null}
             </div>
             <footer className={cms.footer}>
-              <div className={cms.footerRow}>
-                <span>
-                  &copy; {company.year} {company.legalName}. All rights reserved.
-                </span>
-                <span className={cms.footerLinks}>
+              <div className={cms.footerInner}>
+                <div className={cms.footerLeft}>
+                  <span className={cms.footerCopy}>
+                    &copy; {company.year} {company.legalName}. All rights reserved.
+                  </span>
+                  <span className={cms.footerNote}>Authorised staff only. Every change made here is recorded.</span>
+                </div>
+                <nav className={cms.footerLinks} aria-label="Footer">
                   <a href="/privacy-policy" target="_blank" rel="noopener noreferrer">
                     Privacy Policy
                   </a>
@@ -610,12 +613,9 @@ function Shell({ user, permissions, superUser, initialContent, initialInquiries,
                   <a href="/" target="_blank" rel="noopener noreferrer">
                     View website
                   </a>
-                </span>
+                  <a href={`mailto:${company.email}`}>Need help?</a>
+                </nav>
               </div>
-              <p className={cms.footerNote}>
-                Website admin panel for authorised staff only. Changes made here are recorded in the activity log. For access or password help, contact{" "}
-                <a href={`mailto:${company.email}`}>{company.email}</a>.
-              </p>
             </footer>
           </div>
         </div>
