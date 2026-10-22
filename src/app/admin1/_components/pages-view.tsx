@@ -143,6 +143,20 @@ export function PageEdit({ id }: { id: string }) {
   const [error, setError] = useState("");
   const [deleting, setDeleting] = useState(false);
   const [adding, setAdding] = useState(false);
+  // Dropdowns other pages already use, so this page can be put under one of them.
+  const [groups, setGroups] = useState<string[]>([]);
+  const [newGroup, setNewGroup] = useState(false);
+  useEffect(() => {
+    let alive = true;
+    void api<{ pages: CustomPage[] }>("/api/cms/pages").then((res) => {
+      if (!alive || !res.success) return;
+      const names = res.pages.filter((p) => p.id !== id && p.menu === "group" && p.menuGroup.trim()).map((p) => p.menuGroup.trim());
+      setGroups([...new Set(names)]);
+    });
+    return () => {
+      alive = false;
+    };
+  }, [id]);
   const [closedBlocks, setClosedBlocks] = useState<Record<string, boolean>>({});
   const dragFrom = useRef<number | null>(null);
   const [showPreview, setShowPreview] = useState(false);
@@ -300,9 +314,41 @@ export function PageEdit({ id }: { id: string }) {
         )}
       </Field>
 
-      {page.menu === "group" ? (
+      {page.menu === "group" && groups.length > 0 ? (
+        <Field label="Which dropdown" hint="Pick a dropdown that already exists to add this page under it, or start a new one.">
+          {(fid) => {
+            const known = groups.find((g) => g.toLowerCase() === page.menuGroup.trim().toLowerCase());
+            return (
+              <select
+                id={fid}
+                className={adminStyles.input}
+                value={newGroup || !known ? "__new__" : known}
+                disabled={!canSave}
+                onChange={(e) => {
+                  if (e.target.value === "__new__") {
+                    setNewGroup(true);
+                    patch({ menuGroup: "" });
+                  } else {
+                    setNewGroup(false);
+                    patch({ menuGroup: e.target.value });
+                  }
+                }}
+              >
+                {groups.map((g) => (
+                  <option key={g} value={g}>
+                    {g}
+                  </option>
+                ))}
+                <option value="__new__">A new dropdown…</option>
+              </select>
+            );
+          }}
+        </Field>
+      ) : null}
+
+      {page.menu === "group" && (groups.length === 0 || newGroup || !groups.some((g) => g.toLowerCase() === page.menuGroup.trim().toLowerCase())) ? (
         <TextField
-          label="Dropdown name"
+          label="New dropdown name"
           value={page.menuGroup}
           max={30}
           onChange={(v) => patch({ menuGroup: v })}

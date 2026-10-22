@@ -256,12 +256,16 @@ export function withCustomPageLinks<
   // Their own place in the top bar, after the built-in links: single links first, then dropdowns.
   const items = next.header.items as { label: string; href: string; hasMenu: boolean; entries?: ReturnType<typeof entry>[] }[];
   for (const p of inTop) items.push({ label: p.title, href: path(p), hasMenu: false });
-  const groups = new Map<string, CustomPage[]>();
+  // Pages share a dropdown when the names match, ignoring capital letters.
+  const groups = new Map<string, { name: string; list: CustomPage[] }>();
   for (const p of inGroups) {
     const name = p.menuGroup.trim() || "More";
-    groups.set(name, [...(groups.get(name) ?? []), p]);
+    const key = name.toLowerCase();
+    const group = groups.get(key) ?? { name, list: [] };
+    group.list.push(p);
+    groups.set(key, group);
   }
-  for (const [name, list] of groups) items.push({ label: name, href: path(list[0]), hasMenu: true, entries: list.map(entry) });
+  for (const { name, list } of groups.values()) items.push({ label: name, href: path(list[0]), hasMenu: true, entries: list.map(entry) });
 
   const first = next.footer.columns[0];
   if (first) {
