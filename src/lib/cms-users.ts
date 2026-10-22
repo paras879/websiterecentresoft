@@ -130,6 +130,12 @@ async function checkUsername(raw: string, selfId?: string): Promise<string> {
   return username;
 }
 
+/** True when a person created under Users already signs in with this name or email. */
+export async function loginNameTaken(name: string, exceptId?: string): Promise<boolean> {
+  const wanted = name.trim().toLowerCase();
+  return (await readAll()).some((u) => u.id !== exceptId && (u.email.toLowerCase() === wanted || u.username?.toLowerCase() === wanted));
+}
+
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export class CmsError extends Error {

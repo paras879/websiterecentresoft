@@ -86,7 +86,7 @@ In the page editor, "Show a link in" has these choices: inside the Services drop
 
 ## Locked accounts and built-in roles
 
-- Nobody can change their own name, email, username or password from the Account page. Only an administrator can, from Users. Account shows the details read-only with a message to contact the administrator.
+- Only a Super admin can change their own sign-in details on the Account page: the main administrator (from the environment) changes the username and password, and a Super admin created under Users changes name, email, username and password. Everyone else sees the details read-only with a message to contact the administrator, and an administrator changes them from Users.
 - Sign-in accepts the email, the username, or the full name when only one person has that name.
 - Editor and Viewer can be adjusted under Roles (permissions and description). "Restore defaults" puts the original back. Super admin cannot be changed or deleted.
 
