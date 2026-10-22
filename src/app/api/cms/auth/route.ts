@@ -2,6 +2,7 @@ import { adminStatus, clientIp, resetRateLimit, sameOrigin, withinRateLimit } fr
 import { cmsLogin, cmsLogout, getCmsUser } from "@/lib/cms-auth";
 import { logAudit } from "@/lib/audit";
 import { failure, json } from "@/lib/api";
+import { verifyRecaptcha } from "@/lib/recaptcha";
 
 export async function GET() {
   const user = await getCmsUser();
@@ -27,11 +28,14 @@ export async function POST(req: Request) {
   }
 
   try {
-    const body = (await req.json()) as { email?: unknown; password?: unknown };
+    const body = (await req.json()) as { email?: unknown; password?: unknown; recaptcha?: unknown };
     const email = typeof body.email === "string" ? body.email.trim().slice(0, 200) : "";
     const password = typeof body.password === "string" ? body.password.slice(0, 200) : "";
     if (!email || !password) return json({ success: false, error: "Enter your email and password." }, 400);
 
+    if (!(await verifyRecaptcha(typeof body.recaptcha === "string" ? body.recaptcha.slice(0, 4000) : "", ip))) {
+      return json({ success: false, error: "Please complete the security check (I'm not a robot) and try again." }, 400);
+    }
     const result = await cmsLogin(email, password);
     if (!result.ok) {
       await logAudit("sign-in", `${result.reason === "disabled" ? "Blocked sign-in (account switched off)" : "Failed sign-in"} as "${email.slice(0, 60)}"`, { id: "", name: "Unknown", email });

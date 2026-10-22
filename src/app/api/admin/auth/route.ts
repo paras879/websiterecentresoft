@@ -11,6 +11,7 @@ import {
 } from "@/lib/admin-auth";
 import { logAudit } from "@/lib/audit";
 import { failure, json } from "@/lib/api";
+import { verifyRecaptcha } from "@/lib/recaptcha";
 import { getStore } from "@/lib/store";
 
 export async function GET() {
@@ -41,9 +42,12 @@ export async function POST(req: Request) {
   }
 
   try {
-    const body = (await req.json()) as { username?: unknown; password?: unknown };
+    const body = (await req.json()) as { username?: unknown; password?: unknown; recaptcha?: unknown };
     const username = typeof body.username === "string" ? body.username : "";
     const password = typeof body.password === "string" ? body.password : "";
+    if (!(await verifyRecaptcha(typeof body.recaptcha === "string" ? body.recaptcha.slice(0, 4000) : "", ip))) {
+      return json({ success: false, error: "Please complete the security check (I'm not a robot) and try again." }, 400);
+    }
     const who = await verifyLogin(username, password);
     if (!who) {
       await logAudit("sign-in", `Failed sign-in to /admin as "${username.slice(0, 60)}"`, { id: "", name: "Unknown", email: username.slice(0, 120) });

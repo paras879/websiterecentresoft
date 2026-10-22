@@ -89,3 +89,9 @@ In the page editor, "Show a link in" has these choices: inside the Services drop
 - Nobody can change their own name, email, username or password from the Account page. Only an administrator can, from Users. Account shows the details read-only with a message to contact the administrator.
 - Sign-in accepts the email, the username, or the full name when only one person has that name.
 - Editor and Viewer can be adjusted under Roles (permissions and description). "Restore defaults" puts the original back. Super admin cannot be changed or deleted.
+
+## Security check on sign-in, and per-page reset and restore
+
+- Both /admin and /admin1 sign-in show the Google I'm not a robot box when the reCAPTCHA keys are set (the same keys as the contact form). The server checks it too. Without the keys, sign-in works as before.
+- On a built-in page in /admin1: the Delete permission allows Reset whole page to original, and the Restore permission allows Restore an earlier version of that page only. Other pages are never touched. Both are written to the Activity log.
+

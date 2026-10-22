@@ -29,6 +29,8 @@ export interface CmsContextValue {
   anyDirty: boolean;
   savePage: (moduleId: string) => Promise<boolean>;
   discardPage: (moduleId: string) => void;
+  /** Shows a page's new content after the server changed it (reset or restore), without marking it as unsaved. */
+  applyPage: (moduleId: string, data: unknown) => void;
   savingModule: string | null;
   attempt: number;
   /** Replaces everything after a version was restored. */

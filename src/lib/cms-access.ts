@@ -33,7 +33,8 @@ export const RESOURCES: ResourceDef[] = [
     id: pageResource(m.id),
     label: m.id === "site" ? "Header, footer & contact" : m.id === "reviews" ? "Customer reviews" : m.title,
     group: m.group as ResourceGroup,
-    actions: ["read", "update"] as Action[],
+    // Create, delete and restore are listed so every row of the table can be ticked. Only read and update change what a person can do on these pages today.
+    actions: ["read", "create", "update", "delete", "restore"] as Action[],
   })),
   { id: "pages", label: "Custom pages", group: "Collections", actions: ["read", "create", "update", "delete"] },
   { id: "inbox", label: "Messages & applications", group: "Collections", actions: ["read", "update", "delete"] },

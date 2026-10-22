@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useRef, useState } from "react";
+import { Recaptcha, recaptchaEnabled, type RecaptchaHandle } from "@/components/recaptcha";
 import styles from "../admin.module.css";
 
 export function LoginForm({
@@ -21,6 +22,9 @@ export function LoginForm({
   const [attempt, setAttempt] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [captcha, setCaptcha] = useState("");
+  const [captchaMissing, setCaptchaMissing] = useState(false);
+  const captchaRef = useRef<RecaptchaHandle>(null);
   const userRef = useRef<HTMLInputElement>(null);
   const passRef = useRef<HTMLInputElement>(null);
 
@@ -36,13 +40,14 @@ export function LoginForm({
     setError(null);
     if (problems.username) return userRef.current?.focus();
     if (problems.password) return passRef.current?.focus();
+    if (recaptchaEnabled && !captcha) return setCaptchaMissing(true);
 
     setBusy(true);
     try {
       const res = await fetch("/api/admin/auth", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({ username, password, recaptcha: captcha }),
       });
       const data = (await res.json().catch(() => ({}))) as { success?: boolean; error?: string };
       if (res.ok && data.success) {
@@ -51,6 +56,8 @@ export function LoginForm({
       }
       setError(data.error ?? "Could not sign you in. Please try again.");
       setPassword("");
+      // A security check can only be used once.
+      captchaRef.current?.reset();
       passRef.current?.focus();
     } catch {
       setError("Could not reach the server. Check your internet connection and try again.");
@@ -152,6 +159,20 @@ export function LoginForm({
                 </p>
               ) : null}
             </div>
+
+            <Recaptcha
+              ref={captchaRef}
+              invalid={captchaMissing}
+              onChange={(token) => {
+                setCaptcha(token);
+                if (token) setCaptchaMissing(false);
+              }}
+            />
+            {captchaMissing ? (
+              <p className={styles.formError} role="alert">
+                Please tick &quot;I&apos;m not a robot&quot; to sign in.
+              </p>
+            ) : null}
 
             {error ? (
               <p className={styles.formError} role="alert">

@@ -143,6 +143,21 @@ export async function getHistoryDoc(id: string): Promise<SiteContent | null> {
   return null;
 }
 
+/** Earlier saved copies of one page of the site, newest first. */
+export async function moduleVersions(moduleId: string): Promise<{ id: string; at: string; note: string; data: unknown }[]> {
+  const rows = await getStore().lrange(HISTORY_KEY, 0, HISTORY_KEEP - 1);
+  const out: { id: string; at: string; note: string; data: unknown }[] = [];
+  for (const r of rows) {
+    try {
+      const e = JSON.parse(r) as { id: string; at: string; note?: string; doc?: Record<string, unknown> };
+      if (e.doc && moduleId in e.doc) out.push({ id: e.id, at: e.at, note: e.note ?? "", data: e.doc[moduleId] });
+    } catch {
+      /* skip unreadable entry */
+    }
+  }
+  return out;
+}
+
 export function getDefaultContent(): SiteContent {
   return sanitizeContent(defaultContent);
 }

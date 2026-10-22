@@ -232,6 +232,13 @@ function Shell({ user, permissions, superUser, initialContent, initialInquiries,
     [saved, notify],
   );
 
+  const applyPage = useCallback((moduleId: string, data: unknown) => {
+    setContent((prev) => ({ ...(prev as object), [moduleId]: data }) as unknown as SiteContent);
+    setSaved((prev) => ({ ...prev, [moduleId]: JSON.stringify(data) }));
+    setSavedTick((t) => t + 1);
+    setAttempt(0);
+  }, []);
+
   const replaceAll = useCallback(
     (next: SiteContent) => {
       // Keep only what this person may read.
@@ -306,6 +313,7 @@ function Shell({ user, permissions, superUser, initialContent, initialInquiries,
     anyDirty,
     savePage,
     discardPage,
+    applyPage,
     savingModule,
     attempt,
     replaceAll,

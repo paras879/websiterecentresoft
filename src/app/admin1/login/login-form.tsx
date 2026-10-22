@@ -2,7 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { Recaptcha, recaptchaEnabled, type RecaptchaHandle } from "@/components/recaptcha";
 import adminStyles from "../../admin/admin.module.css";
 import { api } from "../../admin/_components/lib";
 import { Button } from "../../admin/_components/ui";
@@ -14,18 +15,27 @@ export function LoginForm({ missingSecret }: { missingSecret: boolean }) {
   const [show, setShow] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+  const [captcha, setCaptcha] = useState("");
+  const [captchaMissing, setCaptchaMissing] = useState(false);
+  const captchaRef = useRef<RecaptchaHandle>(null);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (busy) return;
     setError("");
+    if (recaptchaEnabled && !captcha) {
+      setCaptchaMissing(true);
+      return;
+    }
     setBusy(true);
-    const res = await api("/api/cms/auth", { method: "POST", json: { email: identifier, password } });
+    const res = await api("/api/cms/auth", { method: "POST", json: { email: identifier, password, recaptcha: captcha } });
     if (res.success) {
       window.location.href = "/admin1";
       return;
     }
     setBusy(false);
+    // A security check can only be used once.
+    captchaRef.current?.reset();
     setError(res.error ?? "Could not sign you in. Please try again.");
   };
 
@@ -81,6 +91,20 @@ export function LoginForm({ missingSecret }: { missingSecret: boolean }) {
               </button>
             </div>
           </div>
+
+          <Recaptcha
+            ref={captchaRef}
+            invalid={captchaMissing}
+            onChange={(token) => {
+              setCaptcha(token);
+              if (token) setCaptchaMissing(false);
+            }}
+          />
+          {captchaMissing ? (
+            <p className={cms.error} role="alert">
+              Please tick &quot;I&apos;m not a robot&quot; to sign in.
+            </p>
+          ) : null}
 
           {error ? (
             <p className={cms.error} role="alert">
