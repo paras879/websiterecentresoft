@@ -32,12 +32,14 @@ interface DropdownProps {
   heading: string;
   entries: MenuEntry[];
   active: boolean;
+  /** Few links: a narrower panel with one column. */
+  compact?: boolean;
   header: SiteContent["site"]["header"];
   info: SiteInfo;
 }
 
 /** One hover-and-click dropdown with the list of links and the contact panel beside it. */
-function NavDropdown({ id, label, heading, entries, active, header, info }: DropdownProps) {
+function NavDropdown({ id, label, heading, entries, active, compact, header, info }: DropdownProps) {
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
@@ -157,7 +159,7 @@ function NavDropdown({ id, label, heading, entries, active, header, info }: Drop
       </button>
 
       {open && (
-        <div id={`${id}-dropdown-menu`} ref={menuRef} className={styles.dropdownMenu} aria-labelledby={`${id}-menu-button`}>
+        <div id={`${id}-dropdown-menu`} ref={menuRef} className={`${styles.dropdownMenu} ${compact ? styles.dropdownMenuCompact : ""}`} aria-labelledby={`${id}-menu-button`}>
           <div className={styles.dropdownPanel}>
             <div className={styles.dropdownMain}>
               <div className={styles.dropdownHeader}>
@@ -296,6 +298,7 @@ export function SiteHeader({ site, info }: Props) {
                   heading={item.label}
                   entries={entries}
                   active={entries.some((e) => pathname === e.href)}
+                  compact={entries.length <= 4}
                   header={header}
                   info={info}
                 />
