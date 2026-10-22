@@ -1,8 +1,12 @@
 "use client";
 
-import { Component, useEffect, useState, type ReactNode } from "react";
+import { Component, useEffect, useMemo, useState, type ReactNode } from "react";
+import type { SiteContent } from "@/content";
 import { CustomPageView } from "@/components/custom-page-view";
-import type { CustomPage } from "@/lib/custom-pages-types";
+import { SiteFooter } from "@/components/site-footer";
+import { SiteHeader } from "@/components/site-header";
+import { withCustomPageLinks, type CustomPage } from "@/lib/custom-pages-types";
+import type { SiteInfo } from "@/lib/site";
 
 /** Messages the editor sends to this frame. */
 export type FrameMessage =
@@ -29,8 +33,15 @@ class Guard extends Component<{ page: CustomPage; children: ReactNode }, { faile
   }
 }
 
-export function LiveFrame() {
+export function LiveFrame({ site, info, others }: { site: SiteContent["site"]; info: SiteInfo; others: CustomPage[] }) {
   const [page, setPage] = useState<CustomPage | null>(null);
+
+  // The header and footer as they will look with this page in them: its menu choice is applied even before it is saved.
+  const shownSite = useMemo(() => {
+    const rest = others.filter((p) => p.id !== page?.id);
+    const thisOne = page && page.title.trim() && page.slug.trim() ? [{ ...page, status: "published" as const }] : [];
+    return withCustomPageLinks(site, [...rest, ...thisOne]);
+  }, [site, others, page]);
 
   useEffect(() => {
     const onMessage = (e: MessageEvent<FrameMessage>) => {
@@ -46,7 +57,14 @@ export function LiveFrame() {
   }, []);
 
   return (
-    <div style={{ minHeight: "100dvh", background: "var(--color-bg-page)" }}>
+    <div
+      style={{ minHeight: "100dvh", background: "var(--color-bg-page)" }}
+      // Links inside the preview do nothing, so clicking one cannot take the frame away from the page being edited.
+      onClickCapture={(e) => {
+        if ((e.target as HTMLElement).closest("a")) e.preventDefault();
+      }}
+    >
+      <SiteHeader site={shownSite} info={info} />
       {page ? (
         <Guard page={page}>
           {page.blocks.length === 0 ? (
@@ -58,6 +76,7 @@ export function LiveFrame() {
       ) : (
         <p style={{ padding: 32, textAlign: "center", color: "var(--color-text-muted)" }}>Loading the preview...</p>
       )}
+      <SiteFooter site={shownSite} info={info} />
     </div>
   );
 }

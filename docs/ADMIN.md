@@ -97,3 +97,5 @@ In the page editor, "Show a link in" has these choices: inside the Services drop
 
 
 Versions list: each saved version now says what changed and who saved it (for older saves it is worked out by comparing with the save before). A save that changes nothing is not added.
+
+The live preview in the page editor now includes the site header and footer, so a page's menu choice (top link, dropdown, Services, footer) shows up there as you set it, before saving. Links inside the preview do not navigate.
