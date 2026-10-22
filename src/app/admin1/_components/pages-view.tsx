@@ -20,6 +20,7 @@ import cms from "../cms.module.css";
 import { useAccess } from "./access-context";
 import { BlockBody, blockSummary, Field, ImagePick, Seg, TextField, AreaField } from "./block-editors";
 import { NavLink, useNav } from "./nav-context";
+import { LivePreview } from "./live-preview";
 import { PageHead } from "./page-head";
 
 /* ------------------------------------------------------------------ list */
@@ -143,6 +144,28 @@ export function PageEdit({ id }: { id: string }) {
   const [adding, setAdding] = useState(false);
   const [closedBlocks, setClosedBlocks] = useState<Record<string, boolean>>({});
   const dragFrom = useRef<number | null>(null);
+  const [showPreview, setShowPreview] = useState(false);
+  const [scrollTo, setScrollTo] = useState<{ id: string; n: number } | null>(null);
+  const showBlock = (blockId: string) => setScrollTo((cur) => ({ id: blockId, n: (cur?.n ?? 0) + 1 }));
+
+  // The preview opens by default on a wide screen, and the choice is remembered.
+  useEffect(() => {
+    let on = window.innerWidth >= 1200;
+    try {
+      const saved = localStorage.getItem("rs-cms-live-preview");
+      if (saved === "on") on = true;
+      if (saved === "off") on = false;
+    } catch {}
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setShowPreview(on);
+  }, []);
+  const togglePreview = () =>
+    setShowPreview((v) => {
+      try {
+        localStorage.setItem("rs-cms-live-preview", v ? "off" : "on");
+      } catch {}
+      return !v;
+    });
   const [dragOver, setDragOver] = useState<number | null>(null);
 
   useEffect(() => {
@@ -182,11 +205,14 @@ export function PageEdit({ id }: { id: string }) {
       const blocks = [...cur.blocks];
       const [b] = blocks.splice(from, 1);
       blocks.splice(to, 0, b);
+      window.setTimeout(() => showBlock(b.id), 150);
       return { ...cur, blocks };
     });
   const addBlock = (type: BlockType) => {
-    setPage((cur) => ({ ...cur, blocks: [...cur.blocks, blankBlock(type)] }));
+    const fresh = blankBlock(type);
+    setPage((cur) => ({ ...cur, blocks: [...cur.blocks, fresh] }));
     setAdding(false);
+    window.setTimeout(() => showBlock(fresh.id), 300);
     window.setTimeout(() => document.getElementById("page-blocks-end")?.scrollIntoView({ block: "center", behavior: "smooth" }), 80);
   };
   const duplicateBlock = (index: number) =>
@@ -243,12 +269,88 @@ export function PageEdit({ id }: { id: string }) {
     );
   }
 
+  const actions = (
+    <aside className={`${cms.docAside} ${showPreview ? cms.docAsideInline : ""}`} aria-label="Document actions">
+      <p className={cms.asideTitle}>Actions</p>
+      <span className={`${cms.state} ${dirty ? cms.stateDirty : ""}`} role="status" aria-live="polite">
+        <span className={cms.stateDot} aria-hidden="true" />
+        {dirty ? "Unsaved changes" : "All changes saved"}
+      </span>
+
+      <Seg<"published" | "draft">
+        label="Status"
+        value={page.status}
+        options={[
+          { value: "draft", label: "Draft" },
+          { value: "published", label: "Published" },
+        ]}
+        onChange={(v) => patch({ status: v })}
+      />
+
+      <Field label="Show a link in" hint="The link is added to the menu or footer automatically while the page is published.">
+        {(fid) => (
+          <select id={fid} className={adminStyles.input} value={page.menu} onChange={(e) => patch({ menu: e.target.value as CustomPage["menu"] })} disabled={!canSave}>
+            <option value="none">No menu</option>
+            <option value="services">Services menu</option>
+            <option value="footer">Footer</option>
+          </select>
+        )}
+      </Field>
+
+      {error ? (
+        <p className={cms.error} role="alert">
+          {error}
+        </p>
+      ) : null}
+
+      <div className={cms.asideActions}>
+        <Button variant="primary" icon="save" busy={saving} disabled={!canSave || !loaded} onClick={() => void save()}>
+          {creating ? "Create page" : "Save"}
+        </Button>
+        {!creating && page.status === "draft" && can("pages", "update") ? (
+          <Button disabled={saving} onClick={() => void save("published")}>
+            Save and publish
+          </Button>
+        ) : null}
+        {!creating && page.status === "published" && can("pages", "update") ? (
+          <Button variant="ghost" disabled={saving} onClick={() => void save("draft")}>
+            Unpublish (make a draft)
+          </Button>
+        ) : null}
+        {!creating ? (
+          <a className={cms.asideLink} href={nav.preview(id)} target="_blank" rel="noopener noreferrer">
+            Preview <UiIcon name="external" />
+          </a>
+        ) : null}
+        {!creating && page.status === "published" ? (
+          <a className={cms.asideLink} href={pagePath(page)} target="_blank" rel="noopener noreferrer">
+            View live page <UiIcon name="external" />
+          </a>
+        ) : null}
+        {!creating && can("pages", "delete") ? (
+          <Button variant="danger" icon="trash" onClick={() => setDeleting(true)}>
+            Delete page
+          </Button>
+        ) : null}
+        <NavLink className={cms.asideLink} to={{ name: "pages" }}>
+          Back to pages
+        </NavLink>
+      </div>
+      {!creating ? <p className={cms.help}>Preview shows the last saved version. Save first to see new changes.</p> : null}
+    </aside>
+  );
+
   return (
     <>
-      <PageHead title={creating ? "Create new page" : page.title || "Page"} />
+      <PageHead title={creating ? "Create new page" : page.title || "Page"}>
+        <Button onClick={togglePreview} aria-pressed={showPreview}>
+          {showPreview ? "Hide live preview" : "Show live preview"}
+        </Button>
+      </PageHead>
 
-      <div className={cms.doc}>
+      <div className={`${cms.doc} ${showPreview ? cms.docSplit : ""}`}>
         <div className={cms.docMain}>
+          {showPreview ? actions : null}
           <fieldset className={cms.fieldset} disabled={!canSave || !loaded}>
             {/* ---- basics */}
             <section className={cms.card} aria-labelledby="pg-basics">
@@ -312,6 +414,9 @@ export function PageEdit({ id }: { id: string }) {
                     <li
                       key={block.id}
                       className={`${cms.blockCard} ${dragOver === i ? cms.blockOver : ""}`}
+                      onFocusCapture={() => {
+                        if (scrollTo?.id !== block.id) showBlock(block.id);
+                      }}
                       onDragOver={(e) => {
                         if (dragFrom.current === null) return;
                         e.preventDefault();
@@ -416,74 +521,13 @@ export function PageEdit({ id }: { id: string }) {
           </fieldset>
         </div>
 
-        <aside className={cms.docAside} aria-label="Document actions">
-          <p className={cms.asideTitle}>Actions</p>
-          <span className={`${cms.state} ${dirty ? cms.stateDirty : ""}`} role="status" aria-live="polite">
-            <span className={cms.stateDot} aria-hidden="true" />
-            {dirty ? "Unsaved changes" : "All changes saved"}
-          </span>
-
-          <Seg<"published" | "draft">
-            label="Status"
-            value={page.status}
-            options={[
-              { value: "draft", label: "Draft" },
-              { value: "published", label: "Published" },
-            ]}
-            onChange={(v) => patch({ status: v })}
-          />
-
-          <Field label="Show a link in" hint="The link is added to the menu or footer automatically while the page is published.">
-            {(fid) => (
-              <select id={fid} className={adminStyles.input} value={page.menu} onChange={(e) => patch({ menu: e.target.value as CustomPage["menu"] })} disabled={!canSave}>
-                <option value="none">No menu</option>
-                <option value="services">Services menu</option>
-                <option value="footer">Footer</option>
-              </select>
-            )}
-          </Field>
-
-          {error ? (
-            <p className={cms.error} role="alert">
-              {error}
-            </p>
-          ) : null}
-
-          <div className={cms.asideActions}>
-            <Button variant="primary" icon="save" busy={saving} disabled={!canSave || !loaded} onClick={() => void save()}>
-              {creating ? "Create page" : "Save"}
-            </Button>
-            {!creating && page.status === "draft" && can("pages", "update") ? (
-              <Button disabled={saving} onClick={() => void save("published")}>
-                Save and publish
-              </Button>
-            ) : null}
-            {!creating && page.status === "published" && can("pages", "update") ? (
-              <Button variant="ghost" disabled={saving} onClick={() => void save("draft")}>
-                Unpublish (make a draft)
-              </Button>
-            ) : null}
-            {!creating ? (
-              <a className={cms.asideLink} href={nav.preview(id)} target="_blank" rel="noopener noreferrer">
-                Preview <UiIcon name="external" />
-              </a>
-            ) : null}
-            {!creating && page.status === "published" ? (
-              <a className={cms.asideLink} href={pagePath(page)} target="_blank" rel="noopener noreferrer">
-                View live page <UiIcon name="external" />
-              </a>
-            ) : null}
-            {!creating && can("pages", "delete") ? (
-              <Button variant="danger" icon="trash" onClick={() => setDeleting(true)}>
-                Delete page
-              </Button>
-            ) : null}
-            <NavLink className={cms.asideLink} to={{ name: "pages" }}>
-              Back to pages
-            </NavLink>
+        {showPreview ? (
+          <div className={cms.liveCol}>
+            <LivePreview page={page} scrollTo={scrollTo} onClose={togglePreview} />
           </div>
-          {!creating ? <p className={cms.help}>Preview shows the last saved version. Save first to see new changes.</p> : null}
-        </aside>
+        ) : (
+          actions
+        )}
       </div>
 
       <ConfirmDialog

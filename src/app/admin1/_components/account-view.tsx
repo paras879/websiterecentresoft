@@ -13,7 +13,7 @@ import { useCms } from "./cms-context";
 export function AccountView() {
   const { user, signOut } = useCms();
   const notify = useToast();
-  const [form, setForm] = useState({ name: user.name, email: user.email, current: "", next: "", confirm: "" });
+  const [form, setForm] = useState({ name: user.name, email: user.email, username: user.username ?? "", current: "", next: "", confirm: "" });
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const set = <K extends keyof typeof form>(k: K, v: string) => setForm((f) => ({ ...f, [k]: v }));
@@ -28,7 +28,7 @@ export function AccountView() {
     setSaving(true);
     const res = await api<{ passwordChanged: boolean }>("/api/cms/me", {
       method: "PATCH",
-      json: { name: form.name, email: form.email, currentPassword: form.current, newPassword: form.next },
+      json: { name: form.name, email: form.email, username: form.username, currentPassword: form.current, newPassword: form.next },
     });
     setSaving(false);
     if (!res.success) return setError(res.error ?? "Could not save your details.");
@@ -66,6 +66,14 @@ export function AccountView() {
               </label>
               <input id="a-email" type="email" className={adminStyles.input} value={form.email} onChange={(e) => set("email", e.target.value)} maxLength={200} />
             </div>
+          </div>
+
+          <div className={adminStyles.field}>
+            <label htmlFor="a-username" className={adminStyles.label}>
+              Username
+            </label>
+            <input id="a-username" className={adminStyles.input} value={form.username} onChange={(e) => set("username", e.target.value)} maxLength={32} autoCapitalize="none" spellCheck={false} />
+            <span className={cms.help}>Optional. Sign in with this instead of your email.</span>
           </div>
 
           <div className={adminStyles.field}>

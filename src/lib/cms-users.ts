@@ -1,5 +1,6 @@
 import crypto from "node:crypto";
 import { promisify } from "node:util";
+import { adminUsername } from "./admin-auth";
 import { BUILTIN_ROLES, cleanPermissions, type Permissions, type Role, SUPER_ROLE_ID } from "./cms-access";
 import { getStore } from "./store";
 
@@ -15,6 +16,8 @@ export const MIN_PASSWORD = 10;
 interface StoredUser {
   id: string;
   email: string;
+  /** Optional short sign-in name, used instead of the email. */
+  username?: string;
   name: string;
   roleId: string;
   salt: string;
@@ -28,6 +31,7 @@ interface StoredUser {
 export interface PublicUser {
   id: string;
   email: string;
+  username?: string;
   name: string;
   roleId: string;
   disabled: boolean;
@@ -39,6 +43,7 @@ export interface PublicUser {
 export const publicUser = (u: StoredUser): PublicUser => ({
   id: u.id,
   email: u.email,
+  username: u.username,
   name: u.name,
   roleId: u.roleId,
   disabled: u.disabled,
@@ -97,6 +102,30 @@ export async function findUserByEmail(email: string): Promise<StoredUser | null>
   return (await readAll()).find((u) => u.email.toLowerCase() === wanted) ?? null;
 }
 
+/** Finds a person by the email or the username they typed on the sign-in page. */
+export async function findUserByLogin(identifier: string): Promise<StoredUser | null> {
+  const wanted = identifier.trim().toLowerCase();
+  if (!wanted) return null;
+  const all = await readAll();
+  return all.find((u) => u.email.toLowerCase() === wanted) ?? all.find((u) => u.username?.toLowerCase() === wanted) ?? null;
+}
+
+const USERNAME = /^[a-z0-9][a-z0-9._-]{2,31}$/i;
+
+/** Returns the cleaned username ("" for none), or throws when it cannot be used. */
+async function checkUsername(raw: string, selfId?: string): Promise<string> {
+  const username = raw.trim();
+  if (!username) return "";
+  if (!USERNAME.test(username)) {
+    throw new CmsError("A username is 3 to 32 letters, numbers, dots, dashes or underscores, with no spaces.");
+  }
+  const lower = username.toLowerCase();
+  if (lower === (await adminUsername()).toLowerCase()) throw new CmsError("This username is reserved. Choose another.", 409);
+  const clash = (await readAll()).find((u) => u.id !== selfId && (u.username?.toLowerCase() === lower || u.email.toLowerCase() === lower));
+  if (clash) throw new CmsError("This username is already taken.", 409);
+  return username;
+}
+
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export class CmsError extends Error {
@@ -122,12 +151,14 @@ function checkPasswordRules(password: string) {
 export async function createUser(input: {
   email: string;
   name: string;
+  username?: string;
   roleId: string;
   password: string;
   disabled?: boolean;
 }): Promise<PublicUser> {
   const email = input.email.trim();
   checkFields(email, input.name);
+  const username = await checkUsername(input.username ?? "");
   checkPasswordRules(input.password);
   if (!(await getRole(input.roleId))) throw new CmsError("Choose a role for this user.");
   if (await findUserByEmail(email)) throw new CmsError("A user with this email already exists.", 409);
@@ -136,6 +167,7 @@ export async function createUser(input: {
   const user: StoredUser = {
     id: newId("u"),
     email,
+    ...(username ? { username } : {}),
     name: input.name.trim(),
     roleId: input.roleId,
     ...(await hashPassword(input.password)),
@@ -149,7 +181,7 @@ export async function createUser(input: {
 
 export async function updateUser(
   id: string,
-  patch: { email?: string; name?: string; roleId?: string; disabled?: boolean; password?: string },
+  patch: { email?: string; username?: string; name?: string; roleId?: string; disabled?: boolean; password?: string },
 ): Promise<PublicUser> {
   const user = await getStoredUser(id);
   if (!user) throw new CmsError("That user no longer exists.", 404);
@@ -162,6 +194,11 @@ export async function updateUser(
     if (other && other.id !== id) throw new CmsError("A user with this email already exists.", 409);
     user.email = email;
     user.name = name.trim();
+  }
+  if (patch.username !== undefined) {
+    const username = await checkUsername(patch.username, id);
+    if (username) user.username = username;
+    else delete user.username;
   }
   if (patch.roleId !== undefined) {
     if (!(await getRole(patch.roleId))) throw new CmsError("Choose a role for this user.");

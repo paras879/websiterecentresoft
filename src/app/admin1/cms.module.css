@@ -1267,3 +1267,132 @@
     padding-left: 36px;
   }
 }
+
+/* ------------------------------------------------------------------ live preview beside the page editor */
+.docSplit {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 28px;
+}
+
+.docAsideInline {
+  position: static;
+  margin-bottom: 24px;
+}
+
+.docAsideInline .asideActions {
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.docAsideInline .asideActions > * {
+  width: auto;
+}
+
+.liveCol {
+  position: sticky;
+  top: 74px;
+  height: calc(100vh - 96px);
+  min-width: 0;
+}
+
+.live {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  background: var(--ad-surface);
+  border: 1px solid var(--ad-line);
+  border-radius: 6px;
+}
+
+.liveBar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 8px;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--ad-line);
+}
+
+.liveTitle {
+  margin-right: auto;
+  white-space: nowrap;
+  font-size: 13px;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--ad-muted);
+}
+
+.liveSeg {
+  display: inline-flex;
+  overflow: hidden;
+  border: 1px solid var(--ad-line-strong);
+  border-radius: 6px;
+}
+
+.liveSeg button,
+.liveClose {
+  min-height: 32px;
+  padding: 0 8px;
+  font: inherit;
+  font-size: 13px;
+  color: var(--ad-text);
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+}
+
+.liveSeg button + button {
+  border-left: 1px solid var(--ad-line-strong);
+}
+
+.liveSeg button.liveOn {
+  color: var(--ad-surface);
+  background: var(--ad-text);
+}
+
+.liveClose {
+  border: 1px solid var(--ad-line-strong);
+  border-radius: 6px;
+}
+
+.liveBox {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  background: var(--ad-line);
+}
+
+.liveStage {
+  position: relative;
+  overflow: hidden;
+  background: #ffffff;
+}
+
+.liveFrame {
+  display: block;
+  border: 0;
+  transform-origin: top left;
+}
+
+.liveNote {
+  margin: 0;
+  padding: 8px 12px;
+  font-size: 12.5px;
+  color: var(--ad-muted);
+  border-top: 1px solid var(--ad-line);
+}
+
+@media (max-width: 1100px) {
+  .docSplit {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .docSplit .liveCol {
+    order: -1;
+    top: 56px;
+    z-index: 6;
+    height: 44vh;
+  }
+}

@@ -21,9 +21,10 @@ export async function PATCH(req: Request, { params }: Ctx) {
     }
 
     const b = (await req.json()) as Record<string, unknown>;
-    const patch: { email?: string; name?: string; roleId?: string; disabled?: boolean; password?: string } = {};
+    const patch: { email?: string; username?: string; name?: string; roleId?: string; disabled?: boolean; password?: string } = {};
     if (typeof b.email === "string") patch.email = b.email;
     if (typeof b.name === "string") patch.name = b.name;
+    if (typeof b.username === "string") patch.username = b.username;
     if (typeof b.password === "string" && b.password) patch.password = b.password;
 
     if (typeof b.roleId === "string" && b.roleId !== target.roleId) {
@@ -42,6 +43,7 @@ export async function PATCH(req: Request, { params }: Ctx) {
     const did = [
       patch.name !== undefined && patch.name !== target.name ? "name" : "",
       patch.email !== undefined ? "email" : "",
+      patch.username !== undefined && (patch.username || "") !== (target.username ?? "") ? "username" : "",
       patch.password ? "password reset" : "",
       patch.roleId ? `role changed to ${(await getRole(patch.roleId))?.name ?? patch.roleId}` : "",
       patch.disabled !== undefined && patch.disabled !== Boolean(target.disabled) ? (patch.disabled ? "switched off" : "switched on") : "",

@@ -15,9 +15,10 @@ export async function PATCH(req: Request) {
     const stored = await getStoredUser(guard.user.id);
     if (!stored) throw new CmsError("Your account no longer exists.", 404);
 
-    const patch: { name?: string; email?: string; password?: string } = {};
+    const patch: { name?: string; email?: string; username?: string; password?: string } = {};
     if (typeof b.name === "string") patch.name = b.name;
     if (typeof b.email === "string") patch.email = b.email;
+    if (typeof b.username === "string") patch.username = b.username;
     if (typeof b.newPassword === "string" && b.newPassword) {
       if (typeof b.currentPassword !== "string" || !(await checkPassword(stored, b.currentPassword))) {
         throw new CmsError("Your current password is not correct.");

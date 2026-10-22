@@ -27,6 +27,7 @@ export async function POST(req: Request) {
     const user = await createUser({
       email: typeof b.email === "string" ? b.email : "",
       name: typeof b.name === "string" ? b.name : "",
+      username: typeof b.username === "string" ? b.username : "",
       roleId,
       password: typeof b.password === "string" ? b.password : "",
       disabled: b.disabled === true,

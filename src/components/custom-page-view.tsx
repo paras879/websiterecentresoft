@@ -72,12 +72,14 @@ function H({ lead, className, children }: { lead: boolean; className: string; ch
 }
 
 function BlockView({ block, first, lead }: { block: Block; first: boolean; lead: boolean }) {
+  // Lets the editor's live preview scroll to the block being edited.
+  const domId = `blk-${block.id}`;
   switch (block.type) {
     case "hero": {
       const bg = block.imageSide === "background" && block.image;
       const beside = (block.imageSide === "right" || block.imageSide === "left") && block.image;
       return (
-        <div className={`${styles.hero} ${bg ? styles.heroBg : ""}`}>
+        <div id={domId} className={`${styles.hero} ${bg ? styles.heroBg : ""}`}>
           {bg ? <Image src={block.image} alt={block.imageAlt} fill priority={first} sizes="100vw" className={styles.heroBgImg} /> : null}
           {bg ? <span className={styles.heroScrim} aria-hidden="true" /> : null}
           <div className={`container ${styles.heroGrid} ${beside ? styles.heroTwo : ""} ${block.imageSide === "left" ? styles.heroFlip : ""}`}>
@@ -102,7 +104,7 @@ function BlockView({ block, first, lead }: { block: Block; first: boolean; lead:
     }
     case "text":
       return (
-        <div className={`${styles.band} ${block.align === "center" ? styles.center : ""}`}>
+        <div id={domId} className={`${styles.band} ${block.align === "center" ? styles.center : ""}`}>
           <div className={`container ${styles.narrow}`}>
             {block.heading ? (
               <H lead={lead} className={styles.h2}>
@@ -115,7 +117,7 @@ function BlockView({ block, first, lead }: { block: Block; first: boolean; lead:
       );
     case "image":
       return (
-        <div className={styles.band}>
+        <div id={domId} className={styles.band}>
           <figure className={`container ${styles.figure} ${block.size === "small" ? styles.figSmall : block.size === "full" ? styles.figFull : styles.figMedium}`}>
             {block.image ? <Image src={block.image} alt={block.alt} width={1920} height={1280} sizes="(max-width: 1100px) 100vw, 1100px" className={styles.figImg} /> : null}
             {block.caption ? <figcaption>{block.caption}</figcaption> : null}
@@ -124,7 +126,7 @@ function BlockView({ block, first, lead }: { block: Block; first: boolean; lead:
       );
     case "imageText":
       return (
-        <div className={styles.band}>
+        <div id={domId} className={styles.band}>
           <div className={`container ${styles.split} ${block.side === "right" ? styles.splitFlip : ""}`}>
             {block.image ? (
               <div className={styles.splitPic}>
@@ -148,7 +150,7 @@ function BlockView({ block, first, lead }: { block: Block; first: boolean; lead:
     case "features":
       if (block.items.length === 0) return null;
       return (
-        <div className={styles.band}>
+        <div id={domId} className={styles.band}>
           <div className="container">
             {block.heading ? (
               <H lead={lead} className={`${styles.h2} ${styles.centerHead}`}>
@@ -175,7 +177,7 @@ function BlockView({ block, first, lead }: { block: Block; first: boolean; lead:
     case "gallery":
       if (block.images.length === 0) return null;
       return (
-        <div className={styles.band}>
+        <div id={domId} className={styles.band}>
           <div className="container">
             {block.heading ? <h2 className={`${styles.h2} ${styles.centerHead}`}>{block.heading}</h2> : null}
             <ul className={`${styles.grid} ${block.columns === 2 ? styles.cols2 : block.columns === 4 ? styles.cols4 : styles.cols3}`}>
@@ -191,7 +193,7 @@ function BlockView({ block, first, lead }: { block: Block; first: boolean; lead:
     case "faq":
       if (block.items.length === 0) return null;
       return (
-        <div className={styles.band}>
+        <div id={domId} className={styles.band}>
           <div className={`container ${styles.narrow}`}>
             {block.heading ? (
               <H lead={lead} className={`${styles.h2} ${styles.centerHead}`}>
@@ -211,7 +213,7 @@ function BlockView({ block, first, lead }: { block: Block; first: boolean; lead:
       );
     case "cta":
       return (
-        <div className={styles.band}>
+        <div id={domId} className={styles.band}>
           <div className={`container ${styles.ctaBox}`}>
             {block.heading ? (
               <H lead={lead} className={styles.ctaTitle}>

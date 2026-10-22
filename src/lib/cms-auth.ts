@@ -10,7 +10,7 @@ import {
   verifyLogin,
 } from "./admin-auth";
 import { can, isSubset, type Action, type Permissions, type Role, SUPER_ROLE_ID, BUILTIN_ROLES } from "./cms-access";
-import { checkPassword, findUserByEmail, fingerprint, getRole, getStoredUser, touchLogin } from "./cms-users";
+import { checkPassword, findUserByLogin, fingerprint, getRole, getStoredUser, touchLogin } from "./cms-users";
 
 const COOKIE = "rs_cms";
 const SESSION_SECONDS = 60 * 60 * 24 * 7;
@@ -19,6 +19,7 @@ export const ROOT_ID = "root";
 export interface CmsUser {
   id: string;
   email: string;
+  username?: string;
   name: string;
   roleId: string;
   role: Role;
@@ -71,7 +72,7 @@ export const getCmsUser = cache(async (): Promise<CmsUser | null> => {
             if (user && !user.disabled && fingerprint(user) === data.pv) {
               const role = await getRole(user.roleId);
               if (role) {
-                return { id: user.id, email: user.email, name: user.name, roleId: role.id, role, permissions: role.permissions, root: false };
+                return { id: user.id, email: user.email, username: user.username, name: user.name, roleId: role.id, role, permissions: role.permissions, root: false };
               }
             }
           }
@@ -88,7 +89,7 @@ export const getCmsUser = cache(async (): Promise<CmsUser | null> => {
 export type LoginResult = { ok: true; user: CmsUser } | { ok: false; reason: "invalid" | "disabled" };
 
 export async function cmsLogin(identifier: string, password: string): Promise<LoginResult> {
-  const stored = await findUserByEmail(identifier);
+  const stored = await findUserByLogin(identifier);
   if (stored) {
     if (!(await checkPassword(stored, password))) return { ok: false, reason: "invalid" };
     if (stored.disabled) return { ok: false, reason: "disabled" };
@@ -98,7 +99,7 @@ export async function cmsLogin(identifier: string, password: string): Promise<Lo
     await touchLogin(stored.id).catch(() => undefined);
     return {
       ok: true,
-      user: { id: stored.id, email: stored.email, name: stored.name, roleId: role.id, role, permissions: role.permissions, root: false },
+      user: { id: stored.id, email: stored.email, username: stored.username, name: stored.name, roleId: role.id, role, permissions: role.permissions, root: false },
     };
   }
 

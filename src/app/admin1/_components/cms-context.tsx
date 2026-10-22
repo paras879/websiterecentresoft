@@ -9,6 +9,7 @@ export interface CmsUserInfo {
   id: string;
   name: string;
   email: string;
+  username?: string;
   roleId: string;
   roleName: string;
   /** The administrator from the environment (the same sign-in as /admin). */

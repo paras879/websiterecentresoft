@@ -26,7 +26,7 @@ export default async function PanelLayout({ children }: { children: React.ReactN
 
   return (
     <CmsApp
-      user={{ id: user.id, name: user.name, email: user.email, roleId: user.roleId, roleName: user.role.name, root: user.root }}
+      user={{ id: user.id, name: user.name, email: user.email, username: user.username, roleId: user.roleId, roleName: user.role.name, root: user.root }}
       permissions={user.permissions}
       superUser={user.role.id === "super"}
       initialContent={readable}

@@ -51,7 +51,7 @@ export function UsersList() {
   const roleName = (id: string) => roles.find((r) => r.id === id)?.name ?? id;
   const rows = useMemo(() => {
     const needle = q.trim().toLowerCase();
-    return (users ?? []).filter((u) => !needle || `${u.name} ${u.email} ${roleName(u.roleId)}`.toLowerCase().includes(needle));
+    return (users ?? []).filter((u) => !needle || `${u.name} ${u.email} ${u.username ?? ""} ${roleName(u.roleId)}`.toLowerCase().includes(needle));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [users, q, roles]);
 
@@ -93,7 +93,7 @@ export function UsersList() {
         <input
           className={`${adminStyles.input} ${cms.search}`}
           type="search"
-          placeholder="Search by name, email or role"
+          placeholder="Search by name, email, username or role"
           aria-label="Search users"
           value={q}
           onChange={(e) => setQ(e.target.value)}
@@ -166,7 +166,10 @@ export function UsersList() {
                     </NavLink>
                     {u.id === me.id ? <span className={cms.muted}> (you)</span> : null}
                   </td>
-                  <td>{u.email}</td>
+                  <td>
+                    {u.email}
+                    {u.username ? <span className={cms.muted}> ({u.username})</span> : null}
+                  </td>
                   <td>
                     <span className={cms.pill}>{roleName(u.roleId)}</span>
                   </td>
@@ -208,7 +211,7 @@ export function UserEdit({ id }: { id: string }) {
   const { users, roles, error: loadError } = useUsersAndRoles();
 
   const existing = users?.find((u) => u.id === id) ?? null;
-  const [form, setForm] = useState({ name: "", email: "", roleId: "editor", disabled: false, password: "", confirm: "" });
+  const [form, setForm] = useState({ name: "", email: "", username: "", roleId: "editor", disabled: false, password: "", confirm: "" });
   const [loaded, setLoaded] = useState(creating);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
@@ -217,7 +220,7 @@ export function UserEdit({ id }: { id: string }) {
   useEffect(() => {
     if (creating || !existing || loaded) return;
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    setForm({ name: existing.name, email: existing.email, roleId: existing.roleId, disabled: existing.disabled, password: "", confirm: "" });
+    setForm({ name: existing.name, email: existing.email, username: existing.username ?? "", roleId: existing.roleId, disabled: existing.disabled, password: "", confirm: "" });
     setLoaded(true);
   }, [creating, existing, loaded]);
 
@@ -238,6 +241,7 @@ export function UserEdit({ id }: { id: string }) {
     const body = {
       name: form.name,
       email: form.email,
+      username: form.username,
       roleId: form.roleId,
       disabled: form.disabled,
       ...(form.password ? { password: form.password } : {}),
@@ -306,6 +310,14 @@ export function UserEdit({ id }: { id: string }) {
                     </label>
                     <input id="u-email" type="email" className={adminStyles.input} value={form.email} onChange={(e) => set("email", e.target.value)} maxLength={200} autoComplete="off" />
                   </div>
+                </div>
+
+                <div className={adminStyles.field}>
+                  <label htmlFor="u-username" className={adminStyles.label}>
+                    Username
+                  </label>
+                  <input id="u-username" className={adminStyles.input} value={form.username} onChange={(e) => set("username", e.target.value)} maxLength={32} autoComplete="off" autoCapitalize="none" spellCheck={false} />
+                  <span className={cms.help}>Optional. A short name to sign in with instead of the email, for example asha.verma.</span>
                 </div>
 
                 <div className={adminStyles.field}>

@@ -74,3 +74,8 @@ Both `/admin` (Pages > Custom pages) and `/admin1` (Pages collection) can create
 ## Activity log
 
 Both panels have an **Activity log** (Collections in /admin1, Access in /admin). It records who did what and when: content edits (which page and fields), custom pages, users, roles, images, messages and resume downloads, restored versions, and sign-ins (including failed ones). The newest 1000 entries are kept under the `audit:log` key. Only the Super admin sees it by default; give the "Activity log" permission to another role under Roles.
+
+## Live preview and usernames
+
+- The page editor has a **Live preview** beside the form (desktop, tablet or phone size, light or dark). It redraws while you type and scrolls to the block you are editing. Nothing goes on the website until you save.
+- A user can have a **username** (3 to 32 letters, numbers, dots, dashes or underscores). People in /admin1 sign in with either the email or the username. The environment administrator keeps its own username, which no user can take.
