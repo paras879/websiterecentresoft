@@ -566,8 +566,9 @@ function Shell({ user, permissions, superUser, initialContent, initialInquiries,
               ) : null}
               {!blocked && route.name === "versions" ? (
                 <>
-                  <PageHead title="Versions" lead="Every save is kept. Open an older one to put it back." />
+                  <PageHead title="Versions" lead="Every time you save, a copy is kept here (the latest 20). Restoring a version puts it on the website straight away, and the version you replace stays in this list." />
                   <HistoryView
+                    hideLead
                     dirty={anyDirty}
                     writable={can("history", "restore") && storage !== "none"}
                     refreshKey={savedTick}

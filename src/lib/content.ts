@@ -2,16 +2,23 @@ import { cache } from "react";
 import { revalidateTag } from "next/cache";
 import { applyImageUpgrades } from "@/content/image-upgrades";
 import { defaultContent, sanitizeContent, type SiteContent } from "@/content";
+import { changedParts, currentActor, moduleTitle } from "./audit";
 import { getStore } from "./store";
 
 const CONTENT_KEY = "content";
+
+/** "Home, Careers" or "Home, Careers, About Us and 4 more": what a save changed, short enough to read. */
+const describeChange = (parts: string[]) => `Changed ${parts.length > 3 ? `${parts.slice(0, 3).join(", ")} and ${parts.length - 3} more` : parts.join(", ")}`;
 const HISTORY_KEY = "content:history";
 const HISTORY_KEEP = 20;
 
 export interface HistoryEntry {
   id: string;
   at: string;
+  /** What changed in this save, in words. */
   note: string;
+  /** Who saved it, when known. */
+  by: string;
 }
 
 /**
@@ -106,9 +113,25 @@ export async function saveSiteContent(raw: unknown, note = ""): Promise<SiteCont
   const clean = sanitizeContent(raw);
   const store = getStore();
   const at = new Date().toISOString();
-  const entry = { id: `v-${Date.now().toString(36)}`, at, note: note.slice(0, 120), doc: clean };
+
+  // Say what this save changed, and who saved it, so the Versions list is readable.
+  // With nothing saved yet, the built-in copy is what this save is compared with.
+  let before: unknown = sanitizeContent(defaultContent);
+  let hadSaved = false;
+  try {
+    const stored = await store.get(CONTENT_KEY);
+    if (stored) {
+      before = JSON.parse(stored);
+      hadSaved = true;
+    }
+  } catch {}
+  const parts = changedParts(before, clean, moduleTitle);
+  const label = note.trim() || (parts.length ? describeChange(parts) : "Saved with no changes");
+  const by = (await currentActor()).name;
+  const entry = { id: `v-${Date.now().toString(36)}`, at, note: label.slice(0, 160), by, doc: clean };
   await store.set(CONTENT_KEY, JSON.stringify(clean));
-  await store.lpush(HISTORY_KEY, JSON.stringify(entry), HISTORY_KEEP);
+  // A save that changes nothing is not worth a place in the list.
+  if (parts.length > 0 || note.trim() || !hadSaved) await store.lpush(HISTORY_KEY, JSON.stringify(entry), HISTORY_KEEP);
   try {
     // Public pages keep the saved content for a minute; this makes a new save show up right away.
     revalidateTag("site-content", { expire: 0 });
@@ -118,16 +141,29 @@ export async function saveSiteContent(raw: unknown, note = ""): Promise<SiteCont
 
 export async function listHistory(): Promise<HistoryEntry[]> {
   const rows = await getStore().lrange(HISTORY_KEY, 0, HISTORY_KEEP - 1);
-  return rows
+  const parsed = rows
     .map((r) => {
       try {
-        const e = JSON.parse(r) as HistoryEntry;
-        return { id: e.id, at: e.at, note: e.note ?? "" };
+        return JSON.parse(r) as { id: string; at: string; note?: string; by?: string; doc?: unknown };
       } catch {
         return null;
       }
     })
-    .filter((e): e is HistoryEntry => e !== null);
+    .filter((e): e is { id: string; at: string; note?: string; by?: string; doc?: unknown } => e !== null);
+
+  return parsed.map((e, i) => {
+    // Older saves did not record what they changed. Work it out by comparing with the save before.
+    let note = e.note ?? "";
+    if (!note) {
+      const older = parsed[i + 1];
+      if (!older) note = "Earliest version still kept";
+      else {
+        const parts = changedParts(older.doc, e.doc, moduleTitle);
+        note = parts.length ? describeChange(parts) : "No visible change";
+      }
+    }
+    return { id: e.id, at: e.at, note, by: e.by ?? "" };
+  });
 }
 
 export async function getHistoryDoc(id: string): Promise<SiteContent | null> {

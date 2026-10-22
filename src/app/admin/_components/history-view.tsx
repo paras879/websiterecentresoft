@@ -10,6 +10,7 @@ interface Entry {
   id: string;
   at: string;
   note: string;
+  by?: string;
 }
 
 export function HistoryView({
@@ -17,11 +18,14 @@ export function HistoryView({
   writable,
   refreshKey,
   onRestored,
+  hideLead,
 }: {
   dirty: boolean;
   writable: boolean;
   refreshKey: number;
   onRestored: (content: SiteContent) => void;
+  /** The page already explains the list in its own heading. */
+  hideLead?: boolean;
 }) {
   const [entries, setEntries] = useState<Entry[] | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -65,10 +69,12 @@ export function HistoryView({
 
   return (
     <div className={styles.page}>
-      <p className={styles.pageLead}>
-        Every time you save, a copy is kept here (the latest 20). Restoring a version puts it on the website straight
-        away, and the version you replace stays in this list.
-      </p>
+      {hideLead ? null : (
+        <p className={styles.pageLead}>
+          Every time you save, a copy is kept here (the latest 20). Restoring a version puts it on the website straight
+          away, and the version you replace stays in this list.
+        </p>
+      )}
 
       {entries === null ? (
         <p className={styles.help}>Loading…</p>
@@ -84,6 +90,7 @@ export function HistoryView({
                 <p className={styles.historyMeta}>
                   {relativeTime(e.at)}
                   {e.note ? ` · ${e.note}` : ""}
+                  {e.by ? ` · by ${e.by}` : ""}
                 </p>
               </div>
               {i > 0 ? (
