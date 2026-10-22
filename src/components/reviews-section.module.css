@@ -196,7 +196,14 @@
   display: none;
 }
 
-.track > li {
+.set {
+  display: contents;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.set > li {
   flex: 0 0 calc((100% - 3.75rem) / 4);
   scroll-snap-align: start;
 }
@@ -225,7 +232,7 @@
 }
 
 @media (max-width: 1000px) {
-  .track > li {
+  .set > li {
     flex-basis: calc((100% - 1.25rem) / 2);
   }
 }
@@ -235,7 +242,7 @@
     padding: 2.25rem 0 2rem;
   }
 
-  .track > li {
+  .set > li {
     flex-basis: 88%;
   }
 }
