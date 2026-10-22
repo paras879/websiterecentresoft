@@ -21,44 +21,6 @@ function Glyph({ name, className }: { name: string; className?: string }) {
   return isIcon(name) ? <Icon name={name} className={className} /> : null;
 }
 
-const REQUIRED = [
-  {
-    title: "AI - Agentic",
-    desc: "Autonomous enterprise agents, multi-agent swarms, and verified human-in-the-loop workflows.",
-    points: [
-      "Autonomous goal reasoning and tool execution via MCP",
-      "Multi-agent swarm coordination and supervisory routing",
-      "Enterprise RBAC, PII sanitization and human audit gates",
-    ],
-    href: "/services/agentic-ai",
-    icon: "assist",
-    after: "/services/software-development",
-  },
-  {
-    title: "App Development",
-    desc: "Native Android and iOS apps, from first idea to the App Store and Google Play.",
-    points: [
-      "Native Swift and Kotlin, or cross-platform when it fits",
-      "Secure sign-in, offline sync and smooth performance",
-      "Release support for Apple and Google stores",
-    ],
-    href: "/services/app-development",
-    icon: "phone",
-    after: "/services/ai-automation",
-  },
-];
-
-/** Saved content from before a service existed still shows it, right after its neighbour. */
-function withMissing<T extends { href: string }>(items: T[]): (T | (typeof REQUIRED)[number])[] {
-  const list: (T | (typeof REQUIRED)[number])[] = [...items];
-  for (const req of REQUIRED) {
-    if (list.some((i) => i.href === req.href)) continue;
-    const at = list.findIndex((i) => i.href === req.after);
-    list.splice(at >= 0 ? at + 1 : list.length, 0, req);
-  }
-  return list;
-}
-
 export default async function HomePage() {
   const { home, reviews } = await getSiteContent();
   const info = await getSiteInfo();
@@ -113,7 +75,7 @@ export default async function HomePage() {
           </header>
 
           <div className={styles.svcGrid}>
-            {withMissing(services.items).map((service, index) => (
+            {services.items.map((service, index) => (
               <article key={`${service.title}-${index}`} className={styles.svcBox}>
                 <span className={styles.svcNum} aria-hidden="true">
                   {String(index + 1).padStart(2, "0")}

@@ -70,6 +70,46 @@ function withRequiredCareerAreas(content: SiteContent): SiteContent {
   return content;
 }
 
+/** Home page service cards for services that came after older saved content. They are added to the content itself,
+ *  so the admin shows exactly the cards the website shows, and they can be edited there like any other. */
+const REQUIRED_HOME_CARDS = [
+  {
+    title: "AI - Agentic",
+    desc: "Autonomous enterprise agents, multi-agent swarms, and verified human-in-the-loop workflows.",
+    points: [
+      "Autonomous goal reasoning and tool execution via MCP",
+      "Multi-agent swarm coordination and supervisory routing",
+      "Enterprise RBAC, PII sanitization and human audit gates",
+    ],
+    href: "/services/agentic-ai",
+    icon: "assist",
+    after: "/services/software-development",
+  },
+  {
+    title: "App Development",
+    desc: "Native Android and iOS apps, from first idea to the App Store and Google Play.",
+    points: [
+      "Native Swift and Kotlin, or cross-platform when it fits",
+      "Secure sign-in, offline sync and smooth performance",
+      "Release support for Apple and Google stores",
+    ],
+    href: "/services/app-development",
+    icon: "phone",
+    after: "/services/ai-automation",
+  },
+];
+
+function withRequiredHomeCards(content: SiteContent): SiteContent {
+  const items = content.home?.services?.items as Array<{ title: string; desc: string; points: string[]; href: string; icon: string }> | undefined;
+  if (!items) return content;
+  for (const { after, ...card } of REQUIRED_HOME_CARDS) {
+    if (items.some((i) => i.href === card.href)) continue;
+    const at = items.findIndex((i) => i.href === after);
+    items.splice(at >= 0 ? at + 1 : items.length, 0, { ...card, points: [...card.points] });
+  }
+  return content;
+}
+
 function withRequiredServices(content: SiteContent): SiteContent {
   const { header, footer } = content.site;
   for (const req of REQUIRED_SERVICES) {
@@ -114,11 +154,11 @@ function withSiteAddress(content: SiteContent): SiteContent {
 export const getSiteContent = cache(async (): Promise<SiteContent> => {
   try {
     const raw = await getStore().get(CONTENT_KEY, { cached: true });
-    if (raw) return withSiteAddress(applyImageUpgrades(withRequiredCareerAreas(withRequiredServices(sanitizeContent(JSON.parse(raw))))));
+    if (raw) return withSiteAddress(applyImageUpgrades(withRequiredHomeCards(withRequiredCareerAreas(withRequiredServices(sanitizeContent(JSON.parse(raw)))))));
   } catch (error) {
     console.error("Could not read saved content, using the built-in copy.", error);
   }
-  return withSiteAddress(withRequiredCareerAreas(withRequiredServices(sanitizeContent(defaultContent))));
+  return withSiteAddress(withRequiredHomeCards(withRequiredCareerAreas(withRequiredServices(sanitizeContent(defaultContent)))));
 });
 
 /** Validates and saves the whole document, and keeps a snapshot so it can be restored later. */

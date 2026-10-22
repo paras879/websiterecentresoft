@@ -114,3 +114,5 @@ The AI chat assistant also knows the published custom pages (their text, questio
 The /admin1 panel has a footer on every screen: copyright with the company legal name and the current year, links to Privacy Policy, Terms & Conditions and the website, a short note that the panel is for authorised staff and every change is recorded, and a Need help? link to the company email. The name and email come from Header, footer & contact.
 
 /llms.txt is a short Markdown guide to the site for AI tools. It is built from the site content (services, contact details, published custom pages), so it follows admin changes.
+
+Home page service cards: the Agentic AI and App Development cards are part of the saved Home content itself (added to older saved content automatically), so the admin shows the same six cards as the website and each one can be edited. A saved card with the same link is never added twice.
