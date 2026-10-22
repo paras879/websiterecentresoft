@@ -116,3 +116,5 @@ The /admin1 panel has a footer on every screen: copyright with the company legal
 /llms.txt is a short Markdown guide to the site for AI tools. It is built from the site content (services, contact details, published custom pages), so it follows admin changes.
 
 Home page service cards: the Agentic AI and App Development cards are part of the saved Home content itself (added to older saved content automatically), so the admin shows the same six cards as the website and each one can be edited. A saved card with the same link is never added twice.
+
+The AI chat shows a Main menu button under each answer. It clears the conversation and shows the welcome message with all the starting questions again.

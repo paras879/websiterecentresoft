@@ -167,6 +167,18 @@ export function AiAssistant({ whatsappUrl }: { whatsappUrl?: string }) {
   if (pathname?.startsWith("/admin")) return null;
 
   const showSuggestions = messages.length === 0;
+  // After an answer, one tap goes back to the start: the welcome message and all the starting questions.
+  const canGoBack = !busy && messages.length > 0 && messages[messages.length - 1].role === "assistant";
+  const backToMenu = () => {
+    setMessages([]);
+    setInput("");
+    try {
+      sessionStorage.removeItem(STORAGE_KEY);
+    } catch {
+      /* storage can be blocked */
+    }
+    inputRef.current?.focus();
+  };
 
   return (
     <aside aria-label="Assistant">
@@ -213,6 +225,17 @@ export function AiAssistant({ whatsappUrl }: { whatsappUrl?: string }) {
                   <i />
                   <i />
                 </span>
+              </div>
+            ) : null}
+
+            {canGoBack ? (
+              <div className={styles.chips}>
+                <button type="button" className={`${styles.chip} ${styles.menuChip}`} onClick={backToMenu}>
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M19 12H5M11 6l-6 6 6 6" />
+                  </svg>
+                  Main menu
+                </button>
               </div>
             ) : null}
 

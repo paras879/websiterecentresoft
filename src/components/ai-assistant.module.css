@@ -447,3 +447,20 @@
     transition: none;
   }
 }
+
+/* "Main menu" under an answer: goes back to the welcome message and the starting questions */
+.menuChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.menuChip svg {
+  width: 0.95rem;
+  height: 0.95rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
