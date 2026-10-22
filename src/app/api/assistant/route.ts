@@ -20,7 +20,7 @@ const PER_MINUTE = Math.max(1, Number(process.env.AI_MAX_PER_MINUTE) || 12);
 const MAX_QUESTION = 500;
 const MAX_HISTORY = 8;
 
-const SYSTEM = (facts: string) => `You are the website assistant for Recenturesoft Infotech, a software company in Noida, India.
+const SYSTEM = (facts: string, company: string) => `You are the website assistant for ${company}, a software company.
 
 Answer ONLY from the company information below. It is the same information shown on the website.
 - Reply in the language the visitor uses: English, or Hinglish (Hindi written in English letters). Keep a friendly, professional tone.
@@ -114,7 +114,7 @@ export async function POST(req: Request) {
   if (!withinBudget) return json({ success: true, reply: basicAnswer(question, kb), source: "basic", why: "minute_limit" });
 
   try {
-    const reply = await askModel(cfg, SYSTEM(kb.text), messages);
+    const reply = await askModel(cfg, SYSTEM(kb.text, kb.facts.legalName), messages);
     if (!reply) return json({ success: true, reply: basicAnswer(question, kb), source: "basic", why: "empty_reply" });
     if (standalone) {
       // Saved after the answer is on its way, so the visitor does not wait for it.

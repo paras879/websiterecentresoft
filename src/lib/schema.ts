@@ -12,6 +12,24 @@ const str = (v: unknown) => (typeof v === "string" ? v.trim() : "");
 
 const SERVICE_PREFIX = "/services/";
 
+/**
+ * The address typed in the admin ("street, city, state, postal code, country") as a structured postal address.
+ * When it does not follow that shape, the whole text is kept as the street line rather than guessed at.
+ */
+function postalAddress(full: string): Json {
+  const parts = full.split(",").map((p) => p.trim()).filter(Boolean);
+  if (parts.length < 5) return { "@type": "PostalAddress", streetAddress: full.trim() };
+  const [country, postal, region, locality] = [parts.at(-1)!, parts.at(-2)!, parts.at(-3)!, parts.at(-4)!];
+  return {
+    "@type": "PostalAddress",
+    streetAddress: parts.slice(0, -4).join(", "),
+    addressLocality: locality,
+    addressRegion: region,
+    postalCode: postal,
+    addressCountry: /^india$/i.test(country) ? "IN" : country,
+  };
+}
+
 /** Business, website and review data that appears on every page. */
 export function buildSiteGraph(content: SiteContent, info: SiteInfo): Json {
   const { site } = content;
@@ -29,14 +47,7 @@ export function buildSiteGraph(content: SiteContent, info: SiteInfo): Json {
     description: info.description,
     email: info.contact.email,
     telephone: info.contact.phone,
-    address: {
-      "@type": "PostalAddress",
-      streetAddress: "A-125, 1st Floor, Sector-63",
-      addressLocality: "Noida",
-      addressRegion: "Uttar Pradesh",
-      postalCode: "201301",
-      addressCountry: "IN",
-    },
+    address: postalAddress(info.contact.address),
     hasMap: info.contact.mapUrl,
     contactPoint: [
       {

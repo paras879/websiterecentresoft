@@ -75,11 +75,11 @@ function answer(question: string, kb: Knowledge, onlySimple: boolean): string | 
   if (has(q, ABOUT)) {
     const list = f.services.map((s) => s.title).join(", ");
     return t(
-      `${f.legalName} is a software company based in Noida, India. ${f.about}
+      `${f.legalName} is a software company. ${f.about}
 Our services: ${list}.
 Office: ${f.address}
 Email: ${f.email} | Phone: ${f.phone}`,
-      `${f.legalName} Noida, India ki ek software company hai. ${f.about}
+      `${f.legalName} ek software company hai. ${f.about}
 Hamari services: ${list}.
 Office: ${f.address}
 Email: ${f.email} | Phone: ${f.phone}`,
