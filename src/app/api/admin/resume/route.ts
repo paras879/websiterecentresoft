@@ -1,4 +1,5 @@
 import { getBlob, listInquiries } from "@/lib/records";
+import { logAudit } from "@/lib/audit";
 import { failure, guardAdmin, json } from "@/lib/api";
 
 const TYPES: Record<string, string> = {
@@ -20,6 +21,7 @@ export async function GET(req: Request) {
     const file = await getBlob(inquiry.resume.id);
     if (!file) return json({ success: false, error: "The resume file could not be found." }, 404);
 
+    await logAudit("message", `Downloaded the resume "${inquiry.resume.name.slice(0, 80)}"`);
     const ext = inquiry.resume.name.split(".").pop()?.toLowerCase() ?? "";
     const safeName = inquiry.resume.name.replace(/[^\w.\- ]+/g, "_");
     return new Response(new Uint8Array(file), {

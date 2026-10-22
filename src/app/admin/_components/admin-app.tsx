@@ -17,6 +17,7 @@ import { NavContext, type NavRoute, type NavValue } from "../../admin1/_componen
 import { PageEdit, PagesList } from "../../admin1/_components/pages-view";
 import { RoleEdit, RolesList } from "../../admin1/_components/roles-view";
 import { UserEdit, UsersList } from "../../admin1/_components/users-view";
+import { ActivityView } from "../../admin1/_components/activity-view";
 import { BUILTIN_ROLES } from "@/lib/cms-access";
 import { OverviewView } from "./overview-view";
 import { Button, ConfirmDialog, cx, ToastProvider, UiIcon, useToast, type UiIconName } from "./ui";
@@ -35,7 +36,8 @@ type View =
   | { name: "roles" }
   | { name: "role"; id: string }
   | { name: "pages" }
-  | { name: "page"; id: string };
+  | { name: "page"; id: string }
+  | { name: "activity" };
 
 function parseHash(hash: string): View {
   const [, name, a, b] = hash.replace(/^#/, "").split("/");
@@ -45,6 +47,7 @@ function parseHash(hash: string): View {
   if (name === "user" && a) return { name: "user", id: a };
   if (name === "roles") return { name: "roles" };
   if (name === "role" && a) return { name: "role", id: a };
+  if (name === "activity") return { name: "activity" };
   if (name === "pages") return { name: "pages" };
   if (name === "page" && a) return { name: "page", id: a };
   if (name === "images" || name === "history" || name === "account") return { name };
@@ -253,6 +256,8 @@ function Shell({ initialContent, initialInquiries, system }: AdminProps) {
           return "#/pages";
         case "page":
           return `#/page/${r.id}`;
+        case "activity":
+          return "#/activity";
       }
     };
     return { kind: "hash", href, go: (r) => go(href(r)), preview: (id) => `/admin1/preview/${id}` };
@@ -292,6 +297,7 @@ function Shell({ initialContent, initialInquiries, system }: AdminProps) {
       items: [
         { label: "Users", icon: "people", hash: "#/users", active: (v) => v.name === "users" || v.name === "user" },
         { label: "Roles", icon: "shield", hash: "#/roles", active: (v) => v.name === "roles" || v.name === "role" },
+        { label: "Activity log", icon: "clock", hash: "#/activity", active: (v) => v.name === "activity" },
       ],
     },
     {
@@ -314,6 +320,7 @@ function Shell({ initialContent, initialInquiries, system }: AdminProps) {
     users: "Users",
     user: "User",
     roles: "Roles",
+    activity: "Activity log",
     role: "Role",
     pages: "Custom pages",
     page: "Custom page",
@@ -478,6 +485,7 @@ function Shell({ initialContent, initialInquiries, system }: AdminProps) {
             {view.name === "users" ? <UsersList /> : null}
             {view.name === "user" ? <UserEdit key={view.id} id={view.id} /> : null}
             {view.name === "roles" ? <RolesList /> : null}
+            {view.name === "activity" ? <ActivityView /> : null}
             {view.name === "role" ? <RoleEdit key={view.id} id={view.id} /> : null}
             {view.name === "pages" ? <PagesList /> : null}
             {view.name === "page" ? <PageEdit key={view.id} id={view.id} /> : null}

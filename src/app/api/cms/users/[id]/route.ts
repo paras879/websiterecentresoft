@@ -1,3 +1,4 @@
+import { logAudit } from "@/lib/audit";
 import { mayManageRole } from "@/lib/cms-auth";
 import { cmsFailure, guardCms } from "@/lib/cms-guard";
 import { CmsError, deleteUser, getRole, getStoredUser, updateUser } from "@/lib/cms-users";
@@ -37,7 +38,16 @@ export async function PATCH(req: Request, { params }: Ctx) {
       patch.disabled = b.disabled;
     }
 
-    return json({ success: true, user: await updateUser(id, patch) });
+    const user = await updateUser(id, patch);
+    const did = [
+      patch.name !== undefined && patch.name !== target.name ? "name" : "",
+      patch.email !== undefined ? "email" : "",
+      patch.password ? "password reset" : "",
+      patch.roleId ? `role changed to ${(await getRole(patch.roleId))?.name ?? patch.roleId}` : "",
+      patch.disabled !== undefined && patch.disabled !== Boolean(target.disabled) ? (patch.disabled ? "switched off" : "switched on") : "",
+    ].filter(Boolean);
+    await logAudit("user", `Changed the user ${user.email}${did.length ? `: ${did.join(", ")}` : ""}`, guard.user);
+    return json({ success: true, user });
   } catch (error) {
     return cmsFailure(error, "Could not save the user.");
   }
@@ -56,6 +66,7 @@ export async function DELETE(req: Request, { params }: Ctx) {
       throw new CmsError("You cannot delete a user with more access than your own.", 403);
     }
     await deleteUser(id);
+    await logAudit("user", `Deleted the user ${target.email}`, guard.user);
     return json({ success: true });
   } catch (error) {
     return cmsFailure(error, "Could not delete the user.");

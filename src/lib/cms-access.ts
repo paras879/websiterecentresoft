@@ -41,6 +41,7 @@ export const RESOURCES: ResourceDef[] = [
   { id: "history", label: "Versions", group: "Collections", actions: ["read", "restore"] },
   { id: "users", label: "Users", group: "Collections", actions: ["read", "create", "update", "delete"] },
   { id: "roles", label: "Roles", group: "Collections", actions: ["read", "create", "update", "delete"] },
+  { id: "audit", label: "Activity log", group: "Collections", actions: ["read"] },
 ];
 
 export const resourceById = (id: string) => RESOURCES.find((r) => r.id === id);

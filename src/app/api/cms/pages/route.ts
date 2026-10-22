@@ -1,4 +1,5 @@
 import { revalidatePath, revalidateTag } from "next/cache";
+import { logAudit } from "@/lib/audit";
 import { cmsFailure, guardCms } from "@/lib/cms-guard";
 import { createPage, listPages } from "@/lib/custom-pages";
 import { pagePath } from "@/lib/custom-pages-types";
@@ -19,6 +20,7 @@ export async function POST(req: Request) {
   if ("denied" in guard) return guard.denied;
   try {
     const page = await createPage(await req.json(), guard.user.name);
+    await logAudit("page", `Created the page "${page.title}" (${pagePath(page)}, ${page.status})`, guard.user);
     try {
       revalidateTag("site-content", { expire: 0 });
       revalidatePath("/", "layout");

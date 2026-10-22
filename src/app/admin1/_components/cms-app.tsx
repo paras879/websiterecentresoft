@@ -21,6 +21,7 @@ import { DashboardView } from "./dashboard-view";
 import { PageDocView } from "./page-doc-view";
 import { RoleEdit, RolesList } from "./roles-view";
 import { UserEdit, UsersList } from "./users-view";
+import { ActivityView } from "./activity-view";
 import { PagesList, PageEdit } from "./pages-view";
 import { PageHead } from "./page-head";
 import { AccessContext } from "./access-context";
@@ -50,6 +51,7 @@ type Route =
   | { name: "role"; id: string }
   | { name: "pages" }
   | { name: "page"; id: string }
+  | { name: "activity" }
   | { name: "media" }
   | { name: "messages"; id?: string }
   | { name: "versions" }
@@ -65,6 +67,7 @@ function parseRoute(pathname: string): Route {
     if (b === "users") return c ? { name: "user", id: c } : { name: "users" };
     if (b === "roles") return c ? { name: "role", id: c } : { name: "roles" };
     if (b === "pages") return c ? { name: "page", id: c } : { name: "pages" };
+    if (b === "activity") return { name: "activity" };
     if (b === "media") return { name: "media" };
     if (b === "messages") return { name: "messages", id: c };
     if (b === "versions") return { name: "versions" };
@@ -86,6 +89,8 @@ function routeNeeds(route: Route): { resource: string; action: Action } | null {
     case "pages":
     case "page":
       return { resource: "pages", action: "read" };
+    case "activity":
+      return { resource: "audit", action: "read" };
     case "media":
       return { resource: "media", action: "read" };
     case "messages":
@@ -281,6 +286,8 @@ function Shell({ user, permissions, superUser, initialContent, initialInquiries,
           return `${BASE}/collections/pages`;
         case "page":
           return `${BASE}/collections/pages/${r.id}`;
+        case "activity":
+          return `${BASE}/collections/activity`;
       }
     };
     return { kind: "next", href, go: (r) => router.push(href(r)), preview: (id) => `${BASE}/preview/${id}` };
@@ -325,6 +332,7 @@ function Shell({ user, permissions, superUser, initialContent, initialInquiries,
   const collections: NavItem[] = [];
   if (can("users", "read")) collections.push({ label: "Users", href: `${BASE}/collections/users`, on: route.name === "users" || route.name === "user" });
   if (can("roles", "read")) collections.push({ label: "Roles", href: `${BASE}/collections/roles`, on: route.name === "roles" || route.name === "role" });
+  if (can("audit", "read")) collections.push({ label: "Activity log", href: `${BASE}/collections/activity`, on: route.name === "activity" });
   if (can("pages", "read")) collections.push({ label: "Custom pages", href: `${BASE}/collections/pages`, on: route.name === "pages" || route.name === "page" });
   if (can("media", "read")) collections.push({ label: "Media", href: `${BASE}/collections/media`, on: route.name === "media" });
   if (canReadInbox)
@@ -364,6 +372,9 @@ function Shell({ user, permissions, superUser, initialContent, initialInquiries,
       break;
     case "page":
       crumbs.push({ label: "Custom pages", href: `${BASE}/collections/pages` }, { label: route.id === "create" ? "Create new" : "Edit" });
+      break;
+    case "activity":
+      crumbs.push({ label: "Collections" }, { label: "Activity log" });
       break;
     case "media":
       crumbs.push({ label: "Collections" }, { label: "Media" });
@@ -522,6 +533,7 @@ function Shell({ user, permissions, superUser, initialContent, initialInquiries,
               {!blocked && route.name === "users" ? <UsersList /> : null}
               {!blocked && route.name === "user" ? <UserEdit key={route.id} id={route.id} /> : null}
               {!blocked && route.name === "roles" ? <RolesList /> : null}
+              {!blocked && route.name === "activity" ? <ActivityView /> : null}
               {!blocked && route.name === "role" ? <RoleEdit key={route.id} id={route.id} /> : null}
               {!blocked && route.name === "pages" ? <PagesList /> : null}
               {!blocked && route.name === "page" ? <PageEdit key={route.id} id={route.id} /> : null}

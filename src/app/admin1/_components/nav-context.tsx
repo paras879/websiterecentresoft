@@ -10,7 +10,8 @@ export type NavRoute =
   | { name: "roles" }
   | { name: "role"; id: string }
   | { name: "pages" }
-  | { name: "page"; id: string };
+  | { name: "page"; id: string }
+  | { name: "activity" };
 
 export interface NavValue {
   kind: "next" | "hash";

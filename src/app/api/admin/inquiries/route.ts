@@ -1,4 +1,5 @@
 import { deleteInquiry, listInquiries, setInquiryStatus, type InquiryStatus } from "@/lib/records";
+import { logAudit } from "@/lib/audit";
 import { failure, guardAdmin, json } from "@/lib/api";
 
 const STATUSES: InquiryStatus[] = ["new", "contacted", "archived"];
@@ -22,6 +23,7 @@ export async function PATCH(req: Request) {
       return json({ success: false, error: "That update is not valid." }, 400);
     }
     const ok = await setInquiryStatus(id, status as InquiryStatus);
+    if (ok) await logAudit("message", `Marked a message as ${status}`);
     return ok ? json({ success: true }) : json({ success: false, error: "That message no longer exists." }, 404);
   } catch (error) {
     return failure(error, "Could not update the message.");
@@ -35,6 +37,7 @@ export async function DELETE(req: Request) {
     const id = new URL(req.url).searchParams.get("id");
     if (!id) return json({ success: false, error: "Missing message." }, 400);
     const ok = await deleteInquiry(id);
+    if (ok) await logAudit("message", "Deleted a message");
     return ok ? json({ success: true }) : json({ success: false, error: "That message no longer exists." }, 404);
   } catch (error) {
     return failure(error, "Could not delete the message.");

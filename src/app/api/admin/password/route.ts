@@ -1,4 +1,5 @@
 import { clearAdminSession, saveCredentials, verifyCurrentPassword } from "@/lib/admin-auth";
+import { logAudit } from "@/lib/audit";
 import { failure, guardAdmin, json } from "@/lib/api";
 
 export async function POST(req: Request) {
@@ -22,6 +23,7 @@ export async function POST(req: Request) {
     }
 
     await saveCredentials(username, next);
+    await logAudit("account", "Changed the administrator username or password");
     // Every session, including this one, is now invalid. The person signs in again with the new password.
     await clearAdminSession();
     return json({ success: true });

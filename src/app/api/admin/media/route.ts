@@ -1,4 +1,5 @@
 import { addMedia, deleteMedia, IMAGE_TYPES, listMedia, maxImageBytes, sniffImageType } from "@/lib/records";
+import { logAudit } from "@/lib/audit";
 import { failure, guardAdmin, json } from "@/lib/api";
 
 export async function GET(req: Request) {
@@ -36,6 +37,7 @@ export async function POST(req: Request) {
     }
 
     const item = await addMedia(buffer, file.name, type);
+    await logAudit("media", `Uploaded the image "${file.name.slice(0, 80)}"`);
     return json({ success: true, item });
   } catch (error) {
     return failure(error, "The image could not be uploaded.");
@@ -49,6 +51,7 @@ export async function DELETE(req: Request) {
     const id = new URL(req.url).searchParams.get("id");
     if (!id) return json({ success: false, error: "Missing image." }, 400);
     await deleteMedia(id);
+    await logAudit("media", "Deleted an image");
     return json({ success: true });
   } catch (error) {
     return failure(error, "Could not delete the image.");

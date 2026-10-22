@@ -1,4 +1,5 @@
 import { revalidatePath, revalidateTag } from "next/cache";
+import { logAudit } from "@/lib/audit";
 import { cmsFailure, guardCms } from "@/lib/cms-guard";
 import { deletePage, getPage, updatePage } from "@/lib/custom-pages";
 import { pagePath } from "@/lib/custom-pages-types";
@@ -32,6 +33,9 @@ export async function PUT(req: Request, { params }: Ctx) {
     const { id } = await params;
     const before = await getPage(id);
     const page = await updatePage(id, await req.json(), guard.user.name);
+    const moved = before && pagePath(before) !== pagePath(page) ? `, moved from ${pagePath(before)}` : "";
+    const state = before && before.status !== page.status ? `, now ${page.status}` : "";
+    await logAudit("page", `Edited the page "${page.title}" (${pagePath(page)}${state}${moved})`, guard.user);
     // The old address (if it changed) and the new one both need refreshing.
     refresh([pagePath(page), ...(before ? [pagePath(before)] : [])]);
     return json({ success: true, page });
@@ -48,6 +52,7 @@ export async function DELETE(req: Request, { params }: Ctx) {
     const before = await getPage(id);
     const ok = await deletePage(id);
     if (!ok) return json({ success: false, error: "That page no longer exists." }, 404);
+    await logAudit("page", `Deleted the page "${before?.title ?? id}"${before ? ` (${pagePath(before)})` : ""}`, guard.user);
     refresh(before ? [pagePath(before)] : []);
     return json({ success: true });
   } catch (error) {

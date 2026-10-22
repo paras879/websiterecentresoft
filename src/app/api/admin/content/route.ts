@@ -1,5 +1,6 @@
 import { revalidatePath } from "next/cache";
 import { getDefaultContent, getSiteContent, saveSiteContent } from "@/lib/content";
+import { changedParts, logAudit, moduleTitle } from "@/lib/audit";
 import { failure, guardAdmin, json } from "@/lib/api";
 import { getStore } from "@/lib/store";
 
@@ -25,7 +26,10 @@ export async function PUT(req: Request) {
       return json({ success: false, error: "Nothing to save." }, 400);
     }
     const note = typeof body.note === "string" ? body.note : "";
+    const before = await getSiteContent();
     const content = await saveSiteContent(body.content, note);
+    const parts = changedParts(before, content, moduleTitle);
+    if (parts.length) await logAudit("content", `Edited ${parts.join(", ")}`);
     try {
       revalidatePath("/", "layout");
     } catch {}

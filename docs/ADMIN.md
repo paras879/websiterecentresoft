@@ -70,3 +70,7 @@ Both `/admin` (Pages > Custom pages) and `/admin1` (Pages collection) can create
 - Status: Draft pages are only visible in the preview (`/admin1/preview/<id>`). Published pages go live at once and are added to the sitemap.
 - Menu: a page can be added to the Services menu or the footer. These links are added when the page is drawn and are not saved into the site content.
 - Pages are stored in the `cms:pages` key. Who may create, edit or delete them is set per role (Roles > Pages).
+
+## Activity log
+
+Both panels have an **Activity log** (Collections in /admin1, Access in /admin). It records who did what and when: content edits (which page and fields), custom pages, users, roles, images, messages and resume downloads, restored versions, and sign-ins (including failed ones). The newest 1000 entries are kept under the `audit:log` key. Only the Super admin sees it by default; give the "Activity log" permission to another role under Roles.

@@ -9,6 +9,7 @@ import {
   resetRateLimit,
   withinRateLimit,
 } from "@/lib/admin-auth";
+import { logAudit } from "@/lib/audit";
 import { failure, json } from "@/lib/api";
 import { getStore } from "@/lib/store";
 
@@ -45,9 +46,11 @@ export async function POST(req: Request) {
     const password = typeof body.password === "string" ? body.password : "";
     const who = await verifyLogin(username, password);
     if (!who) {
+      await logAudit("sign-in", `Failed sign-in to /admin as "${username.slice(0, 60)}"`, { id: "", name: "Unknown", email: username.slice(0, 120) });
       return json({ success: false, error: "The username or password is not correct." }, 401);
     }
     await createAdminSession(who);
+    await logAudit("sign-in", "Signed in to /admin", { id: "root", name: "Administrator", email: who });
     await resetRateLimit(`login:${ip}`);
     return json({ success: true });
   } catch (error) {

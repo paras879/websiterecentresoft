@@ -1,5 +1,6 @@
 import { adminStatus, clientIp, resetRateLimit, sameOrigin, withinRateLimit } from "@/lib/admin-auth";
 import { cmsLogin, cmsLogout, getCmsUser } from "@/lib/cms-auth";
+import { logAudit } from "@/lib/audit";
 import { failure, json } from "@/lib/api";
 
 export async function GET() {
@@ -33,6 +34,7 @@ export async function POST(req: Request) {
 
     const result = await cmsLogin(email, password);
     if (!result.ok) {
+      await logAudit("sign-in", `${result.reason === "disabled" ? "Blocked sign-in (account switched off)" : "Failed sign-in"} as "${email.slice(0, 60)}"`, { id: "", name: "Unknown", email });
       return json(
         {
           success: false,
@@ -44,6 +46,7 @@ export async function POST(req: Request) {
         401,
       );
     }
+    await logAudit("sign-in", "Signed in to /admin1", result.user);
     await resetRateLimit(`cmslogin:${ip}`);
     return json({ success: true });
   } catch (error) {

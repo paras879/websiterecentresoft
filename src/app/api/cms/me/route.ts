@@ -1,3 +1,4 @@
+import { logAudit } from "@/lib/audit";
 import { cmsFailure, guardCms } from "@/lib/cms-guard";
 import { checkPassword, CmsError, getStoredUser, updateUser } from "@/lib/cms-users";
 import { json } from "@/lib/api";
@@ -24,6 +25,7 @@ export async function PATCH(req: Request) {
       patch.password = b.newPassword;
     }
     const user = await updateUser(stored.id, patch);
+    await logAudit("account", patch.password ? "Changed their own details and password" : "Changed their own details", guard.user);
     return json({ success: true, user, passwordChanged: Boolean(patch.password) });
   } catch (error) {
     return cmsFailure(error, "Could not save your details.");

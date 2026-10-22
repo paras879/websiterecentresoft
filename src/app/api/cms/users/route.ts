@@ -1,3 +1,4 @@
+import { logAudit } from "@/lib/audit";
 import { mayManageRole } from "@/lib/cms-auth";
 import { cmsFailure, guardCms } from "@/lib/cms-guard";
 import { CmsError, createUser, getRole, listUsers } from "@/lib/cms-users";
@@ -30,6 +31,7 @@ export async function POST(req: Request) {
       password: typeof b.password === "string" ? b.password : "",
       disabled: b.disabled === true,
     });
+    await logAudit("user", `Created the user ${user.email} (role ${role.name})`, guard.user);
     return json({ success: true, user });
   } catch (error) {
     return cmsFailure(error, "Could not create the user.");

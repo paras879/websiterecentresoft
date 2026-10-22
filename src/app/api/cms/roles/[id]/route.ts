@@ -1,3 +1,4 @@
+import { logAudit } from "@/lib/audit";
 import { mayManageRole } from "@/lib/cms-auth";
 import { cleanPermissions } from "@/lib/cms-access";
 import { cmsFailure, guardCms } from "@/lib/cms-guard";
@@ -27,6 +28,7 @@ export async function PATCH(req: Request, { params }: Ctx) {
       description: typeof b.description === "string" ? b.description : undefined,
       permissions,
     });
+    await logAudit("role", `Changed the role "${role.name}"${permissions ? " (permissions updated)" : ""}`, guard.user);
     return json({ success: true, role });
   } catch (error) {
     return cmsFailure(error, "Could not save the role.");
@@ -44,6 +46,7 @@ export async function DELETE(req: Request, { params }: Ctx) {
       throw new CmsError("You cannot delete a role with more access than your own.", 403);
     }
     await deleteRole(id);
+    await logAudit("role", `Deleted the role "${existing.name}"`, guard.user);
     return json({ success: true });
   } catch (error) {
     return cmsFailure(error, "Could not delete the role.");

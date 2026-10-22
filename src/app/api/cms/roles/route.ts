@@ -1,3 +1,4 @@
+import { logAudit } from "@/lib/audit";
 import { allowed, mayManageRole } from "@/lib/cms-auth";
 import { cmsFailure, guardCms } from "@/lib/cms-guard";
 import { CmsError, createRole, listRoles, usersPerRole } from "@/lib/cms-users";
@@ -32,6 +33,7 @@ export async function POST(req: Request) {
       description: typeof b.description === "string" ? b.description : "",
       permissions,
     });
+    await logAudit("role", `Created the role "${role.name}"`, guard.user);
     return json({ success: true, role });
   } catch (error) {
     return cmsFailure(error, "Could not create the role.");

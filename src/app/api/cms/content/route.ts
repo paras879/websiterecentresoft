@@ -1,6 +1,7 @@
 import { revalidatePath } from "next/cache";
 import { modules } from "@/content";
 import { pageResource } from "@/lib/cms-access";
+import { changedParts, logAudit } from "@/lib/audit";
 import { cmsFailure, guardCms } from "@/lib/cms-guard";
 import { getSiteContent, saveSiteContent } from "@/lib/content";
 import { json } from "@/lib/api";
@@ -22,6 +23,11 @@ export async function PUT(req: Request) {
 
     const current = await getSiteContent();
     const saved = await saveSiteContent({ ...current, [mod.id]: body.data }, `${mod.title} edited by ${guard.user.name}`);
+    const fields = changedParts((current as unknown as Record<string, unknown>)[mod.id], (saved as unknown as Record<string, unknown>)[mod.id]);
+    if (fields.length) {
+      const more = fields.length > 6 ? ` and ${fields.length - 6} more` : "";
+      await logAudit("content", `Edited ${mod.title} (${fields.slice(0, 6).join(", ")}${more})`, guard.user);
+    }
     try {
       revalidatePath("/", "layout");
     } catch {}
