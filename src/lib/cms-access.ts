@@ -55,6 +55,8 @@ export interface Role {
   permissions: Permissions;
   /** Built-in roles ship with the panel and cannot be changed or deleted. */
   builtin?: boolean;
+  /** A built-in role whose permissions were changed from the original. */
+  customized?: boolean;
 }
 
 const everything = (): Permissions => Object.fromEntries(RESOURCES.map((r) => [r.id, [...r.actions]]));

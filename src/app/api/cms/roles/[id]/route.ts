@@ -46,7 +46,7 @@ export async function DELETE(req: Request, { params }: Ctx) {
       throw new CmsError("You cannot delete a role with more access than your own.", 403);
     }
     await deleteRole(id);
-    await logAudit("role", `Deleted the role "${existing.name}"`, guard.user);
+    await logAudit("role", existing.builtin ? `Restored the original permissions of the role "${existing.name}"` : `Deleted the role "${existing.name}"`, guard.user);
     return json({ success: true });
   } catch (error) {
     return cmsFailure(error, "Could not delete the role.");

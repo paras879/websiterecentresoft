@@ -12,6 +12,7 @@ import {
   type Block,
   type BlockType,
   type CustomPage,
+  MENU_ICONS,
 } from "@/lib/custom-pages-types";
 import adminStyles from "../../admin/admin.module.css";
 import { api, fullDate, relativeTime } from "../../admin/_components/lib";
@@ -109,7 +110,7 @@ export function PagesList() {
                   <td>
                     <span className={`${cms.pill} ${p.status === "published" ? cms.pillOn : ""}`}>{p.status === "published" ? "Published" : "Draft"}</span>
                   </td>
-                  <td className={cms.muted}>{p.menu === "services" ? "Services menu" : p.menu === "footer" ? "Footer" : "No"}</td>
+                  <td className={cms.muted}>{p.menu === "services" ? "Services menu" : p.menu === "top" ? "Top bar" : p.menu === "group" ? `Dropdown: ${p.menuGroup || "More"}` : p.menu === "footer" ? "Footer" : "No"}</td>
                   <td className={cms.muted} title={fullDate(p.updatedAt)}>
                     {relativeTime(p.updatedAt)}
                     {p.updatedBy ? ` by ${p.updatedBy}` : ""}
@@ -291,11 +292,37 @@ export function PageEdit({ id }: { id: string }) {
         {(fid) => (
           <select id={fid} className={adminStyles.input} value={page.menu} onChange={(e) => patch({ menu: e.target.value as CustomPage["menu"] })} disabled={!canSave}>
             <option value="none">No menu</option>
-            <option value="services">Services menu</option>
-            <option value="footer">Footer</option>
+            <option value="services">Inside the Services dropdown</option>
+            <option value="top">Top bar, as its own link</option>
+            <option value="group">Top bar, in a dropdown of its own</option>
+            <option value="footer">Footer only</option>
           </select>
         )}
       </Field>
+
+      {page.menu === "group" ? (
+        <TextField
+          label="Dropdown name"
+          value={page.menuGroup}
+          max={30}
+          onChange={(v) => patch({ menuGroup: v })}
+          hint="Shown in the top bar, after Careers. Every page with the same name goes into the same dropdown."
+        />
+      ) : null}
+
+      {page.menu === "services" || page.menu === "group" ? (
+        <Field label="Icon in the dropdown" hint="The short description under the name comes from the page description in Search and sharing.">
+          {(fid) => (
+            <select id={fid} className={adminStyles.input} value={page.menuIcon} onChange={(e) => patch({ menuIcon: e.target.value })} disabled={!canSave}>
+              {MENU_ICONS.map((name) => (
+                <option key={name} value={name}>
+                  {name}
+                </option>
+              ))}
+            </select>
+          )}
+        </Field>
+      ) : null}
 
       {error ? (
         <p className={cms.error} role="alert">

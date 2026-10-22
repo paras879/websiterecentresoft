@@ -79,3 +79,13 @@ Both panels have an **Activity log** (Collections in /admin1, Access in /admin).
 
 - The page editor has a **Live preview** beside the form (desktop, tablet or phone size, light or dark). It redraws while you type and scrolls to the block you are editing. Nothing goes on the website until you save.
 - A user can have a **username** (3 to 32 letters, numbers, dots, dashes or underscores). People in /admin1 sign in with either the email or the username. The environment administrator keeps its own username, which no user can take.
+
+## Menu placement for custom pages
+
+In the page editor, "Show a link in" has these choices: inside the Services dropdown, as its own link in the top bar, in a dropdown of its own in the top bar (give the dropdown a name; pages with the same name share one dropdown, shown after Careers), or footer only. Pages in a dropdown can have an icon, and the short line under the name comes from the page description. The links are added when the header is drawn and are not saved into the site content.
+
+## Locked accounts and built-in roles
+
+- Nobody can change their own name, email, username or password from the Account page. Only an administrator can, from Users. Account shows the details read-only with a message to contact the administrator.
+- Sign-in accepts the email, the username, or the full name when only one person has that name.
+- Editor and Viewer can be adjusted under Roles (permissions and description). "Restore defaults" puts the original back. Super admin cannot be changed or deleted.

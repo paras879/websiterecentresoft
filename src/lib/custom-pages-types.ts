@@ -105,7 +105,10 @@ export type Block = HeroBlock | TextBlock | ImageBlock | ImageTextBlock | Featur
 
 export type PageStatus = "published" | "draft";
 /** Where a link to the page also appears. */
-export type PageMenu = "none" | "services" | "footer";
+export type PageMenu = "none" | "services" | "top" | "group" | "footer";
+
+/** Icons a page can show in a dropdown. They all exist in the site's icon set. */
+export const MENU_ICONS = ["code", "web", "workflow", "assist", "phone", "search", "shield", "rocket", "people", "document", "enterprise", "database", "devices", "handshake"] as const;
 
 export interface CustomPage {
   id: string;
@@ -116,6 +119,10 @@ export interface CustomPage {
   title: string;
   status: PageStatus;
   menu: PageMenu;
+  /** For menu "group": the name of the dropdown. Pages with the same name share one dropdown. */
+  menuGroup: string;
+  /** The icon shown beside the page inside a dropdown. */
+  menuIcon: string;
   seo: { title: string; description: string; image: string; imageAlt: string };
   blocks: Block[];
   createdAt: string;
@@ -184,6 +191,8 @@ export function blankPage(): CustomPage {
     title: "",
     status: "draft",
     menu: "none",
+    menuGroup: "",
+    menuIcon: "code",
     seo: { title: "", description: "", image: "", imageAlt: "" },
     blocks: [blankBlock("hero", "b-start")],
     createdAt: "",

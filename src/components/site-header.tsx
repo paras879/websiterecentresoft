@@ -16,11 +16,31 @@ interface Props {
   info: SiteInfo;
 }
 
+interface MenuEntry {
+  title: string;
+  desc: string;
+  href: string;
+  icon: string;
+}
+
 const isIcon = (name: string): name is IconName => name in iconPaths;
 
-export function SiteHeader({ site, info }: Props) {
-  const { header } = site;
-  const [servicesOpen, setServicesOpen] = useState(false);
+interface DropdownProps {
+  /** Used for element ids, so each dropdown on the page has its own. */
+  id: string;
+  label: string;
+  heading: string;
+  entries: MenuEntry[];
+  active: boolean;
+  /** Open towards the left, for dropdowns near the right edge. */
+  alignEnd?: boolean;
+  header: SiteContent["site"]["header"];
+  info: SiteInfo;
+}
+
+/** One hover-and-click dropdown with the list of links and the contact panel beside it. */
+function NavDropdown({ id, label, heading, entries, active, alignEnd, header, info }: DropdownProps) {
+  const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const closeTimer = useRef<number | null>(null);
@@ -37,16 +57,173 @@ export function SiteHeader({ site, info }: Props) {
   const handlePointerEnter = (e: React.PointerEvent) => {
     if (e.pointerType !== "mouse") return;
     clearCloseTimer();
-    setServicesOpen(true);
+    setOpen(true);
   };
 
   const handlePointerLeave = (e: React.PointerEvent) => {
     if (e.pointerType !== "mouse") return;
     clearCloseTimer();
-    closeTimer.current = window.setTimeout(() => setServicesOpen(false), 150);
+    closeTimer.current = window.setTimeout(() => setOpen(false), 150);
   };
 
   useEffect(() => clearCloseTimer, []);
+
+  // Close dropdown on outside click or Escape (returning focus to trigger)
+  useEffect(() => {
+    if (!open) return;
+
+    const handlePointerDown = (e: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    };
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setOpen(false);
+        triggerRef.current?.focus();
+      }
+    };
+
+    document.addEventListener("mousedown", handlePointerDown);
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("mousedown", handlePointerDown);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [open]);
+
+  // Close dropdown on route change without triggering cascading render effect
+  const [prevPathname, setPrevPathname] = useState(pathname);
+  if (pathname !== prevPathname) {
+    setPrevPathname(pathname);
+    setOpen(false);
+  }
+
+  const handleBlur = (e: React.FocusEvent) => {
+    if (!dropdownRef.current?.contains(e.relatedTarget as Node)) {
+      setOpen(false);
+    }
+  };
+
+  return (
+    <div
+      className={styles.dropdownContainer}
+      ref={dropdownRef}
+      onBlur={handleBlur}
+      onPointerEnter={handlePointerEnter}
+      onPointerLeave={handlePointerLeave}
+    >
+      <button
+        ref={triggerRef}
+        type="button"
+        id={`${id}-menu-button`}
+        className={`${styles.dropdownTrigger} ${active ? styles.activeTrigger : ""}`}
+        aria-expanded={open}
+        aria-controls={`${id}-dropdown-menu`}
+        onClick={(e) =>
+          // A mouse click keeps the hover-opened menu open; keyboard and touch toggle it.
+          open && (e.nativeEvent as PointerEvent).pointerType === "mouse" ? undefined : setOpen((prev) => !prev)
+        }
+        onKeyDown={(e) => {
+          if (e.key === "ArrowDown" && !open) {
+            e.preventDefault();
+            setOpen(true);
+          }
+        }}
+      >
+        {label}
+        <svg className={`${styles.caret} ${open ? styles.caretRotated : ""}`} viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M6 9l6 6 6-6" />
+        </svg>
+      </button>
+
+      {open && (
+        <div id={`${id}-dropdown-menu`} className={`${styles.dropdownMenu} ${alignEnd ? styles.dropdownMenuEnd : ""}`} aria-labelledby={`${id}-menu-button`}>
+          <div className={styles.dropdownPanel}>
+            <div className={styles.dropdownMain}>
+              <div className={styles.dropdownHeader}>
+                <span className={styles.dropdownHeaderTitle}>{heading}</span>
+              </div>
+
+              <div className={styles.dropdownItems}>
+                {entries.map((entry) => {
+                  const isCurrent = pathname === entry.href;
+                  return (
+                    <Link
+                      key={`${entry.href}-${entry.title}`}
+                      href={entry.href}
+                      className={`${styles.dropdownItem} ${isCurrent ? styles.dropdownItemCurrent : ""}`}
+                      aria-current={isCurrent ? "page" : undefined}
+                      onClick={() => setOpen(false)}
+                    >
+                      <span className={styles.dropdownItemIconBox}>
+                        {isIcon(entry.icon) ? <Icon name={entry.icon} className={styles.dropdownItemIcon} /> : null}
+                      </span>
+                      <span className={styles.dropdownItemContent}>
+                        <span className={styles.dropdownItemTitle}>{entry.title}</span>
+                        <span className={styles.dropdownItemDesc}>{entry.desc}</span>
+                      </span>
+                      <span className={styles.dropdownItemArrow} aria-hidden="true">
+                        &rarr;
+                      </span>
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div
+              className={styles.dropdownAside}
+              style={header.asideImage ? ({ "--aside-img": `url("${encodeURI(header.asideImage)}")` } as React.CSSProperties) : undefined}
+            >
+              <span className={styles.asideKicker}>{header.asideKicker}</span>
+              <p className={styles.asideTitle}>{header.asideTitle}</p>
+              <p className={styles.asideText}>{header.asideText}</p>
+
+              <ul className={styles.asideList}>
+                <li>
+                  <a href={`mailto:${info.contact.email}`} className={styles.asideRow}>
+                    <span className={styles.asideIcon}>
+                      <Icon name="mailIcon" />
+                    </span>
+                    {info.contact.email}
+                  </a>
+                </li>
+                <li>
+                  <a href={`tel:${info.contact.phoneRaw}`} className={styles.asideRow}>
+                    <span className={styles.asideIcon}>
+                      <Icon name="phone" />
+                    </span>
+                    {info.contact.phone}
+                  </a>
+                </li>
+                {info.contact.address ? (
+                  <li>
+                    <a href={info.contact.mapUrl} className={`${styles.asideRow} ${styles.asideAddress}`} target="_blank" rel="noopener noreferrer">
+                      <span className={styles.asideIcon}>
+                        <Icon name="pin" />
+                      </span>
+                      {info.contact.address}
+                    </a>
+                  </li>
+                ) : null}
+              </ul>
+              <Link href={header.asideButtonHref || "/contact"} className={styles.asideBtn} onClick={() => setOpen(false)}>
+                {header.asideButton} <span aria-hidden="true">&rarr;</span>
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+export function SiteHeader({ site, info }: Props) {
+  const { header } = site;
+  const pathname = usePathname();
 
   const hasAgenticMenu = header.menu.some((m) => m.href === "/services/agentic-ai");
   const menuEntries = hasAgenticMenu
@@ -62,48 +239,11 @@ export function SiteHeader({ site, info }: Props) {
       ...header.menu.slice(1),
     ];
 
-  const menuIndex = header.items.findIndex((item) => item.hasMenu);
+  // The Services dropdown is the first item flagged as a menu without its own list. Dropdowns made from the admin
+  // panel carry their own list of links.
+  const menuIndex = header.items.findIndex((item) => item.hasMenu && !(item as { entries?: MenuEntry[] }).entries);
   const isServicesActive =
     menuEntries.some((m) => pathname === m.href) || Boolean(pathname?.startsWith("/services"));
-
-  // Close dropdown on outside click or Escape (returning focus to trigger)
-  useEffect(() => {
-    if (!servicesOpen) return;
-
-    const handlePointerDown = (e: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
-        setServicesOpen(false);
-      }
-    };
-
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        setServicesOpen(false);
-        triggerRef.current?.focus();
-      }
-    };
-
-    document.addEventListener("mousedown", handlePointerDown);
-    document.addEventListener("keydown", handleKeyDown);
-
-    return () => {
-      document.removeEventListener("mousedown", handlePointerDown);
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [servicesOpen]);
-
-  // Close dropdown on route change without triggering cascading render effect
-  const [prevPathname, setPrevPathname] = useState(pathname);
-  if (pathname !== prevPathname) {
-    setPrevPathname(pathname);
-    setServicesOpen(false);
-  }
-
-  const handleBlur = (e: React.FocusEvent) => {
-    if (!dropdownRef.current?.contains(e.relatedTarget as Node)) {
-      setServicesOpen(false);
-    }
-  };
 
   return (
     <header className={styles.header}>
@@ -129,6 +269,22 @@ export function SiteHeader({ site, info }: Props) {
         {/* Desktop Navigation */}
         <nav className={styles.desktopNav} aria-label="Main Navigation">
           {header.items.map((item, index) => {
+            const entries = (item as { entries?: MenuEntry[] }).entries;
+            if (item.hasMenu && entries) {
+              return (
+                <NavDropdown
+                  key={`${item.label}-${index}`}
+                  id={`menu-${index}`}
+                  label={item.label}
+                  heading={item.label}
+                  entries={entries}
+                  active={entries.some((e) => pathname === e.href)}
+                  alignEnd
+                  header={header}
+                  info={info}
+                />
+              );
+            }
             if (index !== menuIndex) {
               const current = pathname === item.href;
               return (
@@ -144,144 +300,16 @@ export function SiteHeader({ site, info }: Props) {
             }
 
             return (
-              <div
+              <NavDropdown
                 key={`${item.label}-${index}`}
-                className={styles.dropdownContainer}
-                ref={dropdownRef}
-                onBlur={handleBlur}
-                onPointerEnter={handlePointerEnter}
-                onPointerLeave={handlePointerLeave}
-              >
-                <button
-                  ref={triggerRef}
-                  type="button"
-                  id="services-menu-button"
-                  className={`${styles.dropdownTrigger} ${isServicesActive ? styles.activeTrigger : ""
-                    }`}
-                  aria-expanded={servicesOpen}
-                  aria-controls="services-dropdown-menu"
-                  onClick={(e) =>
-                    // A mouse click keeps the hover-opened menu open; keyboard and touch toggle it.
-                    servicesOpen && (e.nativeEvent as PointerEvent).pointerType === "mouse"
-                      ? undefined
-                      : setServicesOpen((prev) => !prev)
-                  }
-                  onKeyDown={(e) => {
-                    if (e.key === "ArrowDown" && !servicesOpen) {
-                      e.preventDefault();
-                      setServicesOpen(true);
-                    }
-                  }}
-                >
-                  {item.label}
-                  <svg
-                    className={`${styles.caret} ${servicesOpen ? styles.caretRotated : ""}`}
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
-                  >
-                    <path d="M6 9l6 6 6-6" />
-                  </svg>
-                </button>
-
-                {servicesOpen && (
-                  <div
-                    id="services-dropdown-menu"
-                    className={styles.dropdownMenu}
-                    aria-labelledby="services-menu-button"
-                  >
-                    <div className={styles.dropdownPanel}>
-                      <div className={styles.dropdownMain}>
-                        <div className={styles.dropdownHeader}>
-                          <span className={styles.dropdownHeaderTitle}>{header.menuTitle}</span>
-                        </div>
-
-                        <div className={styles.dropdownItems}>
-                          {menuEntries.map((entry) => {
-                            const isCurrent = pathname === entry.href;
-                            return (
-                              <Link
-                                key={`${entry.href}-${entry.title}`}
-                                href={entry.href}
-                                className={`${styles.dropdownItem} ${isCurrent ? styles.dropdownItemCurrent : ""
-                                  }`}
-                                aria-current={isCurrent ? "page" : undefined}
-                                onClick={() => setServicesOpen(false)}
-                              >
-                                <span className={styles.dropdownItemIconBox}>
-                                  {isIcon(entry.icon) ? (
-                                    <Icon name={entry.icon} className={styles.dropdownItemIcon} />
-                                  ) : null}
-                                </span>
-                                <span className={styles.dropdownItemContent}>
-                                  <span className={styles.dropdownItemTitle}>{entry.title}</span>
-                                  <span className={styles.dropdownItemDesc}>{entry.desc}</span>
-                                </span>
-                                <span className={styles.dropdownItemArrow} aria-hidden="true">
-                                  &rarr;
-                                </span>
-                              </Link>
-                            );
-                          })}
-                        </div>
-                      </div>
-
-                      <div
-                        className={styles.dropdownAside}
-                        style={
-                          header.asideImage
-                            ? ({ "--aside-img": `url("${encodeURI(header.asideImage)}")` } as React.CSSProperties)
-                            : undefined
-                        }
-                      >
-                        <span className={styles.asideKicker}>{header.asideKicker}</span>
-                        <p className={styles.asideTitle}>{header.asideTitle}</p>
-                        <p className={styles.asideText}>{header.asideText}</p>
-
-                        <ul className={styles.asideList}>
-                          <li>
-                            <a href={`mailto:${info.contact.email}`} className={styles.asideRow}>
-                              <span className={styles.asideIcon}>
-                                <Icon name="mailIcon" />
-                              </span>
-                              {info.contact.email}
-                            </a>
-                          </li>
-                          <li>
-                            <a href={`tel:${info.contact.phoneRaw}`} className={styles.asideRow}>
-                              <span className={styles.asideIcon}>
-                                <Icon name="phone" />
-                              </span>
-                              {info.contact.phone}
-                            </a>
-                          </li>
-                          {info.contact.address ? (
-                            <li>
-                              <a
-                                href={info.contact.mapUrl}
-                                className={`${styles.asideRow} ${styles.asideAddress}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                              >
-                                <span className={styles.asideIcon}>
-                                  <Icon name="pin" />
-                                </span>
-                                {info.contact.address}
-                              </a>
-                            </li>
-                          ) : null}
-                        </ul>
-                        <Link
-                          href={header.asideButtonHref || "/contact"}
-                          className={styles.asideBtn}
-                          onClick={() => setServicesOpen(false)}
-                        >
-                          {header.asideButton} <span aria-hidden="true">&rarr;</span>
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
+                id="services"
+                label={item.label}
+                heading={header.menuTitle}
+                entries={menuEntries}
+                active={isServicesActive}
+                header={header}
+                info={info}
+              />
             );
           })}
         </nav>

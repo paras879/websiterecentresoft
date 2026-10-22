@@ -159,10 +159,11 @@ export function MobileNavigation({ site, info }: { site: SiteContent["site"]; in
                   </Link>
                 );
               }
+              const own = (item as { entries?: { title: string; desc: string; href: string; icon: string }[] }).entries;
               return (
                 <div key={`${item.label}-${index}`} className={styles.servicesGroup}>
                   <div className={styles.groupLabel}>{item.label}</div>
-                  {(header.menu.some((m) => m.href === "/services/agentic-ai")
+                  {(own ? own : header.menu.some((m) => m.href === "/services/agentic-ai")
                     ? header.menu
                     : [
                         ...header.menu.slice(0, 1),

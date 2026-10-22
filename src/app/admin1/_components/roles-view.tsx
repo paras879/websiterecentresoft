@@ -130,7 +130,9 @@ export function RoleEdit({ id }: { id: string }) {
   }, [creating, existing, loaded]);
 
   const builtin = Boolean(existing?.builtin);
-  const canSave = !builtin && (creating ? can("roles", "create") : can("roles", "update"));
+  // Super admin is fixed. Editor and Viewer can be adjusted, and put back to the original.
+  const locked = existing?.id === "super";
+  const canSave = !locked && (creating ? can("roles", "create") : can("roles", "update"));
   // A person can only tick what they hold themselves.
   const mayTick = (resource: string, action: Action) => superUser || Boolean(mine[resource]?.includes(action));
 
@@ -216,10 +218,17 @@ export function RoleEdit({ id }: { id: string }) {
       <form onSubmit={save} noValidate>
         <div className={cms.doc}>
           <div className={cms.docMain}>
-            {builtin ? (
+            {locked ? (
               <div className={cms.notice} role="note">
                 <UiIcon name="info" />
-                <span>This is a built-in role, so it cannot be changed. Use “Duplicate” to make your own version with different permissions.</span>
+                <span>Super admin always has full access, so it cannot be changed. Use “Duplicate” to make your own version with fewer permissions.</span>
+              </div>
+            ) : builtin ? (
+              <div className={cms.notice} role="note">
+                <UiIcon name="info" />
+                <span>
+                  This is a built-in role. You can change what it may do and its description; the name stays. “Restore defaults” puts the original permissions back.
+                </span>
               </div>
             ) : null}
             {loadError ? <p className={cms.error}>{loadError}</p> : null}
@@ -231,7 +240,7 @@ export function RoleEdit({ id }: { id: string }) {
                     <label htmlFor="r-name" className={adminStyles.label}>
                       Name <span className={adminStyles.req}>*</span>
                     </label>
-                    <input id="r-name" className={adminStyles.input} value={name} onChange={(e) => setName(e.target.value)} maxLength={60} autoComplete="off" />
+                    <input id="r-name" className={adminStyles.input} value={name} onChange={(e) => setName(e.target.value)} maxLength={60} autoComplete="off" readOnly={builtin} />
                   </div>
                   <div className={adminStyles.field}>
                     <label htmlFor="r-desc" className={adminStyles.label}>
@@ -323,7 +332,7 @@ export function RoleEdit({ id }: { id: string }) {
           <aside className={cms.docAside} aria-label="Document actions">
             <p className={cms.asideTitle}>Actions</p>
             <div className={cms.asideActions}>
-              {builtin ? null : (
+              {locked ? null : (
                 <Button variant="primary" icon="save" type="submit" busy={saving} disabled={!canSave}>
                   {creating ? "Create role" : "Save"}
                 </Button>
@@ -333,9 +342,9 @@ export function RoleEdit({ id }: { id: string }) {
                   Duplicate
                 </Button>
               ) : null}
-              {!creating && !builtin && can("roles", "delete") ? (
+              {!creating && !locked && can("roles", "delete") && (!builtin || existing?.customized) ? (
                 <Button variant="danger" icon="trash" onClick={() => setDeleting(true)}>
-                  Delete role
+                  {builtin ? "Restore defaults" : "Delete role"}
                 </Button>
               ) : null}
               <NavLink className={cms.asideLink} to={{ name: "roles" }}>
@@ -354,9 +363,9 @@ export function RoleEdit({ id }: { id: string }) {
 
       <ConfirmDialog
         open={deleting}
-        title={`Delete the role “${existing?.name ?? ""}”?`}
-        body="Roles that are still given to a user cannot be deleted. Move those users to another role first."
-        confirmLabel="Delete role"
+        title={builtin ? `Restore the original permissions of “${existing?.name ?? ""}”?` : `Delete the role “${existing?.name ?? ""}”?`}
+        body={builtin ? "Your changes to this role are removed. People with this role get the original permissions again." : "Roles that are still given to a user cannot be deleted. Move those users to another role first."}
+        confirmLabel={builtin ? "Restore defaults" : "Delete role"}
         onCancel={() => setDeleting(false)}
         onConfirm={() => void remove()}
       />

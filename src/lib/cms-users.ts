@@ -107,7 +107,11 @@ export async function findUserByLogin(identifier: string): Promise<StoredUser | 
   const wanted = identifier.trim().toLowerCase();
   if (!wanted) return null;
   const all = await readAll();
-  return all.find((u) => u.email.toLowerCase() === wanted) ?? all.find((u) => u.username?.toLowerCase() === wanted) ?? null;
+  const direct = all.find((u) => u.email.toLowerCase() === wanted) ?? all.find((u) => u.username?.toLowerCase() === wanted);
+  if (direct) return direct;
+  // The full name works too, as long as only one person has it.
+  const sameName = all.filter((u) => u.name.trim().toLowerCase() === wanted);
+  return sameName.length === 1 ? sameName[0] : null;
 }
 
 const USERNAME = /^[a-z0-9][a-z0-9._-]{2,31}$/i;
@@ -241,17 +245,30 @@ async function storedRoles(): Promise<Role[]> {
         return null;
       }
     })
-    .filter((r): r is Role => r !== null)
+    .filter((r): r is Role => r !== null && !BUILTIN_ROLES.some((b) => b.id === r.id))
     .sort((a, b) => a.name.localeCompare(b.name));
 }
 
+/** A built-in role with the permissions an administrator saved for it, if any. Super admin never changes. */
+async function builtinRole(base: Role): Promise<Role> {
+  if (base.id === SUPER_ROLE_ID) return base;
+  const raw = await getStore().hget(ROLES, base.id);
+  if (!raw) return base;
+  try {
+    const o = JSON.parse(raw) as Partial<Role>;
+    return { ...base, description: typeof o.description === "string" ? o.description : base.description, permissions: cleanPermissions(o.permissions), customized: true };
+  } catch {
+    return base;
+  }
+}
+
 export async function listRoles(): Promise<Role[]> {
-  return [...BUILTIN_ROLES, ...(await storedRoles())];
+  return [...(await Promise.all(BUILTIN_ROLES.map(builtinRole))), ...(await storedRoles())];
 }
 
 export async function getRole(id: string): Promise<Role | null> {
   const builtin = BUILTIN_ROLES.find((r) => r.id === id);
-  if (builtin) return builtin;
+  if (builtin) return builtinRole(builtin);
   const raw = await getStore().hget(ROLES, id);
   if (!raw) return null;
   try {
@@ -285,9 +302,22 @@ export async function updateRole(
   id: string,
   patch: { name?: string; description?: string; permissions?: unknown },
 ): Promise<Role> {
-  if (BUILTIN_ROLES.some((r) => r.id === id)) throw new CmsError("Built-in roles cannot be changed. Create a new role instead.", 403);
   const role = await getRole(id);
   if (!role) throw new CmsError("That role no longer exists.", 404);
+  if (role.builtin) {
+    if (id === SUPER_ROLE_ID) throw new CmsError("Super admin always has full access, so it cannot be changed.", 403);
+    // Editor and Viewer keep their names; an administrator can change what they may do.
+    const description = patch.description ?? role.description;
+    if (description.length > 240) throw new CmsError("Keep the description to 240 characters or fewer.");
+    const saved = {
+      id,
+      name: role.name,
+      description: description.trim(),
+      permissions: patch.permissions !== undefined ? cleanPermissions(patch.permissions) : role.permissions,
+    };
+    await getStore().hset(ROLES, id, JSON.stringify(saved));
+    return { ...role, ...saved, builtin: true, customized: true };
+  }
   const name = patch.name ?? role.name;
   const description = patch.description ?? role.description;
   checkRoleFields(name, description);
@@ -304,7 +334,12 @@ export async function updateRole(
 }
 
 export async function deleteRole(id: string): Promise<void> {
-  if (BUILTIN_ROLES.some((r) => r.id === id)) throw new CmsError("Built-in roles cannot be deleted.", 403);
+  if (id === SUPER_ROLE_ID) throw new CmsError("Super admin cannot be deleted.", 403);
+  if (BUILTIN_ROLES.some((r) => r.id === id)) {
+    // For a built-in role, "delete" puts the original permissions back.
+    await getStore().hdel(ROLES, id);
+    return;
+  }
   const using = (await readAll()).filter((u) => u.roleId === id).length;
   if (using > 0) throw new CmsError(`${using} user${using === 1 ? " uses" : "s use"} this role. Move them to another role first.`, 409);
   await getStore().hdel(ROLES, id);

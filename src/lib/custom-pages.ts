@@ -7,6 +7,7 @@ import {
   type Block,
   type CustomPage,
   type PageMenu,
+  MENU_ICONS,
   type PageStatus,
 } from "./custom-pages-types";
 import { getStore } from "./store";
@@ -154,7 +155,9 @@ function cleanPage(raw: unknown): Omit<CustomPage, "id" | "createdAt" | "updated
     prefix,
     title,
     status: oneOf(raw.status, ["published", "draft"] as const, "draft") as PageStatus,
-    menu: oneOf(raw.menu, ["none", "services", "footer"] as const, "none") as PageMenu,
+    menu: oneOf(raw.menu, ["none", "services", "top", "group", "footer"] as const, "none") as PageMenu,
+    menuGroup: str(raw.menuGroup, 30),
+    menuIcon: oneOf(raw.menuIcon, MENU_ICONS, "code"),
     seo: {
       title: str(seo.title, 70),
       description: str(seo.description, 200, true),
@@ -249,30 +252,43 @@ export async function publishedPage(prefix: "" | "services", slug: string): Prom
 }
 
 /** The site header and footer with links to the published pages that asked to be in a menu. Never saved. */
-export function withCustomPageLinks<T extends { header: { menu: { title: string; desc: string; href: string; icon: string }[] }; footer: { columns: { links: { label: string; href: string }[] }[] } }>(
-  site: T,
-  pages: CustomPage[],
-): T {
+export function withCustomPageLinks<
+  T extends {
+    header: { items: { label: string; href: string; hasMenu: boolean }[]; menu: { title: string; desc: string; href: string; icon: string }[] };
+    footer: { columns: { links: { label: string; href: string }[] }[] };
+  },
+>(site: T, pages: CustomPage[]): T {
   const inServices = pages.filter((p) => p.menu === "services");
+  const inTop = pages.filter((p) => p.menu === "top");
+  const inGroups = pages.filter((p) => p.menu === "group");
   const inFooter = pages.filter((p) => p.menu === "footer");
-  if (inServices.length === 0 && inFooter.length === 0) return site;
+  if (inServices.length + inTop.length + inGroups.length + inFooter.length === 0) return site;
 
   const path = (p: CustomPage) => (p.prefix ? `/${p.prefix}/${p.slug}` : `/${p.slug}`);
+  const entry = (p: CustomPage) => ({ title: p.title, desc: p.seo.description.slice(0, 90), href: path(p), icon: p.menuIcon || "code" });
   const next = structuredClone(site);
 
   for (const p of inServices) {
-    if (!next.header.menu.some((m) => m.href === path(p))) {
-      next.header.menu.push({ title: p.title, desc: p.seo.description.slice(0, 90), href: path(p), icon: "code" });
-    }
+    if (!next.header.menu.some((m) => m.href === path(p))) next.header.menu.push(entry(p));
     const col = next.footer.columns.find((c) => c.links.some((l) => l.href.startsWith("/services/")));
     if (col && !col.links.some((l) => l.href === path(p))) col.links.push({ label: p.title, href: path(p) });
   }
+
+  // Their own place in the top bar, after the built-in links: single links first, then dropdowns.
+  const items = next.header.items as { label: string; href: string; hasMenu: boolean; entries?: ReturnType<typeof entry>[] }[];
+  for (const p of inTop) items.push({ label: p.title, href: path(p), hasMenu: false });
+  const groups = new Map<string, CustomPage[]>();
+  for (const p of inGroups) {
+    const name = p.menuGroup.trim() || "More";
+    groups.set(name, [...(groups.get(name) ?? []), p]);
+  }
+  for (const [name, list] of groups) items.push({ label: name, href: path(list[0]), hasMenu: true, entries: list.map(entry) });
+
   const first = next.footer.columns[0];
   if (first) {
-    for (const p of inFooter) {
+    for (const p of [...inTop, ...inGroups, ...inFooter]) {
       if (!first.links.some((l) => l.href === path(p))) first.links.push({ label: p.title, href: path(p) });
     }
   }
   return next;
 }
-
