@@ -72,7 +72,7 @@ export default async function AgenticAiPage() {
             ) : null}
           </div>
 
-          <div className={styles.console} aria-label={hero.consoleTitle}>
+          <div className={styles.console} role="group" aria-label={hero.consoleTitle}>
             <div className={styles.consoleBar}>
               <span className={styles.consoleDots} aria-hidden="true">
                 <i />

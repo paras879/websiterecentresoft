@@ -207,7 +207,7 @@ export function AiAssistant({ whatsappUrl }: { whatsappUrl?: string }) {
             ))}
 
             {busy ? (
-              <div className={`${styles.bubble} ${styles.bot}`} aria-label="Typing">
+              <div className={`${styles.bubble} ${styles.bot}`} role="status" aria-label="Typing">
                 <span className={styles.dots} aria-hidden="true">
                   <i />
                   <i />

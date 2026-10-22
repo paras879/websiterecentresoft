@@ -138,6 +138,8 @@ export const Recaptcha = forwardRef<RecaptchaHandle, { onChange: (token: string)
     return (
       <div
         ref={host}
+        // A label is only allowed on an element with a role, so the box is a labelled group.
+        role="group"
         aria-label="Security check"
         style={{
           minHeight: 78,

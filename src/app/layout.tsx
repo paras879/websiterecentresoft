@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { getSiteContent } from "@/lib/content";
+import { SITE_URL } from "@/lib/seo";
 import { buildSiteInfo } from "@/lib/site";
 import { buildPageSchemas, buildSiteGraph } from "@/lib/schema";
 import { publishedPages, withCustomPageLinks } from "@/lib/custom-pages";
@@ -39,11 +40,11 @@ export async function generateMetadata(): Promise<Metadata> {
       template: `%s | ${info.name}`,
     },
     description,
-    metadataBase: new URL("https://websiterecentresoft.vercel.app"),
+    metadataBase: new URL(SITE_URL),
     openGraph: {
       type: "website",
       locale: "en_US",
-      url: "https://websiterecentresoft.vercel.app",
+      url: SITE_URL,
       siteName: info.legalName,
       title,
       description,

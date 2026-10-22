@@ -7,6 +7,7 @@ import { LegalBody } from "@/components/legal-body";
 import { slug } from "@/content/legal";
 import type { LegalDefaults } from "@/content/legal";
 import styles from "./terms.module.css";
+import { SITE_URL } from "@/lib/seo";
 
 const isIcon = (name: string): name is IconName => name in iconPaths;
 
@@ -96,7 +97,7 @@ export function TermsView({ company, email, phone, phoneRaw, address, mapUrl, wh
         <div className="container">
           <h1 className={styles.title}>{content.hero.title}</h1>
           <p className={styles.lead}>{content.hero.lead}</p>
-          <p className={styles.printMeta}>{company} &middot; https://websiterecentresoft.vercel.app/terms-and-conditions</p>
+          <p className={styles.printMeta}>{company} &middot; {SITE_URL}/terms-and-conditions</p>
 
           <ul className={styles.glance} aria-label="Quick links">
             {content.quick.map((g, i) => (

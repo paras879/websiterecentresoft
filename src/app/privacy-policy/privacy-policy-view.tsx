@@ -7,6 +7,7 @@ import { LegalBody } from "@/components/legal-body";
 import { slug } from "@/content/legal";
 import type { LegalDefaults } from "@/content/legal";
 import styles from "./privacy-policy.module.css";
+import { SITE_URL } from "@/lib/seo";
 
 const isIcon = (name: string): name is IconName => name in iconPaths;
 
@@ -94,7 +95,7 @@ export function PrivacyPolicyView({ company, email, phone, phoneRaw, address, ma
         <div className="container">
           <h1 className={styles.title}>{content.hero.title}</h1>
           <p className={styles.lead}>{content.hero.lead}</p>
-          <p className={styles.printMeta}>{company} &middot; https://websiterecentresoft.vercel.app/privacy-policy</p>
+          <p className={styles.printMeta}>{company} &middot; {SITE_URL}/privacy-policy</p>
 
           <ul className={styles.glance} aria-label="Quick links">
             {content.quick.map((g, i) => (

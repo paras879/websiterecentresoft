@@ -3,6 +3,7 @@ import { revalidateTag } from "next/cache";
 import { applyImageUpgrades } from "@/content/image-upgrades";
 import { defaultContent, sanitizeContent, type SiteContent } from "@/content";
 import { changedParts, currentActor, moduleTitle } from "./audit";
+import { SITE_URL } from "./seo";
 import { getStore } from "./store";
 
 const CONTENT_KEY = "content";
@@ -98,14 +99,26 @@ function withRequiredServices(content: SiteContent): SiteContent {
   return content;
 }
 
+const LAUNCH_ADDRESS = "https://websiterecentresoft.vercel.app";
+
+/** The legal pages name the website's address. Once a domain is connected, they name that instead. */
+function withSiteAddress(content: SiteContent): SiteContent {
+  if (SITE_URL === LAUNCH_ADDRESS) return content;
+  const c = content as unknown as Record<string, unknown>;
+  for (const id of ["privacy", "terms"]) {
+    if (c[id]) c[id] = JSON.parse(JSON.stringify(c[id]).split(LAUNCH_ADDRESS).join(SITE_URL));
+  }
+  return content;
+}
+
 export const getSiteContent = cache(async (): Promise<SiteContent> => {
   try {
     const raw = await getStore().get(CONTENT_KEY, { cached: true });
-    if (raw) return applyImageUpgrades(withRequiredCareerAreas(withRequiredServices(sanitizeContent(JSON.parse(raw)))));
+    if (raw) return withSiteAddress(applyImageUpgrades(withRequiredCareerAreas(withRequiredServices(sanitizeContent(JSON.parse(raw))))));
   } catch (error) {
     console.error("Could not read saved content, using the built-in copy.", error);
   }
-  return withRequiredCareerAreas(withRequiredServices(sanitizeContent(defaultContent)));
+  return withSiteAddress(withRequiredCareerAreas(withRequiredServices(sanitizeContent(defaultContent))));
 });
 
 /** Validates and saves the whole document, and keeps a snapshot so it can be restored later. */

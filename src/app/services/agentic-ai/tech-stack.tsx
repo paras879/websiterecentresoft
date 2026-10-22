@@ -841,7 +841,7 @@ function IntegrationTiles({ items }: { items: string[] }) {
   return (
     <>
       {items.map((name) => (
-        <div key={name} className={styles.integrationTile} title={name} aria-label={name}>
+        <div key={name} className={styles.integrationTile} title={name} role="img" aria-label={name}>
           <ToolMark name={name} />
           <span className={styles.tooltip}>{name}</span>
         </div>

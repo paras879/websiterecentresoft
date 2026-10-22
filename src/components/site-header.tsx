@@ -159,7 +159,7 @@ function NavDropdown({ id, label, heading, entries, active, compact, header, inf
       </button>
 
       {open && (
-        <div id={`${id}-dropdown-menu`} ref={menuRef} className={`${styles.dropdownMenu} ${compact ? styles.dropdownMenuCompact : ""}`} aria-labelledby={`${id}-menu-button`}>
+        <div id={`${id}-dropdown-menu`} ref={menuRef} role="group" className={`${styles.dropdownMenu} ${compact ? styles.dropdownMenuCompact : ""}`} aria-labelledby={`${id}-menu-button`}>
           <div className={styles.dropdownPanel}>
             <div className={styles.dropdownMain}>
               <div className={styles.dropdownHeader}>
