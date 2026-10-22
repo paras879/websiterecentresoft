@@ -832,10 +832,7 @@ a.asideRow:focus-visible {
   }
 }
 
-/* Dropdowns made in the admin panel sit at the right of the bar, so they open towards the left and stay on screen. */
-.dropdownMenu.dropdownMenuEnd {
-  right: 0;
-  left: auto;
-  margin-left: 0;
-  transform-origin: top right;
+/* Every dropdown is centred under its link; the script sets --dd-shift to keep it inside the screen. */
+.dropdownMenu {
+  translate: var(--dd-shift, 0px) 0;
 }

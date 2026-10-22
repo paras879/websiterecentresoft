@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useLayoutEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
@@ -32,17 +32,16 @@ interface DropdownProps {
   heading: string;
   entries: MenuEntry[];
   active: boolean;
-  /** Open towards the left, for dropdowns near the right edge. */
-  alignEnd?: boolean;
   header: SiteContent["site"]["header"];
   info: SiteInfo;
 }
 
 /** One hover-and-click dropdown with the list of links and the contact panel beside it. */
-function NavDropdown({ id, label, heading, entries, active, alignEnd, header, info }: DropdownProps) {
+function NavDropdown({ id, label, heading, entries, active, header, info }: DropdownProps) {
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
   const closeTimer = useRef<number | null>(null);
   const pathname = usePathname();
 
@@ -67,6 +66,24 @@ function NavDropdown({ id, label, heading, entries, active, alignEnd, header, in
   };
 
   useEffect(() => clearCloseTimer, []);
+
+  // The panel sits centred under its link, like Services. Near the edge of the screen it slides back inside.
+  useLayoutEffect(() => {
+    if (!open) return;
+    const place = () => {
+      const el = menuRef.current;
+      if (!el) return;
+      el.style.setProperty("--dd-shift", "0px");
+      const rect = el.getBoundingClientRect();
+      const room = 16;
+      const over = rect.right - (window.innerWidth - room);
+      const under = room - rect.left;
+      el.style.setProperty("--dd-shift", `${over > 0 ? -over : under > 0 ? under : 0}px`);
+    };
+    place();
+    window.addEventListener("resize", place);
+    return () => window.removeEventListener("resize", place);
+  }, [open]);
 
   // Close dropdown on outside click or Escape (returning focus to trigger)
   useEffect(() => {
@@ -140,7 +157,7 @@ function NavDropdown({ id, label, heading, entries, active, alignEnd, header, in
       </button>
 
       {open && (
-        <div id={`${id}-dropdown-menu`} className={`${styles.dropdownMenu} ${alignEnd ? styles.dropdownMenuEnd : ""}`} aria-labelledby={`${id}-menu-button`}>
+        <div id={`${id}-dropdown-menu`} ref={menuRef} className={styles.dropdownMenu} aria-labelledby={`${id}-menu-button`}>
           <div className={styles.dropdownPanel}>
             <div className={styles.dropdownMain}>
               <div className={styles.dropdownHeader}>
@@ -279,7 +296,6 @@ export function SiteHeader({ site, info }: Props) {
                   heading={item.label}
                   entries={entries}
                   active={entries.some((e) => pathname === e.href)}
-                  alignEnd
                   header={header}
                   info={info}
                 />
