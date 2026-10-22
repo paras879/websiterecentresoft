@@ -38,7 +38,7 @@ export function FaqSection({ title, items }: FaqSectionProps) {
                 key={item.q}
                 className={`${faqStyles.item} ${isOpen ? faqStyles.itemOpen : ""}`}
               >
-                <h3 className={faqStyles.heading}>
+                <div className={faqStyles.heading}>
                   <button
                     type="button"
                     id={buttonId}
@@ -50,7 +50,7 @@ export function FaqSection({ title, items }: FaqSectionProps) {
                     <span className={faqStyles.qText}>{item.q}</span>
                     <span className={faqStyles.icon} aria-hidden="true" />
                   </button>
-                </h3>
+                </div>
                 <div
                   id={panelId}
                   role="region"

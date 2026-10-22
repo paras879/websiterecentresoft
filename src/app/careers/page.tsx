@@ -11,6 +11,7 @@ import { CareerForm } from "@/components/career-form";
 import { CareerPerks, type Perk } from "@/components/career-perks";
 import styles from "../services/services.module.css";
 import cr from "./careers.module.css";
+import { RouteSchema } from "@/components/route-schema";
 
 export async function generateMetadata(): Promise<Metadata> {
   const { careers, site } = await getSiteContent();
@@ -40,6 +41,7 @@ export default async function CareersPage() {
 
   return (
     <div className={styles.page}>
+      <RouteSchema path="/careers" />
       {/* Hero */}
       <section className={styles.hero} aria-labelledby="cr-hero-heading">
         <div className={`container ${styles.heroGrid}`}>

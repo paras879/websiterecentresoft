@@ -3,6 +3,7 @@ import { getSiteContent } from "@/lib/content";
 import { getSiteInfo } from "@/lib/site";
 import { pageMetadata } from "@/lib/seo";
 import { TermsView } from "./terms-view";
+import { RouteSchema } from "@/components/route-schema";
 
 export async function generateMetadata(): Promise<Metadata> {
   const { terms } = await getSiteContent();
@@ -13,17 +14,20 @@ export default async function TermsAndConditionsPage() {
   const { terms: content } = await getSiteContent();
   const { name, legalName, contact } = await getSiteInfo();
   return (
-    <TermsView
-      company={legalName}
-      brand={name}
-      email={contact.email}
-      phone={contact.phone}
-      phoneRaw={contact.phoneRaw}
-      address={contact.address}
-      mapUrl={contact.mapUrl}
-      whatsappUrl={contact.whatsappUrl}
-      content={content}
-    />
+    <>
+      <RouteSchema path="/terms-and-conditions" />
+      <TermsView
+        company={legalName}
+        brand={name}
+        email={contact.email}
+        phone={contact.phone}
+        phoneRaw={contact.phoneRaw}
+        address={contact.address}
+        mapUrl={contact.mapUrl}
+        whatsappUrl={contact.whatsappUrl}
+        content={content}
+      />
+    </>
   );
 }
 

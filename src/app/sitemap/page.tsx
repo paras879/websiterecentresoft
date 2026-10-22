@@ -5,6 +5,7 @@ import { getSiteInfo } from "@/lib/site";
 import { pageMetadata } from "@/lib/seo";
 import { Icon, iconPaths, type IconName } from "../services/icons";
 import styles from "../services/services.module.css";
+import { RouteSchema } from "@/components/route-schema";
 
 export async function generateMetadata(): Promise<Metadata> {
   const { sitemap } = await getSiteContent();
@@ -47,6 +48,7 @@ export default async function SitemapPage() {
 
   return (
     <div className={styles.page}>
+      <RouteSchema path="/sitemap" />
       {/* Hero */}
       <section className={styles.hero} aria-labelledby="sitemap-heading">
         <div className="container">

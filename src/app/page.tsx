@@ -9,6 +9,7 @@ import { Icon, iconPaths, type IconName } from "@/app/services/icons";
 import { HomeApproachTimeline } from "@/components/home-approach-timeline";
 import { ReviewsSection } from "@/components/reviews-section";
 import styles from "./home.module.css";
+import { RouteSchema } from "@/components/route-schema";
 
 export async function generateMetadata(): Promise<Metadata> {
   const { home } = await getSiteContent();
@@ -28,6 +29,7 @@ export default async function HomePage() {
 
   return (
     <div className={styles.page}>
+      <RouteSchema path="/" />
       {/* Hero */}
       <section className={styles.hero} aria-labelledby="hero-heading">
         <div className={`container ${styles.heroGrid}`}>

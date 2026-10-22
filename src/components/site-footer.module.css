@@ -388,3 +388,29 @@ a.contactItem:hover .contactIcon {
     contain-intrinsic-size: auto 1370px;
   }
 }
+
+/* ---- share links */
+.shareRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem 1rem;
+  padding: 0 0 1.25rem;
+  font-size: 0.8125rem;
+}
+
+.shareLabel {
+  color: var(--ft-muted, #64748b);
+}
+
+.shareLink {
+  color: inherit;
+  text-decoration: none;
+  opacity: 0.85;
+}
+
+.shareLink:hover {
+  text-decoration: underline;
+  opacity: 1;
+}

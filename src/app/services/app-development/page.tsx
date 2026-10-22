@@ -7,6 +7,7 @@ import { pageMetadata } from "@/lib/seo";
 import { Icon, iconPaths, type IconName } from "../icons";
 import { BrandIcon } from "./brand-icons";
 import styles from "./app-development.module.css";
+import { RouteSchema } from "@/components/route-schema";
 
 export async function generateMetadata(): Promise<Metadata> {
   const { serviceApp } = await getSiteContent();
@@ -28,6 +29,7 @@ export default async function AppDevelopmentPage() {
 
   return (
     <div className={styles.page}>
+      <RouteSchema path="/services/app-development" />
       {/* ---------------------------------------------------------------- hero */}
       <section className={styles.hero} aria-labelledby="app-hero-title">
         {hero.image ? (

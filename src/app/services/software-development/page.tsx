@@ -8,6 +8,7 @@ import { getSiteContent } from "@/lib/content";
 import { pageMetadata } from "@/lib/seo";
 import { Icon, iconPaths, type IconName } from "../icons";
 import styles from "../services.module.css";
+import { RouteSchema } from "@/components/route-schema";
 
 export async function generateMetadata(): Promise<Metadata> {
   const { serviceSoftware } = await getSiteContent();
@@ -35,6 +36,7 @@ export default async function SoftwareDevelopmentPage() {
 
   return (
     <div className={styles.page}>
+      <RouteSchema path="/services/software-development" />
       {/* Hero */}
       <section className={styles.hero} aria-labelledby="software-hero-heading">
         <div className={`container ${styles.heroGrid}`}>

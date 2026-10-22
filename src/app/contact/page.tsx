@@ -8,6 +8,7 @@ import { pageMetadata } from "@/lib/seo";
 import { ContactForm } from "@/components/contact-form";
 import { Icon, type IconName } from "../services/icons";
 import styles from "./contact.module.css";
+import { RouteSchema } from "@/components/route-schema";
 
 export async function generateMetadata(): Promise<Metadata> {
   const { contact } = await getSiteContent();
@@ -57,6 +58,7 @@ export default async function ContactPage() {
 
   return (
     <div className={styles.page}>
+      <RouteSchema path="/contact" />
       {/* Hero */}
       <section className={styles.hero} aria-labelledby="contact-heading">
         {hero.image ? (

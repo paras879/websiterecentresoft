@@ -3,9 +3,8 @@ import { Inter } from "next/font/google";
 import { getSiteContent } from "@/lib/content";
 import { SITE_URL } from "@/lib/seo";
 import { buildSiteInfo } from "@/lib/site";
-import { buildPageSchemas, buildSiteGraph } from "@/lib/schema";
+import { buildSiteGraph } from "@/lib/schema";
 import { publishedPages, withCustomPageLinks } from "@/lib/custom-pages";
-import { PageSchema } from "@/components/page-schema";
 import { SiteShell } from "@/components/site-shell";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
@@ -91,7 +90,6 @@ export default async function RootLayout({
   const site = withCustomPageLinks(content.site, await publishedPages());
 
   const structuredData = buildSiteGraph(content, info);
-  const pageSchemas = buildPageSchemas(content);
 
   return (
     <html lang="en" className={inter.variable} suppressHydrationWarning>
@@ -105,7 +103,6 @@ export default async function RootLayout({
         />
       </head>
       <body>
-        <PageSchema pages={pageSchemas} />
         <SmoothScroll />
         <ThemeProvider>
           <SiteShell

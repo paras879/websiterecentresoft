@@ -118,3 +118,5 @@ The /admin1 panel has a footer on every screen: copyright with the company legal
 Home page service cards: the Agentic AI and App Development cards are part of the saved Home content itself (added to older saved content automatically), so the admin shows the same six cards as the website and each one can be edited. A saved card with the same link is never added twice.
 
 The AI chat shows a Main menu button under each answer. It clears the conversation and shows the welcome message with all the starting questions again.
+
+SEO notes: each page carries only its own structured data (a small RouteSchema block on the page), the footer headings and FAQ questions are not heading tags (fewer headings per page), and the footer has plain Share this page links (Facebook, X, LinkedIn, WhatsApp).

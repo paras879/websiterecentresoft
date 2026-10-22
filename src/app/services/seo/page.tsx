@@ -9,6 +9,7 @@ import { SeoFaq } from "@/components/seo-faq";
 import { SeoServicesExplorer } from "@/components/seo-services-explorer";
 import styles from "../services.module.css";
 import seo from "./seo.module.css";
+import { RouteSchema } from "@/components/route-schema";
 
 export async function generateMetadata(): Promise<Metadata> {
   const { serviceSeo } = await getSiteContent();
@@ -38,6 +39,7 @@ export default async function SeoServicesPage() {
 
   return (
     <div className={styles.page}>
+      <RouteSchema path="/services/seo" />
       {/* Hero */}
       <section className={styles.hero} aria-labelledby="seo-hero-heading">
         <div className={`container ${styles.heroGrid}`}>

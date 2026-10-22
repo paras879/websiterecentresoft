@@ -7,6 +7,7 @@ import { getSiteInfo } from "@/lib/site";
 import { pageMetadata } from "@/lib/seo";
 import { Icon, iconPaths, type IconName } from "../icons";
 import styles from "./ai-automation.module.css";
+import { RouteSchema } from "@/components/route-schema";
 
 export async function generateMetadata(): Promise<Metadata> {
   const { serviceAi } = await getSiteContent();
@@ -26,6 +27,7 @@ export default async function AIAutomationPage() {
 
   return (
     <div className={styles.page}>
+      <RouteSchema path="/services/ai-automation" />
       {/* Hero */}
       <section className={styles.hero} aria-labelledby="ai-hero-heading">
         <div className={`container ${styles.heroGrid}`}>

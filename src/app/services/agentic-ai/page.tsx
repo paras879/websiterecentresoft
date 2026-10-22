@@ -8,6 +8,7 @@ import { Icon, iconPaths, type IconName } from "../icons";
 import { TechStackSection } from "./tech-stack";
 import { SecuritySection } from "./security-section";
 import styles from "./agentic-ai.module.css";
+import { RouteSchema } from "@/components/route-schema";
 
 export async function generateMetadata(): Promise<Metadata> {
   const { serviceAgentic } = await getSiteContent();
@@ -34,6 +35,7 @@ export default async function AgenticAiPage() {
 
   return (
     <div className={styles.page}>
+      <RouteSchema path="/services/agentic-ai" />
       {/* ------------------------------------------------------------ hero */}
       <section className={styles.hero} aria-labelledby="ag-hero-title">
         {hero.image ? (

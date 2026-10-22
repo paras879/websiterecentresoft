@@ -7,6 +7,7 @@ import { getSiteContent } from "@/lib/content";
 import { pageMetadata } from "@/lib/seo";
 import { Icon, iconPaths, type IconName } from "../services/icons";
 import styles from "../services/services.module.css";
+import { RouteSchema } from "@/components/route-schema";
 
 export async function generateMetadata(): Promise<Metadata> {
   const { about } = await getSiteContent();
@@ -25,6 +26,7 @@ export default async function AboutPage() {
 
   return (
     <div className={styles.page}>
+      <RouteSchema path="/about" />
       {/* Hero */}
       <section className={styles.hero} aria-labelledby="about-intro-heading">
         <div className={`container ${styles.heroGrid}`}>

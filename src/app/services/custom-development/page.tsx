@@ -11,6 +11,7 @@ import { ProcessJourney } from "@/components/process-journey";
 import { TechWall } from "@/components/tech-wall";
 import styles from "../services.module.css";
 import cd from "./custom.module.css";
+import { RouteSchema } from "@/components/route-schema";
 
 export async function generateMetadata(): Promise<Metadata> {
   const { serviceCustom } = await getSiteContent();
@@ -61,6 +62,7 @@ export default async function CustomDevelopmentPage() {
 
   return (
     <div className={styles.page}>
+      <RouteSchema path="/services/custom-development" />
       {/* Hero */}
       <section className={styles.hero} aria-labelledby="cd-hero-heading">
         <div className={`container ${styles.heroGrid}`}>

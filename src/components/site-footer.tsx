@@ -3,6 +3,7 @@ import Image from "next/image";
 import type { SiteContent } from "@/content";
 import type { SiteInfo } from "@/lib/site";
 import { socialIcons, type SocialIconName } from "@/lib/social-icons";
+import { FooterShare } from "./footer-share";
 import styles from "./site-footer.module.css";
 
 const icons = {
@@ -103,7 +104,7 @@ export function SiteFooter({ site, info }: { site: SiteContent["site"]; info: Si
           {/* Link columns */}
           {columns.map((column) => (
             <nav key={column.title} aria-label={column.title}>
-              <h2 className={styles.colTitle}>{column.title}</h2>
+              <p className={styles.colTitle}>{column.title}</p>
               <ul className={styles.linkList}>
                 {column.links.map((link) => (
                   <li key={`${link.label}-${link.href}`}>
@@ -118,7 +119,7 @@ export function SiteFooter({ site, info }: { site: SiteContent["site"]; info: Si
 
           {/* Contact */}
           <div>
-            <h2 className={styles.colTitle}>{footer.contactTitle}</h2>
+            <p className={styles.colTitle}>{footer.contactTitle}</p>
             <ul className={styles.contactList}>
               <li>
                 <a
@@ -172,6 +173,9 @@ export function SiteFooter({ site, info }: { site: SiteContent["site"]; info: Si
             </Link>
           </div>
           <span className={styles.officialNote}>{footer.bottomNote}</span>
+        </div>
+        <div className="container">
+          <FooterShare name={info.name} />
         </div>
       </div>
     </footer>
