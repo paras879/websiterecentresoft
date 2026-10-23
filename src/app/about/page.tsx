@@ -70,7 +70,6 @@ export default async function AboutPage() {
           <StickyFit />
           <div className={`container ${styles.pragLayout}`}>
             <header className={styles.pragIntro}>
-              <span className={styles.pragBar} aria-hidden="true" />
               <h2 id="pragmatic-heading" className={styles.pragTitle}>
                 {pragmatic.title}
                 {pragmatic.highlight ? (
