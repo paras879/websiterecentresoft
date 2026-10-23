@@ -29,7 +29,7 @@ const nextConfig: NextConfig = {
       "img-src 'self' data: blob: https://www.gstatic.com https://www.google.com",
       "font-src 'self' data:",
       "connect-src 'self' https://www.google.com/recaptcha/",
-      "frame-src https://www.google.com/recaptcha/ https://recaptcha.google.com/recaptcha/",
+      "frame-src 'self' https://www.google.com/recaptcha/ https://recaptcha.google.com/recaptcha/",
       "worker-src 'self' blob:",
       "object-src 'none'",
       "base-uri 'self'",
