@@ -6,7 +6,7 @@ import { getStore } from "./store";
 const scrypt = promisify(crypto.scrypt) as (pw: string, salt: Buffer, len: number) => Promise<Buffer>;
 
 const COOKIE = "rs_admin";
-const SESSION_SECONDS = 60 * 60 * 24 * 7;
+const SESSION_SECONDS = 60 * 60 * 24;
 const CREDENTIALS_KEY = "admin:credentials";
 
 /* ------------------------------------------------------------------ secrets & credentials */

@@ -13,7 +13,7 @@ import { can, isSubset, type Action, type Permissions, type Role, SUPER_ROLE_ID,
 import { checkPassword, findUserByLogin, fingerprint, getRole, getStoredUser, touchLogin } from "./cms-users";
 
 const COOKIE = "rs_cms";
-const SESSION_SECONDS = 60 * 60 * 24 * 7;
+const SESSION_SECONDS = 60 * 60 * 24;
 export const ROOT_ID = "root";
 
 export interface CmsUser {
