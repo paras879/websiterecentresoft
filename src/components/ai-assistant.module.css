@@ -3,7 +3,7 @@
 .launcher {
   position: fixed;
   right: 28px;
-  bottom: 44px;
+  bottom: 12px;
   z-index: 90;
   display: inline-flex;
   align-items: center;
@@ -105,13 +105,13 @@
 .panel {
   position: fixed;
   right: 28px;
-  bottom: 108px;
+  bottom: 76px;
   z-index: 95;
   display: flex;
   flex-direction: column;
   width: 328px;
   max-width: calc(100vw - 32px);
-  height: min(540px, calc(100vh - 215px));
+  height: min(540px, calc(100vh - 183px));
   overflow: hidden;
   color: #0b1f44;
   background: #ffffff;
