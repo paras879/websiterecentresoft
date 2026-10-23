@@ -31,6 +31,7 @@ const defaults = {
     whatsappMessage: "Hi",
     address: "A-125, 1st Floor, Sector-63, Noida, Uttar Pradesh, 201301, India",
     shortLocation: "Sector 63, Noida, UP",
+    mapUrl: "",
     officeHours: "",
   },
   socials: [
@@ -178,6 +179,10 @@ export const siteModule = defineModule({
           }),
           longtext("address", "Full address", { rows: 3, required: true }),
           text("shortLocation", "Short location", { help: "A short form of the address, e.g. Sector 63, Noida, UP." }),
+          url("mapUrl", "Google Maps link", {
+            placeholder: "https://maps.app.goo.gl/...",
+            help: "Optional but best: the link of your company on Google Maps, so Directions opens exactly your office. In Google Maps open your company, press Share, Copy link, and paste it here. Left empty, the company name is searched instead.",
+          }),
           text("officeHours", "Office hours", {
             help: "Optional. Leave empty to hide it, e.g. Monday to Friday, 9:30 AM to 6:30 PM IST.",
           }),

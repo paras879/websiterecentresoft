@@ -39,7 +39,11 @@ export function buildSiteInfo(site: Awaited<ReturnType<typeof getSiteContent>>["
       whatsappUrl: `https://api.whatsapp.com/send?phone=${phoneRaw}&text=${encodeURIComponent(contact.whatsappMessage || "Hi")}`,
       address: contact.address,
       shortLocation: contact.shortLocation,
-      mapUrl: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(contact.address)}`,
+      // The exact Google Maps link from the admin when there is one; otherwise a search for the company name alone, which
+      // opens the company's own Google listing. (Adding the street address turns it into a list of places nearby.)
+      mapUrl: /^https:\/\//i.test(contact.mapUrl ?? "")
+        ? contact.mapUrl
+        : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(brand.legalName)}`,
       officeHours: contact.officeHours,
     },
   };

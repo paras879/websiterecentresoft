@@ -124,3 +124,5 @@ SEO notes: each page carries only its own structured data (a small RouteSchema b
 Database hiccups: if the connection to the database is cut ("fetch failed", ETIMEDOUT, ECONNRESET) a request is tried again up to three times, each with a 5 second limit. The public pages fall back to the built-in text if the database cannot be read at all, but the admin panels never do: they read the saved content straight from the database and show a "could not load, try again" page instead, so the built-in text can never be shown or saved over the real content by mistake.
 
 Phone speed notes: the launcher pulse on phones animates transform and opacity only (desktop keeps the shadow pulse), and the two logo files are cached for a year (new logo = new file name).
+
+Directions and map links everywhere (header, footer, Contact, Careers, Privacy, Terms, the assistant and the structured data) come from one place. Header, footer and contact has a Google Maps link field: paste the link of your company from Google Maps (Share, Copy link) and Directions opens exactly your office. Left empty, the company name is searched, which opens the company's own Google listing.
