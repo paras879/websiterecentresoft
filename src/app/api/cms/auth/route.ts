@@ -1,5 +1,5 @@
 import { adminStatus, clientIp, resetRateLimit, sameOrigin, withinRateLimit } from "@/lib/admin-auth";
-import { cmsLogin, cmsLogout, getCmsUser } from "@/lib/cms-auth";
+import { cmsLogin, cmsLogout, getCmsUser, renewCmsSession } from "@/lib/cms-auth";
 import { logAudit } from "@/lib/audit";
 import { failure, json } from "@/lib/api";
 import { verifyRecaptcha } from "@/lib/recaptcha";
@@ -67,5 +67,12 @@ export async function POST(req: Request) {
 export async function DELETE(req: Request) {
   if (!(await sameOrigin(req))) return json({ success: false, error: "This request was blocked." }, 403);
   await cmsLogout();
+  return json({ success: true });
+}
+
+/** Sent now and then by the open panel while someone is working: another 20 minutes before the idle sign-out. */
+export async function PATCH(req: Request) {
+  if (!(await sameOrigin(req))) return json({ success: false, error: "This request was blocked." }, 403);
+  if (!(await renewCmsSession())) return json({ success: false, error: "Not signed in." }, 401);
   return json({ success: true });
 }

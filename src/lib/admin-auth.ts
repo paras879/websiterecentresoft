@@ -6,7 +6,8 @@ import { getStore } from "./store";
 const scrypt = promisify(crypto.scrypt) as (pw: string, salt: Buffer, len: number) => Promise<Buffer>;
 
 const COOKIE = "rs_admin";
-const SESSION_SECONDS = 60 * 60 * 24;
+/** A sign-in ends after this long without activity. The open panel renews it while someone is working in it. */
+export const IDLE_SECONDS = 20 * 60;
 const CREDENTIALS_KEY = "admin:credentials";
 
 /* ------------------------------------------------------------------ secrets & credentials */
@@ -132,7 +133,7 @@ export async function createAdminSession(username: string): Promise<void> {
     JSON.stringify({
       u: username,
       pv: identity.fingerprint,
-      exp: Math.floor(Date.now() / 1000) + SESSION_SECONDS,
+      exp: Math.floor(Date.now() / 1000) + IDLE_SECONDS,
     }),
   );
   const store = await cookies();
@@ -141,8 +142,15 @@ export async function createAdminSession(username: string): Promise<void> {
     secure: process.env.NODE_ENV === "production",
     sameSite: "strict",
     path: "/",
-    maxAge: SESSION_SECONDS,
+    // No maxAge: a session cookie, so closing the browser signs the person out.
   });
+}
+
+/** Gives a signed-in administrator another 20 minutes. Returns false when nobody is signed in. */
+export async function renewAdminSession(): Promise<boolean> {
+  if (!(await isAuthenticatedAdmin())) return false;
+  await createAdminSession(await adminUsername());
+  return true;
 }
 
 export async function clearAdminSession(): Promise<void> {

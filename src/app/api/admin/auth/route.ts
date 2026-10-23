@@ -3,6 +3,7 @@ import {
   clearAdminSession,
   clientIp,
   createAdminSession,
+  renewAdminSession,
   isAuthenticatedAdmin,
   sameOrigin,
   verifyLogin,
@@ -71,5 +72,12 @@ export async function POST(req: Request) {
 export async function DELETE(req: Request) {
   if (!(await sameOrigin(req))) return json({ success: false, error: "This request was blocked." }, 403);
   await clearAdminSession();
+  return json({ success: true });
+}
+
+/** Sent now and then by the open panel while someone is working: another 20 minutes before the idle sign-out. */
+export async function PATCH(req: Request) {
+  if (!(await sameOrigin(req))) return json({ success: false, error: "This request was blocked." }, 403);
+  if (!(await renewAdminSession())) return json({ success: false, error: "Not signed in." }, 401);
   return json({ success: true });
 }

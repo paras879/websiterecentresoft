@@ -5,7 +5,9 @@ import {
   adminUsername,
   clearAdminSession,
   createAdminSession,
+  IDLE_SECONDS,
   isAuthenticatedAdmin,
+  renewAdminSession,
   sessionSecret,
   verifyLogin,
 } from "./admin-auth";
@@ -13,7 +15,6 @@ import { can, isSubset, type Action, type Permissions, type Role, SUPER_ROLE_ID,
 import { checkPassword, findUserByLogin, fingerprint, getRole, getStoredUser, touchLogin } from "./cms-users";
 
 const COOKIE = "rs_cms";
-const SESSION_SECONDS = 60 * 60 * 24;
 export const ROOT_ID = "root";
 
 export interface CmsUser {
@@ -37,14 +38,25 @@ const sign = (payload: string, secret: string) =>
 async function setSession(userId: string, pv: string): Promise<void> {
   const secret = sessionSecret();
   if (!secret) throw new Error("Admin is not configured");
-  const payload = b64(JSON.stringify({ u: userId, pv, exp: Math.floor(Date.now() / 1000) + SESSION_SECONDS }));
+  const payload = b64(JSON.stringify({ u: userId, pv, exp: Math.floor(Date.now() / 1000) + IDLE_SECONDS }));
   (await cookies()).set(COOKIE, `${payload}.${sign(payload, secret)}`, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "strict",
     path: "/",
-    maxAge: SESSION_SECONDS,
+    // No maxAge: a session cookie, so closing the browser signs the person out.
   });
+}
+
+/** Gives the signed-in person another 20 minutes. Returns false when nobody is signed in. */
+export async function renewCmsSession(): Promise<boolean> {
+  const user = await getCmsUser();
+  if (!user) return false;
+  if (user.root) return renewAdminSession();
+  const stored = await getStoredUser(user.id);
+  if (!stored) return false;
+  await setSession(stored.id, fingerprint(stored));
+  return true;
 }
 
 async function rootUser(): Promise<CmsUser> {

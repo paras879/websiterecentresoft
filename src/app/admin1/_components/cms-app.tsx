@@ -23,6 +23,7 @@ import { RoleEdit, RolesList } from "./roles-view";
 import { UserEdit, UsersList } from "./users-view";
 import { ActivityView } from "./activity-view";
 import { PagesList, PageEdit } from "./pages-view";
+import { AdminIdleGuard } from "@/components/admin-idle-guard";
 import { PageHead } from "./page-head";
 import { AccessContext } from "./access-context";
 import { NavContext, type NavRoute, type NavValue } from "./nav-context";
@@ -121,6 +122,7 @@ export interface CmsAppProps {
 export function CmsApp(props: CmsAppProps) {
   return (
     <ToastProvider>
+      <AdminIdleGuard authUrl="/api/cms/auth" loginUrl={`${BASE}/login`} />
       <Shell {...props} />
     </ToastProvider>
   );

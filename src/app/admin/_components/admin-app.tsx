@@ -19,6 +19,7 @@ import { RoleEdit, RolesList } from "../../admin1/_components/roles-view";
 import { UserEdit, UsersList } from "../../admin1/_components/users-view";
 import { ActivityView } from "../../admin1/_components/activity-view";
 import { BUILTIN_ROLES } from "@/lib/cms-access";
+import { AdminIdleGuard } from "@/components/admin-idle-guard";
 import { OverviewView } from "./overview-view";
 import { Button, ConfirmDialog, cx, ToastProvider, UiIcon, useToast, type UiIconName } from "./ui";
 
@@ -73,6 +74,7 @@ export interface AdminProps {
 export function AdminApp(props: AdminProps) {
   return (
     <ToastProvider>
+      <AdminIdleGuard authUrl="/api/admin/auth" loginUrl="/admin/login" />
       <Shell {...props} />
     </ToastProvider>
   );
