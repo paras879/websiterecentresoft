@@ -7,6 +7,7 @@ import { buildSiteInfo } from "@/lib/site";
 import { getStore } from "@/lib/store";
 import { aiConfig, askModel, UpstreamBusyError, UpstreamError, type ChatMessage } from "@/lib/assistant-ai";
 import { publishedPages } from "@/lib/custom-pages";
+import { bodyTooLarge } from "@/lib/input";
 import { buildKnowledge, type Knowledge } from "@/lib/assistant-kb";
 import { basicAnswer, quickAnswer } from "@/lib/assistant-fallback";
 
@@ -61,6 +62,7 @@ function parseMessages(raw: unknown): ChatMessage[] | null {
 
 export async function POST(req: Request) {
   if (!(await sameOrigin(req))) return json({ success: false, error: "Blocked." }, 403);
+  if (bodyTooLarge(req, 20_000)) return json({ success: false, error: "That message is too large." }, 413);
 
   let body: { messages?: unknown };
   try {

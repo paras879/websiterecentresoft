@@ -3,13 +3,13 @@ import { clientIp, sameOrigin, withinRateLimit } from "@/lib/admin-auth";
 import { failure, json } from "@/lib/api";
 import { notifyInquiry } from "@/lib/mail";
 import { verifyRecaptcha } from "@/lib/recaptcha";
+import { bodyTooLarge, multiLine, oneLine } from "@/lib/input";
 import { addInquiry, maxResumeBytes, putBlob } from "@/lib/records";
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const PHONE = /^\+?[0-9\s\-()]{7,25}$/;
 
-const field = (v: FormDataEntryValue | null, max: number) =>
-  typeof v === "string" ? v.trim().slice(0, max) : "";
+const field = (v: FormDataEntryValue | null, max: number) => oneLine(v, max);
 
 // PDF "%PDF", old Word (OLE) and DOCX (ZIP) file signatures.
 function looksLikeDocument(b: Buffer): boolean {
@@ -23,6 +23,10 @@ function looksLikeDocument(b: Buffer): boolean {
 /** Saves a job application (and optional resume) so it appears in the admin inbox. */
 export async function POST(req: Request) {
   if (!(await sameOrigin(req))) return json({ success: false, error: "Blocked." }, 403);
+  // The resume limit plus room for the other fields; anything bigger is turned away before it is read.
+  if (bodyTooLarge(req, maxResumeBytes() + 200_000)) {
+    return json({ success: false, code: "resume_too_large", error: "Your application is too large. Please share a link to your resume instead, or email it to us." }, 413);
+  }
 
   try {
     const form = await req.formData();
@@ -77,7 +81,7 @@ export async function POST(req: Request) {
       phone,
       detail: field(form.get("experience"), 60),
       topic: field(form.get("area"), 120),
-      message: field(form.get("note"), 5000),
+      message: multiLine(form.get("note"), 5000),
       link: field(form.get("link"), 500),
       resume,
     });

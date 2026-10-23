@@ -48,6 +48,11 @@ export async function POST(req: Request) {
     if (!(await verifyRecaptcha(typeof body.recaptcha === "string" ? body.recaptcha.slice(0, 4000) : "", ip))) {
       return json({ success: false, error: "Please complete the security check (I'm not a robot) and try again." }, 400);
     }
+    // Guessing one account from many different addresses is slowed down too: 10 tries per account in 15 minutes.
+    const accountKey = `account:${username.trim().toLowerCase()}`;
+    if (!(await withinRateLimit(accountKey, 10, 15 * 60))) {
+      return json({ success: false, error: "Too many attempts for this account. Please wait 15 minutes and try again." }, 429);
+    }
     const who = await verifyLogin(username, password);
     if (!who) {
       await logAudit("sign-in", `Failed sign-in to /admin as "${username.slice(0, 60)}"`, { id: "", name: "Unknown", email: username.slice(0, 120) });
@@ -56,6 +61,7 @@ export async function POST(req: Request) {
     await createAdminSession(who);
     await logAudit("sign-in", "Signed in to /admin", { id: "root", name: "Administrator", email: who });
     await resetRateLimit(`login:${ip}`);
+    await resetRateLimit(accountKey);
     return json({ success: true });
   } catch (error) {
     return failure(error, "Could not sign you in. Please try again.");

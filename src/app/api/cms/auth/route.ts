@@ -36,6 +36,11 @@ export async function POST(req: Request) {
     if (!(await verifyRecaptcha(typeof body.recaptcha === "string" ? body.recaptcha.slice(0, 4000) : "", ip))) {
       return json({ success: false, error: "Please complete the security check (I'm not a robot) and try again." }, 400);
     }
+    // Guessing one account from many different addresses is slowed down too: 10 tries per account in 15 minutes.
+    const accountKey = `cmsaccount:${email.toLowerCase()}`;
+    if (!(await withinRateLimit(accountKey, 10, 15 * 60))) {
+      return json({ success: false, error: "Too many attempts for this account. Please wait 15 minutes and try again." }, 429);
+    }
     const result = await cmsLogin(email, password);
     if (!result.ok) {
       await logAudit("sign-in", `${result.reason === "disabled" ? "Blocked sign-in (account switched off)" : "Failed sign-in"} as "${email.slice(0, 60)}"`, { id: "", name: "Unknown", email });
@@ -52,6 +57,7 @@ export async function POST(req: Request) {
     }
     await logAudit("sign-in", "Signed in to /admin1", result.user);
     await resetRateLimit(`cmslogin:${ip}`);
+    await resetRateLimit(accountKey);
     return json({ success: true });
   } catch (error) {
     return failure(error, "Could not sign you in. Please try again.");
