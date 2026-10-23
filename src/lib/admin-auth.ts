@@ -173,7 +173,9 @@ export async function isAuthenticatedAdmin(): Promise<boolean> {
       pv: string;
       exp: number;
     };
-    if (!data.exp || data.exp < Date.now() / 1000) return false;
+    const now = Date.now() / 1000;
+    // Older sign-ins were issued for days; only tokens that end within the idle window are accepted now.
+    if (!data.exp || data.exp < now || data.exp > now + IDLE_SECONDS + 60) return false;
     const identity = await currentIdentity();
     // Changing the password changes the fingerprint, which signs everyone else out.
     return Boolean(identity) && data.pv === identity!.fingerprint;

@@ -78,7 +78,9 @@ export const getCmsUser = cache(async (): Promise<CmsUser | null> => {
         const b = Buffer.from(expected);
         if (a.length === b.length && crypto.timingSafeEqual(a, b)) {
           const data = JSON.parse(Buffer.from(payload, "base64url").toString("utf-8")) as { u: string; pv: string; exp: number };
-          if (data.exp && data.exp >= Date.now() / 1000) {
+          const now = Date.now() / 1000;
+          // Older sign-ins were issued for days; only tokens that end within the idle window are accepted now.
+          if (data.exp && data.exp >= now && data.exp <= now + IDLE_SECONDS + 60) {
             const user = await getStoredUser(data.u);
             // A disabled or deleted user, or a changed password, ends the session.
             if (user && !user.disabled && fingerprint(user) === data.pv) {
