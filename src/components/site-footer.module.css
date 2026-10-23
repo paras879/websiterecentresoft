@@ -155,25 +155,12 @@
 
 /* Columns */
 .colTitle {
-  position: relative;
-  margin: 0 0 1.5rem;
-  padding-bottom: 0.875rem;
+  margin: 0 0 1.25rem;
   font-size: 0.8125rem;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--ft-heading);
-}
-
-.colTitle::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 28px;
-  height: 2px;
-  background: linear-gradient(90deg, #1d4ed8, #38bdf8);
-  border-radius: 2px;
 }
 
 .linkList {
