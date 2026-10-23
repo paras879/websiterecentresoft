@@ -25,10 +25,14 @@ const nextConfig: NextConfig = {
       { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
       { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=(), payment=()" },
     ];
+    // The two logo files almost never change (a new logo would get a new file name), so they are kept for a year.
+    const logoCache = [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }];
     return [
       { source: "/:path*", headers: security },
       { source: "/images/:path*", headers: cache },
       { source: "/tech/:path*", headers: cache },
+      { source: "/images/recenturesoft-logo.png", headers: logoCache },
+      { source: "/images/logo_white.PNG", headers: logoCache },
     ];
   },
 };

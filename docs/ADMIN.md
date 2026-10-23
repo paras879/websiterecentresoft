@@ -122,3 +122,5 @@ The AI chat shows a Main menu button under each answer. It clears the conversati
 SEO notes: each page carries only its own structured data (a small RouteSchema block on the page), the footer headings and FAQ questions are not heading tags (fewer headings per page), and the footer has plain Share this page links (Facebook, X, LinkedIn, WhatsApp).
 
 Database hiccups: if the connection to the database is cut ("fetch failed", ETIMEDOUT, ECONNRESET) a request is tried again up to three times, each with a 5 second limit. The public pages fall back to the built-in text if the database cannot be read at all, but the admin panels never do: they read the saved content straight from the database and show a "could not load, try again" page instead, so the built-in text can never be shown or saved over the real content by mistake.
+
+Phone speed notes: the launcher pulse on phones animates transform and opacity only (desktop keeps the shadow pulse), and the two logo files are cached for a year (new logo = new file name).
