@@ -450,6 +450,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+
   .pillar,
   .step {
     transition: none;
@@ -482,7 +483,7 @@
   pointer-events: none;
 }
 
-.prac > :global(.container) {
+.prac> :global(.container) {
   position: relative;
   z-index: 1;
 }
@@ -609,6 +610,7 @@
   from {
     background-position: 0 0;
   }
+
   to {
     background-position: 8px 0;
   }
@@ -626,7 +628,6 @@
   justify-content: center;
   width: 60px;
   height: 60px;
-  margin-top: -30px;
   margin-bottom: 1.25rem;
   color: #ffffff;
   background: linear-gradient(135deg, #1d4ed8 0%, #1d4ed8 100%);
@@ -707,6 +708,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+
   .pracItem,
   .pracIcon {
     transition: none;
@@ -877,6 +879,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+
   .implItem,
   .ring {
     transition: none;
