@@ -327,7 +327,7 @@
   border-radius: 8px;
 }
 
-.screenLine + .screenLine {
+.screenLine+.screenLine {
   margin-top: 6px;
 }
 
@@ -427,7 +427,7 @@
 }
 
 .lead {
-  max-width: 62ch;
+  max-width: 100%;
   margin: 0;
   font-size: 1.0625rem;
   line-height: 1.65;
@@ -1201,6 +1201,7 @@
 
 /* ------------------------------------------------------------ larger screens */
 @media (min-width: 640px) {
+
   .qGrid,
   .stack {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1292,6 +1293,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+
   .phoneFront,
   .scanLine {
     animation: none;
@@ -1368,13 +1370,13 @@
   pointer-events: none;
 }
 
-.section > .wrap {
+.section>.wrap {
   position: relative;
 }
 
 /* a fine gradient hairline between sections */
-.section + .section::after,
-.section + .band::after {
+.section+.section::after,
+.section+.band::after {
   content: none;
 }
 
@@ -2348,7 +2350,7 @@
   box-shadow: var(--ap-shadow);
 }
 
-.tsBadge > span:last-child {
+.tsBadge>span:last-child {
   display: flex;
   flex-direction: column;
   line-height: 1.35;
@@ -2360,7 +2362,7 @@
   color: var(--ap-heading);
 }
 
-.tsBadge > span:last-child span {
+.tsBadge>span:last-child span {
   font-size: 0.8125rem;
   color: var(--ap-muted);
 }
@@ -2588,6 +2590,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+
   .tsCard,
   .tsGhost,
   .tsArrow {
@@ -2840,7 +2843,12 @@
 }
 
 .verticalsHead {
+  max-width: 100%;
   margin-bottom: 0.75rem;
+}
+
+.verticalsHead .title {
+  font-size: clamp(1.5rem, 2.5vw, 2.4rem);
 }
 
 .heroBgImg {
