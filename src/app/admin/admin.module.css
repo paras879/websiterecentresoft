@@ -1527,8 +1527,8 @@ textarea.input {
   border-top: 1px solid var(--ad-line);
 }
 
-.miniList > li:first-child .miniRow,
-.miniList > li:first-child .pageRowMain {
+.miniList>li:first-child .miniRow,
+.miniList>li:first-child .pageRowMain {
   border-top: 0;
 }
 
@@ -1567,7 +1567,7 @@ textarea.input {
   border-top: 1px solid var(--ad-line);
 }
 
-.miniList > li:first-child .pageRow {
+.miniList>li:first-child .pageRow {
   border-top: 0;
 }
 
@@ -1577,18 +1577,18 @@ textarea.input {
   gap: 12px;
 }
 
-.pageRowMain > span {
+.pageRowMain>span {
   display: flex;
   flex-direction: column;
   font-size: 14px;
 }
 
-.pageRowMain > span span {
+.pageRowMain>span span {
   font-size: 13px;
   color: var(--ad-muted);
 }
 
-.pageRowMain > svg {
+.pageRowMain>svg {
   color: var(--ad-muted);
 }
 
@@ -1612,7 +1612,9 @@ textarea.input {
 .inbox {
   display: grid;
   grid-template-columns: minmax(300px, 400px) minmax(0, 1fr);
-  min-height: calc(100dvh - 64px - 48px);
+  grid-template-rows: minmax(0, 1fr);
+  height: calc(100dvh - 240px);
+  min-height: 500px;
   overflow: hidden;
   background: var(--ad-surface);
   border: 1px solid var(--ad-line);
@@ -1623,6 +1625,7 @@ textarea.input {
   display: flex;
   flex-direction: column;
   min-width: 0;
+  min-height: 0;
   border-right: 1px solid var(--ad-line);
 }
 
@@ -1773,6 +1776,7 @@ textarea.input {
 
 .inboxDetail {
   min-width: 0;
+  min-height: 0;
   overflow-y: auto;
 }
 
@@ -1895,7 +1899,7 @@ textarea.input {
   padding: 4px 24px 8px;
 }
 
-.statusList > div {
+.statusList>div {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -2130,6 +2134,7 @@ textarea.input {
 
   .inbox {
     display: block;
+    height: auto;
     min-height: 0;
   }
 
@@ -2193,6 +2198,7 @@ textarea.input {
 }
 
 @media (prefers-reduced-motion: reduce) {
+
   .sidebar,
   .scrim,
   .switch,
