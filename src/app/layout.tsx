@@ -23,8 +23,8 @@ const inter = Inter({
   variable: "--font-inter",
 });
 
-// Revalidate cached pages on edge every 60s or on-demand via admin panel
-export const revalidate = 60;
+// Cache forever — revalidate only on-demand via admin panel (saves ISR writes)
+export const revalidate = false;
 
 export async function generateMetadata(): Promise<Metadata> {
   const { site } = await getSiteContent();
